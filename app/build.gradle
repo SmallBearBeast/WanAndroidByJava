@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.bear.wanandroidbyjava"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -16,9 +16,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-        debug {
-
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'   // aar目录
         }
     }
 }
@@ -31,4 +32,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation(name: 'libbase_1.0.0', ext: 'aar')
+    implementation(name: 'libframework_1.0.0', ext: 'aar')
+    implementation(name: 'liblog_1.0.0', ext: 'aar')
+    implementation(name: 'libokhttp_1.0.0', ext: 'aar')
+
+    //okhttp网络请求框架
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
 }
