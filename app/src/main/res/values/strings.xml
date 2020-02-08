@@ -9,4 +9,6 @@
     <string name="str_load_more">加载更多</string>
     <string name="str_new">新</string>
     <string name="str_mark_top">置顶</string>
+    <string name="str_navigation">导航</string>
+    <string name="str_no_more_data">没有更多数据了</string>
 </resources>

@@ -21,7 +21,6 @@ import com.example.libframework.Rv.DataManager;
 import com.example.libframework.Rv.DataType;
 import com.example.libframework.Rv.RvUtil;
 import com.example.libframework.Rv.VHAdapter;
-import com.example.liblog.SLog;
 
 import java.util.List;
 import java.util.Set;
@@ -88,7 +87,6 @@ public class HomeListCom extends FragComponent {
         Bus.get().register(new EventCallback() {
             @Override
             protected void onEvent(Event event) {
-                SLog.d(TAG, "onEvent: event = " + event);
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
                         if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
@@ -110,6 +108,7 @@ public class HomeListCom extends FragComponent {
         mRecyclerView = findViewById(R.id.rv_home_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVHAdapter = new VHAdapter();
+        mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new BannerVHBridge(), Banner.class);
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
         mVHAdapter.register(new LoadMoreVHBridge(), VHBRIDGE_LOAD_MORE);
@@ -125,12 +124,11 @@ public class HomeListCom extends FragComponent {
                 return -1;
             }
         });
-        mDataManager = mVHAdapter.getDataManager();
         mRecyclerView.setAdapter(mVHAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (mHomeListVM.isLoadMoreFinished()) {
+                if (mHomeListVM.canLoadMore()) {
                     return;
                 }
                 int lastVisibleItemPos = RvUtil.findLastVisibleItemPosition(recyclerView);
@@ -146,7 +144,8 @@ public class HomeListCom extends FragComponent {
         RvUtil.scrollToTop(mRecyclerView, 3, 0);
     }
 
-    public void onNotifyVisible() {
+    @Override
+    protected void onFirstVisible() {
         doNetWork();
     }
 

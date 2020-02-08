@@ -6,10 +6,10 @@ import android.widget.ImageView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bear.wanandroidbyjava.Module.Home.HomeListCom;
-import com.bear.wanandroidbyjava.Module.Project.ProjectListCom;
-import com.bear.wanandroidbyjava.Module.Public.PublicListCom;
+import com.bear.wanandroidbyjava.Module.Project.ProjectCom;
+import com.bear.wanandroidbyjava.Module.Public.PublicCom;
+import com.bear.wanandroidbyjava.Module.System.SystemCom;
 import com.bear.wanandroidbyjava.R;
-import com.bear.wanandroidbyjava.Module.System.SystemListCom;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libframework.CoreUI.ActComponent;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
@@ -69,13 +69,13 @@ public class MainBottomCom extends ActComponent {
                             mMain.getComponent(HomeListCom.class, 1).scrollToTop();
                             break;
                         case R.id.ll_system:
-                            mMain.getComponent(SystemListCom.class).scrollToTop();
+                            mMain.getComponent(SystemCom.class).scrollToTop();
                             break;
                         case R.id.ll_public:
-                            mMain.getComponent(PublicListCom.class).scrollToTop();
+                            mMain.getComponent(PublicCom.class).scrollToTop();
                             break;
                         case R.id.ll_project:
-                            mMain.getComponent(ProjectListCom.class).scrollToTop();
+                            mMain.getComponent(ProjectCom.class).scrollToTop();
                             break;
                     }
                 }

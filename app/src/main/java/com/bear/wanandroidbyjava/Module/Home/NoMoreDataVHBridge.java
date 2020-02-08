@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bear.wanandroidbyjava.R;
 import com.example.libframework.Rv.VHBridge;
 import com.example.libframework.Rv.VHolder;
 
@@ -16,6 +17,6 @@ public class NoMoreDataVHBridge extends VHBridge {
 
     @Override
     protected int layoutId() {
-        return 0;
+        return R.layout.item_no_more_data;
     }
 }

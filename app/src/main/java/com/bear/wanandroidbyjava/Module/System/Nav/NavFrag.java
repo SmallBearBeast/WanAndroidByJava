@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Module.System;
+package com.bear.wanandroidbyjava.Module.System.Nav;
 
 import android.os.Bundle;
 
@@ -7,19 +7,20 @@ import androidx.annotation.Nullable;
 import com.bear.wanandroidbyjava.R;
 import com.example.libframework.CoreUI.ComponentFrag;
 
-public class SystemFrag extends ComponentFrag {
+public class NavFrag extends ComponentFrag {
     @Override
     protected int layoutId() {
-        return R.layout.frag_system;
+        return R.layout.frag_nav;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new SystemCom());
+        regComponent(new NavCom());
     }
 
-    public static SystemFrag newInstance() {
-        return new SystemFrag();
+    public static NavFrag newInstance() {
+        return new NavFrag();
     }
+
 }

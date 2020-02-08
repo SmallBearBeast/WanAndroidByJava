@@ -6,17 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bear.wanandroidbyjava.R;
-import com.example.libbase.MoreAction;
 import com.example.libframework.CoreUI.ComponentFrag;
 
 public class HomeFrag extends ComponentFrag {
     private int fragId;
-    private MoreAction firstVisibleAction = new MoreAction(1, new Runnable() {
-        @Override
-        public void run() {
-            getComponent(HomeListCom.class, fragId).onNotifyVisible();
-        }
-    });
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,11 +31,6 @@ public class HomeFrag extends ComponentFrag {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    protected void onNotifyVisible() {
-        firstVisibleAction.doAction();
     }
 
     @Override

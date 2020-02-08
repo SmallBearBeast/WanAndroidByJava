@@ -23,7 +23,7 @@ import java.util.List;
 public class HomeListVM extends ViewModel {
     private static final String TAG = "HomeListVM";
     private int mCurPageIndex = 0;
-    private boolean mIsLoadMoreFinished;
+    private boolean mIsNoLoadMore;
     private boolean mIsFetchingList;
     public List mTotalList = new ArrayList();
     public MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
@@ -38,7 +38,6 @@ public class HomeListVM extends ViewModel {
                     SLog.d(TAG, "fetchBanner: data.errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", data.errorMsg = " + data.errorMsg));
                     if (CollectionUtil.isEmpty(data.data)) {
                         SLog.d(TAG, "fetchBanner: bannerBeanList is empty");
-                        mBannerListLD.postValue(null);
                     } else {
                         List<BannerBean> bannerBeanList = data.data;
                         List<String> imageUrlList = new ArrayList<>();
@@ -106,18 +105,18 @@ public class HomeListVM extends ViewModel {
     }
 
     public void loadMore() {
-        SLog.d(TAG, "loadMore: mIsLoadMoreFinished = " + mIsLoadMoreFinished + ", mIsFetchingList = " + mIsFetchingList);
+        SLog.d(TAG, "loadMore: mIsNoLoadMore = " + mIsNoLoadMore + ", mIsFetchingList = " + mIsFetchingList);
         if (mIsFetchingList) {
             return;
         }
-        if (!mIsLoadMoreFinished) {
+        if (!mIsNoLoadMore) {
             mCurPageIndex = mCurPageIndex + 1;
             fetchList(mCurPageIndex);
         }
     }
 
-    public boolean isLoadMoreFinished() {
-        return mIsLoadMoreFinished;
+    public boolean canLoadMore() {
+        return !mIsNoLoadMore && !mIsFetchingList;
     }
 
     public void refresh() {
@@ -126,7 +125,7 @@ public class HomeListVM extends ViewModel {
             return;
         }
         mCurPageIndex = 0;
-        mIsLoadMoreFinished = false;
+        mIsNoLoadMore = false;
         fetchList(mCurPageIndex);
     }
 
@@ -141,7 +140,7 @@ public class HomeListVM extends ViewModel {
                     if (data.data != null) {
                         if (CollectionUtil.isEmpty(data.data.datas)) {
                             SLog.d(TAG, "fetchList: articleBeanList is empty");
-                            mIsLoadMoreFinished = true;
+                            mIsNoLoadMore = true;
                             mArticleListLD.postValue(null);
                         } else {
                             List<ArticleBean> articleBeanList = data.data.datas;
@@ -151,12 +150,12 @@ public class HomeListVM extends ViewModel {
                             }
                             mArticleListLD.postValue(articleList);
                             mTotalList.addAll(articleList);
-                            mIsFetchingList = false;
                             SLog.d(TAG, "fetchList: articleList.size = " + articleList.size());
                             SLog.d(TAG, "fetchList: articleList = " + articleList);
                         }
                     }
                 }
+                mIsFetchingList = false;
             }
 
             @Override
