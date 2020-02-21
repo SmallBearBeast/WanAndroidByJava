@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tree_container"
+        android:id="@+id/rv_project_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ProgressBar
-        android:id="@+id/pb_tree_loading"
-        android:layout_width="@dimen/dp_60"
-        android:layout_height="@dimen/dp_60"
+        android:id="@+id/pb_project_list_loading"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
         android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible" />

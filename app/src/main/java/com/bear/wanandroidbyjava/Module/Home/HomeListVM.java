@@ -30,11 +30,13 @@ public class HomeListVM extends ViewModel {
     private int mNextPageIndex = 1;
     private boolean mIsNoLoadMore;
     private boolean mIsFetchingList;
+    private boolean mIsFirstLoad = true;
     private CountDownLatch mCountDownLatch;
-    public List mTotalList = new CopyOnWriteArrayList();
-    public List mTempList = new CopyOnWriteArrayList();
-    public MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
-    public MutableLiveData<List> mTotalListLD = new MutableLiveData<>();
+    private List mTotalList = new CopyOnWriteArrayList();
+    private List mTempList = new CopyOnWriteArrayList();
+    private MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
+    private MutableLiveData<List> mTotalListLD = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
 
     private void fetchBanner() {
         SLog.d(TAG, "fetchBanner: start");
@@ -66,6 +68,7 @@ public class HomeListVM extends ViewModel {
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchBanner: onFail");
+                mCountDownLatch.countDown();
             }
         });
     }
@@ -105,6 +108,7 @@ public class HomeListVM extends ViewModel {
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchTopArticle: onFail");
+                mCountDownLatch.countDown();
             }
         });
     }
@@ -130,6 +134,7 @@ public class HomeListVM extends ViewModel {
     public void refresh() {
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is unConnected");
+            mShowProgressLD.postValue(false);
             return;
         }
         SLog.d(TAG, "refresh: mIsFetchingList = " + mIsFetchingList);
@@ -140,6 +145,9 @@ public class HomeListVM extends ViewModel {
         mTempList = mTotalList;
         mTotalList.clear();
         mCountDownLatch = new CountDownLatch(3);
+        if (mIsFirstLoad) {
+            mShowProgressLD.postValue(true);
+        }
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -161,7 +169,11 @@ public class HomeListVM extends ViewModel {
             if (CollectionUtil.isEmpty(mTotalList)) {
                 mTotalList = mTempList;
             }
-            mTotalListLD.postValue(mTotalList);
+            if (!CollectionUtil.isEmpty(mTotalList)) {
+                mTotalListLD.postValue(mTotalList);
+                mIsFirstLoad = false;
+            }
+            mShowProgressLD.postValue(false);
         }
     }
 
@@ -203,7 +215,30 @@ public class HomeListVM extends ViewModel {
             protected void onFail() {
                 SLog.d(TAG, "fetchList: onFail");
                 mIsFetchingList = false;
+                if (pageIndex == 1) {
+                    mCountDownLatch.countDown();
+                }
             }
         });
+    }
+
+    public boolean isFirstLoad() {
+        return mIsFirstLoad;
+    }
+
+    public List getTotalList() {
+        return mTotalList;
+    }
+
+    public MutableLiveData<List<Article>> getArticleListLD() {
+        return mArticleListLD;
+    }
+
+    public MutableLiveData<List> getTotalListLD() {
+        return mTotalListLD;
+    }
+
+    public MutableLiveData<Boolean> getShowProgressLD() {
+        return mShowProgressLD;
     }
 }

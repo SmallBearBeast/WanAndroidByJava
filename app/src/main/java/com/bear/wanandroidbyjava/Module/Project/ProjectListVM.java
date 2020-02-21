@@ -24,8 +24,10 @@ public class ProjectListVM extends ViewModel {
     private boolean mIsNoLoadMore;
     private boolean mIsFetchingList;
     private int mNextPageIndex = 1;
-    public List mTotalList = new ArrayList();
-    public MutableLiveData<List<Article>> mProjectArticleListLD = new MutableLiveData<>();
+    private boolean mIsFirstLoad = true;
+    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
+    private List mTotalList = new ArrayList();
+    private MutableLiveData<List<Article>> mProjectArticleListLD = new MutableLiveData<>();
 
     public void refresh(int cid) {
         if (!NetWorkUtil.isConnected()) {
@@ -37,6 +39,9 @@ public class ProjectListVM extends ViewModel {
             return;
         }
         mIsFetchingList = true;
+        if (mIsFirstLoad) {
+            mShowProgressLD.postValue(true);
+        }
         fetchProject(cid, 1);
     }
 
@@ -78,23 +83,42 @@ public class ProjectListVM extends ViewModel {
                                 SLog.d(TAG, "fetchProject: pageIndex is 1, mIsNoLoadMore is false");
                                 mIsNoLoadMore = false;
                             }
+                            mIsFirstLoad = false;
                             SLog.d(TAG, "fetchProject: articleList.size = " + articleList.size() + ", mTotalList.size = " + mTotalList.size() + ", articleList = " + articleList);
                         }
                         mNextPageIndex = pageIndex + 1;
                     }
                 }
                 mIsFetchingList = false;
+                mShowProgressLD.postValue(false);
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchProject: onFail");
                 mIsFetchingList = false;
+                mShowProgressLD.postValue(false);
             }
         });
     }
 
     public boolean canLoadMore() {
         return !mIsNoLoadMore && !mIsFetchingList;
+    }
+
+    public boolean isFirstLoad() {
+        return mIsFirstLoad;
+    }
+
+    public MutableLiveData<Boolean> getShowProgressLD() {
+        return mShowProgressLD;
+    }
+
+    public List getTotalList() {
+        return mTotalList;
+    }
+
+    public MutableLiveData<List<Article>> getProjectArticleListLD() {
+        return mProjectArticleListLD;
     }
 }

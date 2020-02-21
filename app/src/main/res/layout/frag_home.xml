@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,11 +14,11 @@
         android:paddingRight="15dp">
 
         <ImageView
-            android:tint="@color/color_5c5c5c"
             android:id="@+id/iv_square"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"
-            android:src="@drawable/ic_square" />
+            android:src="@drawable/ic_square"
+            android:tint="@color/color_5c5c5c" />
 
         <TextView
             android:layout_width="0dp"
@@ -27,15 +28,28 @@
             android:text="Hello World" />
 
         <ImageView
-            android:tint="@color/color_5c5c5c"
             android:id="@+id/iv_search"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_search"
+            android:tint="@color/color_5c5c5c" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_home_container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 </LinearLayout>

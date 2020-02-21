@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Module.System.Tree;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,10 +25,10 @@ import java.util.Set;
 
 public class TreeCom extends FragComponent {
     private RecyclerView mRecyclerView;
+    private ProgressBar mPbTreeLoading;
     private VHAdapter mVhAdapter;
     private DataManager mDataManager;
     private TreeVM mTreeVM;
-    private boolean mFirstLoad;
 
     @Override
     protected void onCreate() {
@@ -39,21 +40,29 @@ public class TreeCom extends FragComponent {
     @Override
     protected void onCreateView(View contentView) {
         mRecyclerView = findViewById(R.id.rv_tree_container);
+        mPbTreeLoading = findViewById(R.id.pb_tree_loading);
         mVhAdapter = new VHAdapter();
         mDataManager = mVhAdapter.getDataManager();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVhAdapter.register(new TreeVHBridge(), Tree.class);
         mRecyclerView.setAdapter(mVhAdapter);
-        mDataManager.setData(mTreeVM.mTreeLD.getValue());
+        mDataManager.setData(mTreeVM.getTreeLD().getValue());
     }
 
     private void initData() {
         mTreeVM = new ViewModelProvider(mMain).get(TreeVM.class);
-        mTreeVM.mTreeLD.observe(mMain, new Observer<List<Tree>>() {
+        mTreeVM.getTreeLD().observe(mMain, new Observer<List<Tree>>() {
             @Override
             public void onChanged(List<Tree> trees) {
-                mFirstLoad = true;
                 mDataManager.setData(trees);
+            }
+        });
+        mTreeVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean show) {
+                if (show != null) {
+                    mPbTreeLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }
@@ -64,7 +73,7 @@ public class TreeCom extends FragComponent {
             protected void onEvent(Event event) {
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
+                        if (event.data instanceof Boolean && (Boolean) event.data && mTreeVM.isFirstLoad()) {
                             mTreeVM.fetchTree();
                         }
                         break;

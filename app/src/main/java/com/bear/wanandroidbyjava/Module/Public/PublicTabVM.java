@@ -19,10 +19,13 @@ import java.util.List;
 
 public class PublicTabVM extends ViewModel {
     private static final String TAG = "PublicTabVM";
-
-    public MutableLiveData<List<PublicTab>> mPublicTabLD = new MutableLiveData<>();
+    private boolean mIsFirstLoad = true;
+    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
+    private MutableLiveData<List<PublicTab>> mPublicTabLD = new MutableLiveData<>();
 
     public void fetchTab() {
+        SLog.d(TAG, "fetchTab: start");
+        mShowProgressLD.postValue(true);
         OkHelper.getInstance().getMethod(NetUrl.PUBLIC_TAB, new OkCallback<WanResponce<List<PublicTabBean>>>(new TypeToken<WanResponce<List<PublicTabBean>>>(){}) {
             @Override
             protected void onSuccess(WanResponce<List<PublicTabBean>> data) {
@@ -37,16 +40,29 @@ public class PublicTabVM extends ViewModel {
                             publicTabList.add(publicTabBean.toPublicTab());
                         }
                         mPublicTabLD.postValue(publicTabList);
+                        mIsFirstLoad = false;
                     }
                 }
-
+                mShowProgressLD.postValue(false);
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchTab: onFail");
+                mShowProgressLD.postValue(false);
             }
         });
     }
 
+    public boolean isFirstLoad() {
+        return mIsFirstLoad;
+    }
+
+    public MutableLiveData<Boolean> getShowProgressLD() {
+        return mShowProgressLD;
+    }
+
+    public MutableLiveData<List<PublicTab>> getPublicTabLD() {
+        return mPublicTabLD;
+    }
 }

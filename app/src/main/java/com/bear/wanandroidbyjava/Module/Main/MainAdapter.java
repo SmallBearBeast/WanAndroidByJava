@@ -19,7 +19,7 @@ public class MainAdapter extends FragmentPagerAdapter {
 
     public MainAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        fragmentList.add(HomeFrag.newInstance(1));
+        fragmentList.add(HomeFrag.newInstance());
         fragmentList.add(SystemFrag.newInstance());
         fragmentList.add(PublicFrag.newInstance());
         fragmentList.add(ProjectFrag.newInstance());

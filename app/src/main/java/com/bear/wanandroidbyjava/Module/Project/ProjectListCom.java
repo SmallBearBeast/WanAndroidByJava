@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Module.Project;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -29,11 +30,12 @@ import java.util.Set;
 
 public class ProjectListCom extends FragComponent {
     private static final int LOAD_MORE_OFFSET = 3;
-    private static final int VHBRIDGE_LOAD_MORE = 1;
-    private static final int VHBRIDGE_NO_MORE_DATA = 2;
+    private static final int BRIDGE_LOAD_MORE = 1;
+    private static final int BRIDGE_NO_MORE_DATA = 2;
     private boolean mFirstLoad;
     private int mTabId;
     private RecyclerView mRecyclerView;
+    private ProgressBar mPbProjectListLoading;
     private VHAdapter mVHAdapter;
     private DataManager mDataManager;
     private ProjectListVM mProjectListVM;
@@ -50,20 +52,21 @@ public class ProjectListCom extends FragComponent {
 
     @Override
     protected void onCreateView(View contentView) {
-        mRecyclerView = findViewById(R.id.rv_tab_article_container);
+        mPbProjectListLoading = findViewById(R.id.pb_project_list_loading);
+        mRecyclerView = findViewById(R.id.rv_project_list_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVHAdapter = new VHAdapter();
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
-        mVHAdapter.register(new LoadMoreVHBridge(), VHBRIDGE_LOAD_MORE);
-        mVHAdapter.register(new NoMoreDataVHBridge(), VHBRIDGE_NO_MORE_DATA);
+        mVHAdapter.register(new LoadMoreVHBridge(), BRIDGE_LOAD_MORE);
+        mVHAdapter.register(new NoMoreDataVHBridge(), BRIDGE_NO_MORE_DATA);
         mVHAdapter.setOnGetDataType(new VHAdapter.OnGetDataType() {
             @Override
             public int getType(Object obj, int pos) {
-                if (obj.equals(VHBRIDGE_LOAD_MORE)) {
-                    return VHBRIDGE_LOAD_MORE;
-                } else if (obj.equals(VHBRIDGE_NO_MORE_DATA)) {
-                    return VHBRIDGE_NO_MORE_DATA;
+                if (obj.equals(BRIDGE_LOAD_MORE)) {
+                    return BRIDGE_LOAD_MORE;
+                } else if (obj.equals(BRIDGE_NO_MORE_DATA)) {
+                    return BRIDGE_NO_MORE_DATA;
                 }
                 return -1;
             }
@@ -82,22 +85,30 @@ public class ProjectListCom extends FragComponent {
                 }
             }
         });
-        mDataManager.setData(mProjectListVM.mTotalList);
+        mDataManager.setData(mProjectListVM.getTotalList());
     }
 
     private void initData() {
         mProjectListVM = new ViewModelProvider(mMain).get(ProjectListVM.class);
-        mProjectListVM.mProjectArticleListLD.observe(mMain, new Observer<List<Article>>() {
+        mProjectListVM.getProjectArticleListLD().observe(mMain, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
-                    mDataManager.remove(DataType.of(VHBRIDGE_LOAD_MORE));
-                    mDataManager.addLast(DataType.of(VHBRIDGE_NO_MORE_DATA));
+                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
+                    mDataManager.addLast(DataType.of(BRIDGE_NO_MORE_DATA));
                 } else {
-                    mDataManager.remove(DataType.of(VHBRIDGE_LOAD_MORE));
+                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
                     mDataManager.addLast(articles);
-                    mDataManager.addLast(DataType.of(VHBRIDGE_LOAD_MORE));
+                    mDataManager.addLast(DataType.of(BRIDGE_LOAD_MORE));
                     mFirstLoad = true;
+                }
+            }
+        });
+        mProjectListVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean show) {
+                if (show != null) {
+                    mPbProjectListLoading.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             }
         });

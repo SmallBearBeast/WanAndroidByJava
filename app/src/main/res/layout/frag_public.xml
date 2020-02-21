@@ -6,12 +6,25 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tab_container"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:background="@color/color_03a9f4" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tab_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:background="@color/color_03a9f4" />
+
+        <ProgressBar
+            android:id="@+id/pb_public_tab_loading"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
 
     <View
         android:layout_width="@dimen/dp_1"

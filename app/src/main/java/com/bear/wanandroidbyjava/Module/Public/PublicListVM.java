@@ -24,8 +24,10 @@ public class PublicListVM extends ViewModel {
     private boolean mIsNoLoadMore;
     private boolean mIsFetchingList;
     private int mNextPageIndex = 1;
-    public List mTotalList = new ArrayList();
-    public MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
+    private boolean mIsFirstLoad = true;
+    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
+    private List mTotalList = new ArrayList();
+    private MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
 
     public void refresh(int id) {
         if (!NetWorkUtil.isConnected()) {
@@ -37,6 +39,9 @@ public class PublicListVM extends ViewModel {
             return;
         }
         mIsFetchingList = true;
+        if (mIsFirstLoad) {
+            mShowProgressLD.postValue(true);
+        }
         fetchTabArticle(id, 1);
     }
 
@@ -79,22 +84,41 @@ public class PublicListVM extends ViewModel {
                                 SLog.d(TAG, "fetchTabArticle: pageIndex is 1, mIsNoLoadMore is false");
                                 mIsNoLoadMore = false;
                             }
+                            mIsFirstLoad = false;
                         }
                         mNextPageIndex = pageIndex + 1;
                     }
                 }
                 mIsFetchingList = false;
+                mShowProgressLD.postValue(false);
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchTabArticle: onFail");
                 mIsFetchingList = false;
+                mShowProgressLD.postValue(false);
             }
         });
     }
 
     public boolean canLoadMore() {
         return !mIsNoLoadMore && !mIsFetchingList;
+    }
+
+    public boolean isFirstLoad() {
+        return mIsFirstLoad;
+    }
+
+    public MutableLiveData<Boolean> getShowProgressLD() {
+        return mShowProgressLD;
+    }
+
+    public List getTotalList() {
+        return mTotalList;
+    }
+
+    public MutableLiveData<List<Article>> getArticleListLD() {
+        return mArticleListLD;
     }
 }

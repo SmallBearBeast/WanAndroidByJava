@@ -66,7 +66,7 @@ public class MainBottomCom extends ActComponent {
                 } else {
                     switch (v.getId()) {
                         case R.id.ll_home:
-                            mMain.getComponent(HomeListCom.class, 1).scrollToTop();
+                            mMain.getComponent(HomeListCom.class).scrollToTop();
                             break;
                         case R.id.ll_system:
                             mMain.getComponent(SystemCom.class).scrollToTop();

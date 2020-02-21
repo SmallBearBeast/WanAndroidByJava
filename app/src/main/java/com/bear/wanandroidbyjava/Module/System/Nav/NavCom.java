@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Module.System.Nav;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,10 +25,10 @@ import java.util.Set;
 
 public class NavCom extends FragComponent {
     private RecyclerView mRecyclerView;
+    private ProgressBar mPbNavLoading;
     private VHAdapter mVhAdapter;
     private DataManager mDataManager;
     private NavVM mNavVM;
-    private boolean mFirstLoad;
 
     @Override
     protected void onCreate() {
@@ -38,22 +39,30 @@ public class NavCom extends FragComponent {
 
     @Override
     protected void onCreateView(View contentView) {
+        mPbNavLoading = findViewById(R.id.pb_nav_loading);
         mRecyclerView = findViewById(R.id.rv_navi_container);
         mVhAdapter = new VHAdapter();
         mDataManager = mVhAdapter.getDataManager();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVhAdapter.register(new NavVHBridge(), Nav.class);
         mRecyclerView.setAdapter(mVhAdapter);
-        mDataManager.setData(mNavVM.mNavLD.getValue());
+        mDataManager.setData(mNavVM.getNavLD().getValue());
     }
 
     private void initData() {
         mNavVM = new ViewModelProvider(mMain).get(NavVM.class);
-        mNavVM.mNavLD.observe(mMain, new Observer<List<Nav>>() {
+        mNavVM.getNavLD().observe(mMain, new Observer<List<Nav>>() {
             @Override
             public void onChanged(List<Nav> navList) {
-                mFirstLoad = true;
                 mDataManager.setData(navList);
+            }
+        });
+        mNavVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean show) {
+                if (show != null) {
+                    mPbNavLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }
@@ -64,7 +73,7 @@ public class NavCom extends FragComponent {
             protected void onEvent(Event event) {
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
+                        if (event.data instanceof Boolean && (Boolean) event.data && mNavVM.isFirstLoad()) {
                             mNavVM.fetchNav();
                         }
                         break;

@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Module.Public;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 public class PublicCom extends FragComponent {
-    private boolean mFirstLoad;
     private RecyclerView mRvTabContainer;
+    private ProgressBar mPbPublicTabLoading;
     private VHAdapter mTabListAdapter;
     private NoSwitchViewPager mNoSwitchViewPager;
     private PublicListFragAdapter mPublicListFragAdapter;
@@ -37,27 +38,35 @@ public class PublicCom extends FragComponent {
 
     @Override
     protected void onCreateView(View contentView) {
+        mPbPublicTabLoading = findViewById(R.id.pb_public_tab_loading);
         mNoSwitchViewPager = findViewById(R.id.vp_article_container);
         mPublicListFragAdapter = new PublicListFragAdapter(mMain.getChildFragmentManager());
         mNoSwitchViewPager.setAdapter(mPublicListFragAdapter);
-        mPublicListFragAdapter.setPublicTabList(mPublicTabVM.mPublicTabLD.getValue());
+        mPublicListFragAdapter.setPublicTabList(mPublicTabVM.getPublicTabLD().getValue());
 
         mRvTabContainer = findViewById(R.id.rv_tab_container);
         mRvTabContainer.setLayoutManager(new LinearLayoutManager(mComActivity));
         mTabListAdapter = new VHAdapter();
         mTabListAdapter.register(new PublicTabVHBridge(), PublicTab.class);
         mRvTabContainer.setAdapter(mTabListAdapter);
-        mTabListAdapter.getDataManager().setData(mPublicTabVM.mPublicTabLD.getValue());
+        mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabLD().getValue());
     }
 
     private void initData() {
         mPublicTabVM = new ViewModelProvider(mMain).get(PublicTabVM.class);
-        mPublicTabVM.mPublicTabLD.observe(mMain, new Observer<List<PublicTab>>() {
+        mPublicTabVM.getPublicTabLD().observe(mMain, new Observer<List<PublicTab>>() {
             @Override
             public void onChanged(List<PublicTab> publicTabList) {
                 mPublicListFragAdapter.setPublicTabList(publicTabList);
                 mTabListAdapter.getDataManager().setData(publicTabList);
-                mFirstLoad = true;
+            }
+        });
+        mPublicTabVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean show) {
+                if (show != null) {
+                    mPbPublicTabLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }
@@ -68,7 +77,7 @@ public class PublicCom extends FragComponent {
             protected void onEvent(Event event) {
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
+                        if (event.data instanceof Boolean && (Boolean) event.data && mPublicTabVM.isFirstLoad()) {
                             mPublicTabVM.fetchTab();
                         }
                         break;
@@ -88,7 +97,7 @@ public class PublicCom extends FragComponent {
     }
 
     public void switchTabArticle(int tabId) {
-        List<PublicTab> publicTabList = mPublicTabVM.mPublicTabLD.getValue();
+        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabLD().getValue();
         int index = 0;
         for (int i = 0; i < publicTabList.size(); i++) {
             if (publicTabList.get(i).id == tabId) {
@@ -101,7 +110,7 @@ public class PublicCom extends FragComponent {
 
 
     public void scrollToTop() {
-        List<PublicTab> publicTabList = mPublicTabVM.mPublicTabLD.getValue();
+        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabLD().getValue();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
         PublicListCom publicListCom = mMain.mComActivity.getComponent(PublicListCom.class, curPublicTab.id);

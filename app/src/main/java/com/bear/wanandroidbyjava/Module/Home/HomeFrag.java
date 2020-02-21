@@ -2,20 +2,18 @@ package com.bear.wanandroidbyjava.Module.Home;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bear.wanandroidbyjava.R;
 import com.example.libframework.CoreUI.ComponentFrag;
 
 public class HomeFrag extends ComponentFrag {
-    private int fragId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new HomeTopBarCom(), fragId);
-        regComponent(new HomeListCom(), fragId);
+        regComponent(new HomeTopBarCom());
+        regComponent(new HomeListCom());
     }
 
     @Override
@@ -23,16 +21,7 @@ public class HomeFrag extends ComponentFrag {
         return R.layout.frag_home;
     }
 
-    @Override
-    protected void handleArgument(@NonNull Bundle bundle) {
-        fragId = bundle.getInt("id");
-    }
-
-    public static HomeFrag newInstance(int id) {
-        HomeFrag homeFrag = new HomeFrag();
-        Bundle argument = new Bundle();
-        argument.putInt("id", id);
-        homeFrag.setArguments(argument);
-        return homeFrag;
+    public static HomeFrag newInstance() {
+        return new HomeFrag();
     }
 }

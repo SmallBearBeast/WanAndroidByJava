@@ -25,7 +25,7 @@ public class PublicListFrag extends ComponentFrag {
 
     @Override
     protected int layoutId() {
-        return R.layout.frag_tab_article;
+        return R.layout.frag_public_list;
     }
 
     public static PublicListFrag newInstance(int tabId) {

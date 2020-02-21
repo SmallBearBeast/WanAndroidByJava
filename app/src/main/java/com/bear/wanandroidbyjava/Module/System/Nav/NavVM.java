@@ -19,10 +19,13 @@ import java.util.List;
 
 public class NavVM extends ViewModel {
     private static final String TAG = "NavVM";
-
-    public MutableLiveData<List<Nav>> mNavLD = new MutableLiveData<>();
+    private boolean mIsFirstLoad = true;
+    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
+    private MutableLiveData<List<Nav>> mNavLD = new MutableLiveData<>();
 
     public void fetchNav() {
+        SLog.d(TAG, "fetchNav: start");
+        mShowProgressLD.postValue(true);
         OkHelper.getInstance().getMethod(NetUrl.NAV, new OkCallback<WanResponce<List<NavBean>>>(new TypeToken<WanResponce<List<NavBean>>>(){}) {
             @Override
             protected void onSuccess(WanResponce<List<NavBean>> data) {
@@ -37,16 +40,29 @@ public class NavVM extends ViewModel {
                             navList.add(navBean.toNav());
                         }
                         mNavLD.postValue(navList);
-                        SLog.d(TAG, "fetchNav: navBeanList.size = " + navBeanList.size());
-                        SLog.d(TAG, "fetchNav: navBeanList = " + navBeanList);
+                        SLog.d(TAG, "fetchNav: navBeanList.size = " + navBeanList.size() + ", navBeanList = " + navBeanList);
                     }
                 }
+                mShowProgressLD.postValue(false);
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchNav: onFail");
+                mShowProgressLD.postValue(false);
             }
         });
+    }
+
+    public boolean isFirstLoad() {
+        return mIsFirstLoad;
+    }
+
+    public MutableLiveData<Boolean> getShowProgressLD() {
+        return mShowProgressLD;
+    }
+
+    public MutableLiveData<List<Nav>> getNavLD() {
+        return mNavLD;
     }
 }

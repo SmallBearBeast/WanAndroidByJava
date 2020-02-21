@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_project_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
-        app:tabGravity="center"
-        app:tabIndicatorColor="@color/color_222222"
-        app:tabIndicatorFullWidth="false"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/color_222222"
-        app:tabTextColor="@color/color_5c5c5c" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_project_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_project_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/color_222222"
+            app:tabIndicatorFullWidth="false"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/color_222222"
+            app:tabTextColor="@color/color_5c5c5c" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_project_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_project_loading"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_60"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</FrameLayout>

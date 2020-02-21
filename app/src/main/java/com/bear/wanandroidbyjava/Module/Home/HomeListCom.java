@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -28,10 +29,10 @@ import java.util.Set;
 public class HomeListCom extends FragComponent {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
-    private static final int VHBRIDGE_LOAD_MORE = 1;
-    private static final int VHBRIDGE_NO_MORE_DATA = 2;
-    private boolean mFirstLoad;
+    private static final int BRIDGE_LOAD_MORE = 1;
+    private static final int BRIDGE_NO_MORE_DATA = 2;
     private RecyclerView mRecyclerView;
+    private ProgressBar mPbLoading;
     private VHAdapter mVHAdapter;
     private DataManager mDataManager;
     private HomeListVM mHomeListVM;
@@ -45,23 +46,30 @@ public class HomeListCom extends FragComponent {
 
     private void initData() {
         mHomeListVM = new ViewModelProvider(mMain).get(HomeListVM.class);
-        mHomeListVM.mTotalListLD.observe(mMain, new Observer<List>() {
+        mHomeListVM.getTotalListLD().observe(mMain, new Observer<List>() {
             @Override
             public void onChanged(List list) {
                 mDataManager.setData(list);
             }
         });
-        mHomeListVM.mArticleListLD.observe(mMain, new Observer<List<Article>>() {
+        mHomeListVM.getArticleListLD().observe(mMain, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
-                    mDataManager.remove(DataType.of(VHBRIDGE_LOAD_MORE));
-                    mDataManager.addLast(DataType.of(VHBRIDGE_NO_MORE_DATA));
+                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
+                    mDataManager.addLast(DataType.of(BRIDGE_NO_MORE_DATA));
                 } else {
-                    mDataManager.remove(DataType.of(VHBRIDGE_LOAD_MORE));
+                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
                     mDataManager.addLast(articles);
-                    mDataManager.addLast(DataType.of(VHBRIDGE_LOAD_MORE));
-                    mFirstLoad = true;
+                    mDataManager.addLast(DataType.of(BRIDGE_LOAD_MORE));
+                }
+            }
+        });
+        mHomeListVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean show) {
+                if (show != null) {
+                    mPbLoading.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             }
         });
@@ -73,8 +81,8 @@ public class HomeListCom extends FragComponent {
             protected void onEvent(Event event) {
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
-                            mHomeListVM.refresh();
+                        if (event.data instanceof Boolean && (Boolean) event.data && mHomeListVM.isFirstLoad()) {
+                            doNetWork();
                         }
                         break;
                 }
@@ -89,21 +97,22 @@ public class HomeListCom extends FragComponent {
 
     @Override
     protected void onCreateView(View contentView) {
+        mPbLoading = findViewById(R.id.pb_loading);
         mRecyclerView = findViewById(R.id.rv_home_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVHAdapter = new VHAdapter();
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new BannerVHBridge(), Banner.class);
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
-        mVHAdapter.register(new LoadMoreVHBridge(), VHBRIDGE_LOAD_MORE);
-        mVHAdapter.register(new NoMoreDataVHBridge(), VHBRIDGE_NO_MORE_DATA);
+        mVHAdapter.register(new LoadMoreVHBridge(), BRIDGE_LOAD_MORE);
+        mVHAdapter.register(new NoMoreDataVHBridge(), BRIDGE_NO_MORE_DATA);
         mVHAdapter.setOnGetDataType(new VHAdapter.OnGetDataType() {
             @Override
             public int getType(Object obj, int pos) {
-                if (obj.equals(VHBRIDGE_LOAD_MORE)) {
-                    return VHBRIDGE_LOAD_MORE;
-                } else if (obj.equals(VHBRIDGE_NO_MORE_DATA)) {
-                    return VHBRIDGE_NO_MORE_DATA;
+                if (obj.equals(BRIDGE_LOAD_MORE)) {
+                    return BRIDGE_LOAD_MORE;
+                } else if (obj.equals(BRIDGE_NO_MORE_DATA)) {
+                    return BRIDGE_NO_MORE_DATA;
                 }
                 return -1;
             }
@@ -121,7 +130,7 @@ public class HomeListCom extends FragComponent {
                 }
             }
         });
-        mDataManager.setData(mHomeListVM.mTotalList);
+        mDataManager.setData(mHomeListVM.getTotalList());
     }
 
     public void scrollToTop() {
