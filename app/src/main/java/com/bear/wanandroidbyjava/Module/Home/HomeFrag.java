@@ -24,16 +24,6 @@ public class HomeFrag extends ComponentFrag {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void handleArgument(@NonNull Bundle bundle) {
         fragId = bundle.getInt("id");
     }

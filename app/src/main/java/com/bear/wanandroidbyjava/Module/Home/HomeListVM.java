@@ -11,7 +11,9 @@ import com.bear.wanandroidbyjava.NetBean.BannerBean;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.example.libbase.Util.CollectionUtil;
+import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
+import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
@@ -19,18 +21,23 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class HomeListVM extends ViewModel {
     private static final String TAG = "HomeListVM";
-    private int mCurPageIndex = 0;
+    private int mNextPageIndex = 1;
     private boolean mIsNoLoadMore;
     private boolean mIsFetchingList;
-    public List mTotalList = new ArrayList();
+    private CountDownLatch mCountDownLatch;
+    public List mTotalList = new CopyOnWriteArrayList();
+    public List mTempList = new CopyOnWriteArrayList();
     public MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
-    public MutableLiveData<List<Article>> mTopArticleListLD = new MutableLiveData<>();
-    public MutableLiveData<Banner> mBannerListLD = new MutableLiveData<>();
+    public MutableLiveData<List> mTotalListLD = new MutableLiveData<>();
 
-    public void fetchBanner() {
+    private void fetchBanner() {
+        SLog.d(TAG, "fetchBanner: start");
         OkHelper.getInstance().getMethod(NetUrl.BANNER, new OkCallback<WanResponce<List<BannerBean>>>(new TypeToken<WanResponce<List<BannerBean>>>(){}) {
             @Override
             protected void onSuccess(WanResponce<List<BannerBean>> data) {
@@ -49,9 +56,9 @@ public class HomeListVM extends ViewModel {
                         Banner banner = new Banner();
                         banner.imageUrlList = imageUrlList;
                         banner.clickUrlList = clickUrlList;
-                        mBannerListLD.postValue(banner);
                         mTotalList.add(0, banner);
-                        SLog.d(TAG, "fetchList: banner = " + banner);
+                        SLog.d(TAG, "fetchBanner: banner = " + banner);
+                        mCountDownLatch.countDown();
                     }
                 }
             }
@@ -63,7 +70,8 @@ public class HomeListVM extends ViewModel {
         });
     }
 
-    public void fetchTopArticle() {
+    private void fetchTopArticle() {
+        SLog.d(TAG, "fetchTopArticle: start");
         OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new OkCallback<WanResponce<List<ArticleBean>>>(new TypeToken<WanResponce<List<ArticleBean>>>(){}) {
             @Override
             protected void onSuccess(WanResponce<List<ArticleBean>> data) {
@@ -72,7 +80,6 @@ public class HomeListVM extends ViewModel {
                     if (data.data != null) {
                         if (CollectionUtil.isEmpty(data.data)) {
                             SLog.d(TAG, "fetchTopArticle: articleBeanList is empty");
-                            mTopArticleListLD.postValue(null);
                         } else {
                             List<ArticleBean> articleBeanList = data.data;
                             List<Article> articleList = new ArrayList<>();
@@ -81,7 +88,6 @@ public class HomeListVM extends ViewModel {
                                 articleList.add(article);
                                 article.top = true;
                             }
-                            mTopArticleListLD.postValue(articleList);
                             if (!mTotalList.isEmpty()) {
                                 if (mTotalList.get(0) instanceof Banner) {
                                     mTotalList.addAll(1, articleList);
@@ -89,9 +95,8 @@ public class HomeListVM extends ViewModel {
                                     mTotalList.addAll(0, articleList);
                                 }
                             }
-
-                            SLog.d(TAG, "fetchTopArticle: articleList.size = " + articleList.size());
-                            SLog.d(TAG, "fetchTopArticle: articleList = " + articleList);
+                            SLog.d(TAG, "fetchTopArticle: articleList.size = " + articleList.size() + ", articleList = " + articleList);
+                            mCountDownLatch.countDown();
                         }
                     }
                 }
@@ -105,14 +110,17 @@ public class HomeListVM extends ViewModel {
     }
 
     public void loadMore() {
-        SLog.d(TAG, "loadMore: mIsNoLoadMore = " + mIsNoLoadMore + ", mIsFetchingList = " + mIsFetchingList);
-        if (mIsFetchingList) {
+        if (!NetWorkUtil.isConnected()) {
+            SLog.d(TAG, "loadMore: net is unConnected");
             return;
         }
-        if (!mIsNoLoadMore) {
-            mCurPageIndex = mCurPageIndex + 1;
-            fetchList(mCurPageIndex);
+        SLog.d(TAG, "loadMore: mIsNoLoadMore = " + mIsNoLoadMore + ", mIsFetchingList = "
+                + mIsFetchingList + ", mNextPageIndex = " + mNextPageIndex);
+        if (!canLoadMore()) {
+            return;
         }
+        mIsFetchingList = true;
+        fetchList(mNextPageIndex);
     }
 
     public boolean canLoadMore() {
@@ -120,18 +128,45 @@ public class HomeListVM extends ViewModel {
     }
 
     public void refresh() {
+        if (!NetWorkUtil.isConnected()) {
+            SLog.d(TAG, "refresh: net is unConnected");
+            return;
+        }
         SLog.d(TAG, "refresh: mIsFetchingList = " + mIsFetchingList);
         if (mIsFetchingList) {
             return;
         }
-        mCurPageIndex = 0;
-        mIsNoLoadMore = false;
-        fetchList(mCurPageIndex);
+        mIsFetchingList = true;
+        mTempList = mTotalList;
+        mTotalList.clear();
+        mCountDownLatch = new CountDownLatch(3);
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                fetchBanner();
+                fetchTopArticle();
+                fetchList(1);
+                checkRefreshFinish();
+            }
+        });
     }
 
-    private void fetchList(int pageIndex) {
+    private void checkRefreshFinish() {
+        try {
+            mCountDownLatch.await(3, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            SLog.d(TAG, "checkRefreshFinish: mTotalList.size = " + mTotalList.size());
+            if (CollectionUtil.isEmpty(mTotalList)) {
+                mTotalList = mTempList;
+            }
+            mTotalListLD.postValue(mTotalList);
+        }
+    }
+
+    private void fetchList(final int pageIndex) {
         SLog.d(TAG, "fetchList: pageIndex = " + pageIndex + ", mIsFetchingList = " + mIsFetchingList);
-        mIsFetchingList = true;
         OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(pageIndex), new OkCallback<WanResponce<ArticleListBean>>(new TypeToken<WanResponce<ArticleListBean>>(){}) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
@@ -148,11 +183,17 @@ public class HomeListVM extends ViewModel {
                             for (ArticleBean articleBean : articleBeanList) {
                                 articleList.add(articleBean.toArticle());
                             }
-                            mArticleListLD.postValue(articleList);
                             mTotalList.addAll(articleList);
-                            SLog.d(TAG, "fetchList: articleList.size = " + articleList.size());
-                            SLog.d(TAG, "fetchList: articleList = " + articleList);
+                            SLog.d(TAG, "fetchList: articleList.size = " + articleList.size() + ", mTotalList.size = " + mTotalList.size() + ", articleList = " + articleList);
+                            if (pageIndex == 1) {
+                                SLog.d(TAG, "fetchList: pageIndex is 1, mIsNoLoadMore is false");
+                                mIsNoLoadMore = false;
+                                mCountDownLatch.countDown();
+                            } else {
+                                mArticleListLD.postValue(articleList);
+                            }
                         }
+                        mNextPageIndex = pageIndex + 1;
                     }
                 }
                 mIsFetchingList = false;

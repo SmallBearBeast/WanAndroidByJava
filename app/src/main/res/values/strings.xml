@@ -11,4 +11,11 @@
     <string name="str_mark_top">置顶</string>
     <string name="str_navigation">导航</string>
     <string name="str_no_more_data">没有更多数据了</string>
+
+    <string name="str_my_integral">我的积分</string>
+    <string name="str_my_share">我的分享</string>
+    <string name="str_my_collect">我的收藏</string>
+    <string name="str_my_todo">我的TODO</string>
+    <string name="str_about_developer">关于作者</string>
+    <string name="str_my_setting">系统设置</string>
 </resources>

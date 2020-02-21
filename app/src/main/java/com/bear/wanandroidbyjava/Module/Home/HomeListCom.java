@@ -45,6 +45,12 @@ public class HomeListCom extends FragComponent {
 
     private void initData() {
         mHomeListVM = new ViewModelProvider(mMain).get(HomeListVM.class);
+        mHomeListVM.mTotalListLD.observe(mMain, new Observer<List>() {
+            @Override
+            public void onChanged(List list) {
+                mDataManager.setData(list);
+            }
+        });
         mHomeListVM.mArticleListLD.observe(mMain, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
@@ -56,28 +62,6 @@ public class HomeListCom extends FragComponent {
                     mDataManager.addLast(articles);
                     mDataManager.addLast(DataType.of(VHBRIDGE_LOAD_MORE));
                     mFirstLoad = true;
-                }
-            }
-        });
-        mHomeListVM.mBannerListLD.observe(mMain, new Observer<Banner>() {
-            @Override
-            public void onChanged(Banner banner) {
-                if (mDataManager.get(0) instanceof Banner) {
-                    mDataManager.update(0, banner);
-                } else {
-                    mDataManager.addFirst(banner);
-                }
-            }
-        });
-        mHomeListVM.mTopArticleListLD.observe(mMain, new Observer<List<Article>>() {
-            @Override
-            public void onChanged(List<Article> articles) {
-                if (!CollectionUtil.isEmpty(articles)) {
-                    if (mDataManager.get(0) instanceof Banner) {
-                        mDataManager.add(1, articles);
-                    } else {
-                        mDataManager.addFirst(articles);
-                    }
                 }
             }
         });
@@ -128,7 +112,7 @@ public class HomeListCom extends FragComponent {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (mHomeListVM.canLoadMore()) {
+                if (!mHomeListVM.canLoadMore()) {
                     return;
                 }
                 int lastVisibleItemPos = RvUtil.findLastVisibleItemPosition(recyclerView);
@@ -151,7 +135,5 @@ public class HomeListCom extends FragComponent {
 
     private void doNetWork() {
         mHomeListVM.refresh();
-        mHomeListVM.fetchBanner();
-        mHomeListVM.fetchTopArticle();
     }
 }

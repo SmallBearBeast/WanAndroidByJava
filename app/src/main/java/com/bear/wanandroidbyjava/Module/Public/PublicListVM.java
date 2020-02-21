@@ -32,9 +32,11 @@ public class PublicListVM extends ViewModel {
             SLog.d(TAG, "refresh: net is unConnected");
             return;
         }
+        SLog.d(TAG, "refresh: id = " + id + ", mIsFetchingList = " + mIsFetchingList + ", mNextPageIndex = " + mNextPageIndex);
         if (mIsFetchingList) {
             return;
         }
+        mIsFetchingList = true;
         fetchTabArticle(id, 1);
     }
 
@@ -43,15 +45,17 @@ public class PublicListVM extends ViewModel {
             SLog.d(TAG, "loadMore: net is unConnected");
             return;
         }
+        SLog.d(TAG, "refresh: id = " + id + ", mIsFetchingList = " + mIsFetchingList
+                + ", mIsNoLoadMore = " + mIsNoLoadMore + ", mNextPageIndex = " + mNextPageIndex);
         if (!canLoadMore()) {
             return;
         }
+        mIsFetchingList = true;
         fetchTabArticle(id, mNextPageIndex);
     }
 
     private void fetchTabArticle(int id, final int pageIndex) {
         SLog.d(TAG, "fetchTabArticle: id = " + id + ", pageIndex = " + pageIndex);
-        mIsFetchingList = true;
         OkHelper.getInstance().getMethod(NetUrl.getPublicArticleList(id, pageIndex), new OkCallback<WanResponce<ArticleListBean>>(new TypeToken<WanResponce<ArticleListBean>>(){}) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
@@ -70,25 +74,22 @@ public class PublicListVM extends ViewModel {
                             }
                             mArticleListLD.postValue(articleList);
                             mTotalList.addAll(articleList);
-                            SLog.d(TAG, "fetchTabArticle: articleList.size = " + articleList.size());
-                            SLog.d(TAG, "fetchTabArticle: articleList = " + articleList);
+                            SLog.d(TAG, "fetchTabArticle: articleList.size = " + articleList.size() + ", mTotalList.size = " + mTotalList.size() + ", articleList = " + articleList);
+                            if (pageIndex == 1) {
+                                SLog.d(TAG, "fetchTabArticle: pageIndex is 1, mIsNoLoadMore is false");
+                                mIsNoLoadMore = false;
+                            }
                         }
                         mNextPageIndex = pageIndex + 1;
                     }
                 }
                 mIsFetchingList = false;
-                if (pageIndex == 0) {
-                    mIsNoLoadMore = false;
-                }
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "fetchTabArticle: onFail");
                 mIsFetchingList = false;
-                if (pageIndex == 0) {
-                    mIsNoLoadMore = false;
-                }
             }
         });
     }

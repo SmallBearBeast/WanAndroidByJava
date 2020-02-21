@@ -23,7 +23,7 @@ public class MainAdapter extends FragmentPagerAdapter {
         fragmentList.add(SystemFrag.newInstance());
         fragmentList.add(PublicFrag.newInstance());
         fragmentList.add(ProjectFrag.newInstance());
-        fragmentList.add(HomeFrag.newInstance(5));
+        fragmentList.add(PersonalFrag.newInstance());
     }
 
     @NonNull
