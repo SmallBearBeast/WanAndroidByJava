@@ -20,7 +20,7 @@ public class ProjectListFragAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return ProjectListFrag.newInstance(mProjectTabList.get(position).id);
+        return ProjectListFrag.newInstance(mProjectTabList.get(position).projectTabId);
     }
 
     @Override

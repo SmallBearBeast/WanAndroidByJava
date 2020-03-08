@@ -19,6 +19,6 @@ public class MainContentCom extends ActComponent {
     }
 
     public void switchTab(int tabIndex) {
-        mViewPager.setCurrentItem(tabIndex);
+        mViewPager.setCurrentItem(tabIndex, false);
     }
 }

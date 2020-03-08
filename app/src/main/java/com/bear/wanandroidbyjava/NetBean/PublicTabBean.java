@@ -14,8 +14,9 @@ public class PublicTabBean {
 
     public PublicTab toPublicTab() {
         PublicTab publicTab = new PublicTab();
-        publicTab.id = id;
+        publicTab.publicTabId = id;
         publicTab.name = name;
+        publicTab.order = order;
         return publicTab;
     }
 }

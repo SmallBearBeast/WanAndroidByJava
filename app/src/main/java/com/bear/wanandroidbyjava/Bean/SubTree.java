@@ -8,7 +8,7 @@ public class SubTree {
     public String toString() {
         return "SubTree{" +
                 "name='" + name + '\'' +
-                ", id=" + id +
+                ", articleId=" + id +
                 '}';
     }
 }

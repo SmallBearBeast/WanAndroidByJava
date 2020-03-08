@@ -14,7 +14,7 @@ public class WanApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        OkHelper.init(this);
+        OkHelper.init(this, null);
         AppInitUtil.init(this);
         NetReceiver.init(this, new NetReceiver.NetChangeListener() {
             @Override
@@ -23,5 +23,6 @@ public class WanApp extends Application {
                 Bus.get().post(new Event(EventKey.KEY_NET_CHANGE, connect));
             }
         });
+        WanRoomDataBase.init(this);
     }
 }

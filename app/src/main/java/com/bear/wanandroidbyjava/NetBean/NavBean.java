@@ -12,6 +12,7 @@ public class NavBean {
 
     public Nav toNav() {
         Nav nav = new Nav();
+        nav.cid = cid;
         nav.name = name;
         nav.articleList = new ArrayList<>();
         for (ArticleBean article : articles) {

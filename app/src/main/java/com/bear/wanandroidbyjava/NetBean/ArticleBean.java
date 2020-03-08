@@ -41,6 +41,7 @@ public class ArticleBean {
 
     public Article toArticle() {
         Article article = new Article();
+        article.articleId = id;
         article.author = StringUtil.isEmpty(author) ? shareUser : author;
         article.chapterName = chapterName;
         article.superChapterName = superChapterName;

@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Public;
 
+import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -89,7 +90,18 @@ public class PublicListCom extends FragComponent {
 
     private void initData() {
         mPublicListVM = new ViewModelProvider(mMain).get(PublicListVM.class);
-        mPublicListVM.getArticleListLD().observe(mMain, new Observer<List<Article>>() {
+        mPublicListVM.getRefreshArticlePairLD().observe(mMain, new Observer<Pair<Boolean, List<Article>>>() {
+            @Override
+            public void onChanged(Pair<Boolean, List<Article>> pair) {
+                if (!CollectionUtil.isEmpty(pair.second)) {
+                    mDataManager.setData(pair.second);
+                    if (pair.first) {
+                        mPublicListVM.saveTabArticleList(mTabId, pair.second);
+                    }
+                }
+            }
+        });
+        mPublicListVM.getLoadMoreArticleLD().observe(mMain, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {

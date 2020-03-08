@@ -1,20 +1,20 @@
-package com.bear.wanandroidbyjava.NetBean;
+package com.bear.wanandroidbyjava.Entity;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.bear.wanandroidbyjava.Bean.ProjectTab;
 
-public class ProjectTabBean {
-    //            public List children;
-    public int courseId;
-    public int id;
+@Entity
+public class ProjectTabE {
+    @PrimaryKey
+    public int projectTabId;
     public String name;
     public int order;
-    public int parentChapterId;
-    public boolean userControlSetTop;
-    public int visible;
 
     public ProjectTab toProjectTab() {
         ProjectTab projectTab = new ProjectTab();
-        projectTab.projectTabId = id;
+        projectTab.projectTabId = projectTabId;
         projectTab.name = name;
         projectTab.order = order;
         return projectTab;

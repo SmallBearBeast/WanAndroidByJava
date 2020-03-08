@@ -20,7 +20,7 @@ public class PublicListFragAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return PublicListFrag.newInstance(mPublicTabList.get(position).id);
+        return PublicListFrag.newInstance(mPublicTabList.get(position).publicTabId);
     }
 
     @Override

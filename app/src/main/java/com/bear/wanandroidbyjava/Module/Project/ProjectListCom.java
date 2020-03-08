@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Project;
 
+import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -32,7 +33,6 @@ public class ProjectListCom extends FragComponent {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
-    private boolean mFirstLoad;
     private int mTabId;
     private RecyclerView mRecyclerView;
     private ProgressBar mPbProjectListLoading;
@@ -90,7 +90,7 @@ public class ProjectListCom extends FragComponent {
 
     private void initData() {
         mProjectListVM = new ViewModelProvider(mMain).get(ProjectListVM.class);
-        mProjectListVM.getProjectArticleListLD().observe(mMain, new Observer<List<Article>>() {
+        mProjectListVM.getLoadMoreArticleLD().observe(mMain, new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
@@ -100,7 +100,17 @@ public class ProjectListCom extends FragComponent {
                     mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
                     mDataManager.addLast(articles);
                     mDataManager.addLast(DataType.of(BRIDGE_LOAD_MORE));
-                    mFirstLoad = true;
+                }
+            }
+        });
+        mProjectListVM.getRefreshArticlePairLD().observe(mMain, new Observer<Pair<Boolean, List<Article>>>() {
+            @Override
+            public void onChanged(Pair<Boolean, List<Article>> pair) {
+                if (!CollectionUtil.isEmpty(pair.second)) {
+                    mDataManager.setData(pair.second);
+                    if (pair.first) {
+                        mProjectListVM.saveTabArticleList(mTabId, pair.second);
+                    }
                 }
             }
         });
@@ -120,7 +130,7 @@ public class ProjectListCom extends FragComponent {
             protected void onEvent(Event event) {
                 switch (event.eventKey) {
                     case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mFirstLoad) {
+                        if (event.data instanceof Boolean && (Boolean) event.data && !mProjectListVM.isFirstLoad()) {
                             doNetWork();
                         }
                         break;

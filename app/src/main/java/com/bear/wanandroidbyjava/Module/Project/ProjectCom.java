@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Project;
 
+import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -41,13 +42,13 @@ public class ProjectCom extends FragComponent {
         mTabLayout.setupWithViewPager(mViewPager);
         mProjectListFragAdapter = new ProjectListFragAdapter(mMain.getChildFragmentManager());
         mViewPager.setAdapter(mProjectListFragAdapter);
-        mProjectListFragAdapter.setProjectTabList(mProjectVM.getProjectTabLD().getValue());
+        mProjectListFragAdapter.setProjectTabList(mProjectVM.getProjectTabList());
     }
 
     public void scrollToTop() {
         int curIndex = mViewPager.getCurrentItem();
-        List<ProjectTab> projectTabList = mProjectVM.getProjectTabLD().getValue();
-        int cid = projectTabList.get(curIndex).id;
+        List<ProjectTab> projectTabList = mProjectVM.getProjectTabList();
+        int cid = projectTabList.get(curIndex).projectTabId;
         ProjectListCom projectListCom = mComActivity.getComponent(ProjectListCom.class, cid);
         if (projectListCom != null) {
             projectListCom.scrollToTop();
@@ -56,10 +57,15 @@ public class ProjectCom extends FragComponent {
 
     private void initData() {
         mProjectVM = new ViewModelProvider(mMain).get(ProjectVM.class);
-        mProjectVM.getProjectTabLD().observe(mMain, new Observer<List<ProjectTab>>() {
+        mProjectVM.getProjectTabPairLD().observe(mMain, new Observer<Pair<Boolean, List<ProjectTab>>>() {
             @Override
-            public void onChanged(List<ProjectTab> publicTabList) {
-                mProjectListFragAdapter.setProjectTabList(publicTabList);
+            public void onChanged(Pair<Boolean, List<ProjectTab>> pair) {
+                if (!CollectionUtil.isEmpty(pair.second)) {
+                    mProjectListFragAdapter.setProjectTabList(pair.second);
+                    if (pair.first) {
+                        mProjectVM.saveProjectTabList(pair.second);
+                    }
+                }
             }
         });
         mProjectVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {

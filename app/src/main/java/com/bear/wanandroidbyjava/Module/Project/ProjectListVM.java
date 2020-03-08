@@ -1,5 +1,7 @@
 package com.bear.wanandroidbyjava.Module.Project;
 
+import android.util.Pair;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,9 +10,11 @@ import com.bear.wanandroidbyjava.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
+import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
+import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
@@ -27,9 +31,30 @@ public class ProjectListVM extends ViewModel {
     private boolean mIsFirstLoad = true;
     private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
     private List mTotalList = new ArrayList();
-    private MutableLiveData<List<Article>> mProjectArticleListLD = new MutableLiveData<>();
+    private MutableLiveData<Pair<Boolean, List<Article>>> mRefreshArticlePairLD = new MutableLiveData<>();
+    private MutableLiveData<List<Article>> mLoadMoreArticleLD = new MutableLiveData<>();
+
+    private void refreshFromDb(final int cid) {
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SLog.d(TAG, "refreshFromDb start");
+                    List<Article> articleList = WanRoomDataBase.get().projectDao().queryProjectArticle(cid);
+                    if (!CollectionUtil.isEmpty(articleList)) {
+                        mTotalList.addAll(articleList);
+                        mRefreshArticlePairLD.postValue(new Pair<>(false, articleList));
+                        mIsFirstLoad = false;
+                    }
+                } catch (Exception e) {
+                    SLog.d(TAG, "refreshFromDb fail");
+                }
+            }
+        });
+    }
 
     public void refresh(int cid) {
+        refreshFromDb(cid);
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is unConnected");
             return;
@@ -70,19 +95,22 @@ public class ProjectListVM extends ViewModel {
                         if (CollectionUtil.isEmpty(data.data.datas)) {
                             SLog.d(TAG, "fetchProject: articleBeanList is empty, mIsNoLoadMore is true");
                             mIsNoLoadMore = true;
-                            mProjectArticleListLD.postValue(null);
+                            mLoadMoreArticleLD.postValue(null);
                         } else {
                             List<ArticleBean> articleBeanList = data.data.datas;
                             List<Article> articleList = new ArrayList<>();
                             for (ArticleBean articleBean : articleBeanList) {
                                 articleList.add(articleBean.toArticle());
                             }
-                            mProjectArticleListLD.postValue(articleList);
-                            mTotalList.addAll(articleList);
                             if (pageIndex == 1) {
                                 SLog.d(TAG, "fetchProject: pageIndex is 1, mIsNoLoadMore is false");
                                 mIsNoLoadMore = false;
+                                mRefreshArticlePairLD.postValue(new Pair<>(true, articleList));
+                                mTotalList.clear();
+                            } else {
+                                mLoadMoreArticleLD.postValue(articleList);
                             }
+                            mTotalList.addAll(articleList);
                             mIsFirstLoad = false;
                             SLog.d(TAG, "fetchProject: articleList.size = " + articleList.size() + ", mTotalList.size = " + mTotalList.size() + ", articleList = " + articleList);
                         }
@@ -98,6 +126,21 @@ public class ProjectListVM extends ViewModel {
                 SLog.d(TAG, "fetchProject: onFail");
                 mIsFetchingList = false;
                 mShowProgressLD.postValue(false);
+            }
+        });
+    }
+
+    public void saveTabArticleList(final int publicTabId, final List<Article> publicArticleList) {
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SLog.d(TAG, "saveTabArticleList start");
+                    WanRoomDataBase.get().projectDao().deleteProjectArticle(publicTabId);
+                    WanRoomDataBase.get().projectDao().insertProjectArticle(publicTabId, publicArticleList);
+                } catch (Exception e) {
+                    SLog.d(TAG, "saveTabArticleList fail");
+                }
             }
         });
     }
@@ -118,7 +161,11 @@ public class ProjectListVM extends ViewModel {
         return mTotalList;
     }
 
-    public MutableLiveData<List<Article>> getProjectArticleListLD() {
-        return mProjectArticleListLD;
+    public MutableLiveData<Pair<Boolean, List<Article>>> getRefreshArticlePairLD() {
+        return mRefreshArticlePairLD;
+    }
+
+    public MutableLiveData<List<Article>> getLoadMoreArticleLD() {
+        return mLoadMoreArticleLD;
     }
 }

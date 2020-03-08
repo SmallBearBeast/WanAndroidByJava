@@ -46,7 +46,7 @@ public class PublicTabVHBridge extends VHBridge<PublicTabVHBridge.TabVHolder> {
         @Override
         public void onClick(View v) {
             if (mContext instanceof ComponentAct && mSelectTabPos != mPos) {
-                ((ComponentAct)mContext).getComponent(PublicCom.class).switchTabArticle(mData.id);
+                ((ComponentAct)mContext).getComponent(PublicCom.class).switchTabArticle(mData.publicTabId);
                 mDataManager.update(mSelectTabPos);
                 mDataManager.update(mPos);
                 mSelectTabPos = mPos;

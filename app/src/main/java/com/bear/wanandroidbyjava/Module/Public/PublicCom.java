@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Public;
 
+import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -42,23 +43,28 @@ public class PublicCom extends FragComponent {
         mNoSwitchViewPager = findViewById(R.id.vp_article_container);
         mPublicListFragAdapter = new PublicListFragAdapter(mMain.getChildFragmentManager());
         mNoSwitchViewPager.setAdapter(mPublicListFragAdapter);
-        mPublicListFragAdapter.setPublicTabList(mPublicTabVM.getPublicTabLD().getValue());
+        mPublicListFragAdapter.setPublicTabList(mPublicTabVM.getPublicTabList());
 
         mRvTabContainer = findViewById(R.id.rv_tab_container);
         mRvTabContainer.setLayoutManager(new LinearLayoutManager(mComActivity));
         mTabListAdapter = new VHAdapter();
         mTabListAdapter.register(new PublicTabVHBridge(), PublicTab.class);
         mRvTabContainer.setAdapter(mTabListAdapter);
-        mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabLD().getValue());
+        mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabList());
     }
 
     private void initData() {
         mPublicTabVM = new ViewModelProvider(mMain).get(PublicTabVM.class);
-        mPublicTabVM.getPublicTabLD().observe(mMain, new Observer<List<PublicTab>>() {
+        mPublicTabVM.getPublicTabLD().observe(mMain, new Observer<Pair<Boolean, List<PublicTab>>>() {
             @Override
-            public void onChanged(List<PublicTab> publicTabList) {
-                mPublicListFragAdapter.setPublicTabList(publicTabList);
-                mTabListAdapter.getDataManager().setData(publicTabList);
+            public void onChanged(Pair<Boolean, List<PublicTab>> pair) {
+                if (!CollectionUtil.isEmpty(pair.second)) {
+                    mPublicListFragAdapter.setPublicTabList(pair.second);
+                    mTabListAdapter.getDataManager().setData(pair.second);
+                    if (pair.first) {
+                        mPublicTabVM.savePublicTabList(pair.second);
+                    }
+                }
             }
         });
         mPublicTabVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
@@ -97,10 +103,10 @@ public class PublicCom extends FragComponent {
     }
 
     public void switchTabArticle(int tabId) {
-        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabLD().getValue();
+        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int index = 0;
         for (int i = 0; i < publicTabList.size(); i++) {
-            if (publicTabList.get(i).id == tabId) {
+            if (publicTabList.get(i).publicTabId == tabId) {
                 index = i;
                 break;
             }
@@ -110,10 +116,10 @@ public class PublicCom extends FragComponent {
 
 
     public void scrollToTop() {
-        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabLD().getValue();
+        List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
-        PublicListCom publicListCom = mMain.mComActivity.getComponent(PublicListCom.class, curPublicTab.id);
+        PublicListCom publicListCom = mMain.mComActivity.getComponent(PublicListCom.class, curPublicTab.publicTabId);
         if (publicListCom != null) {
             publicListCom.scrollToTop();
         }

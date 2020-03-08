@@ -1,5 +1,7 @@
 package com.bear.wanandroidbyjava.Module.Public;
 
+import android.util.Pair;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -7,25 +9,48 @@ import com.bear.wanandroidbyjava.Bean.PublicTab;
 import com.bear.wanandroidbyjava.NetBean.PublicTabBean;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
+import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
+import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
+import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PublicTabVM extends ViewModel {
     private static final String TAG = "PublicTabVM";
     private boolean mIsFirstLoad = true;
     private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
-    private MutableLiveData<List<PublicTab>> mPublicTabLD = new MutableLiveData<>();
+    private MutableLiveData<Pair<Boolean, List<PublicTab>>> mPublicTabPairLD = new MutableLiveData<>();
+    private Comparator<PublicTab> mPublicTabComparator = new Comparator<PublicTab>() {
+        @Override
+        public int compare(PublicTab publicTab_1, PublicTab publicTab_2) {
+            if (publicTab_1.order < publicTab_2.order) {
+                return -1;
+            } else if (publicTab_1.order > publicTab_2.order){
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    };
 
     public void fetchTab() {
         SLog.d(TAG, "fetchTab: start");
         mShowProgressLD.postValue(true);
+        fetchTabFromDb();
+        if (!NetWorkUtil.isConnected()) {
+            SLog.d(TAG, "fetchTab: net is unConnected");
+            mShowProgressLD.postValue(false);
+            return;
+        }
         OkHelper.getInstance().getMethod(NetUrl.PUBLIC_TAB, new OkCallback<WanResponce<List<PublicTabBean>>>(new TypeToken<WanResponce<List<PublicTabBean>>>(){}) {
             @Override
             protected void onSuccess(WanResponce<List<PublicTabBean>> data) {
@@ -39,7 +64,8 @@ public class PublicTabVM extends ViewModel {
                         for (PublicTabBean publicTabBean : publicTabBeanList) {
                             publicTabList.add(publicTabBean.toPublicTab());
                         }
-                        mPublicTabLD.postValue(publicTabList);
+                        Collections.sort(publicTabList, mPublicTabComparator);
+                        mPublicTabPairLD.postValue(new Pair<>(true, publicTabList));
                         mIsFirstLoad = false;
                     }
                 }
@@ -54,6 +80,40 @@ public class PublicTabVM extends ViewModel {
         });
     }
 
+    public void savePublicTabList(final List<PublicTab> publicTabList) {
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SLog.d(TAG, "savePublicTabList: start");
+                    WanRoomDataBase.get().publicDao().deletePublicTab();
+                    WanRoomDataBase.get().publicDao().insertPublicTab(publicTabList);
+                } catch (Exception e) {
+                    SLog.d(TAG, "savePublicTabList fail");
+                }
+            }
+        });
+    }
+
+    private void fetchTabFromDb() {
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SLog.d(TAG, "fetchTabFromDb: start");
+                    List<PublicTab> publicTabList = WanRoomDataBase.get().publicDao().queryPublicTab();
+                    if (!CollectionUtil.isEmpty(publicTabList)) {
+                        Collections.sort(publicTabList, mPublicTabComparator);
+                        mPublicTabPairLD.postValue(new Pair<>(false, publicTabList));
+                        mIsFirstLoad = false;
+                    }
+                } catch (Exception e) {
+                    SLog.d(TAG, "fetchTabFromDb: fail");
+                }
+            }
+        });
+    }
+
     public boolean isFirstLoad() {
         return mIsFirstLoad;
     }
@@ -62,7 +122,12 @@ public class PublicTabVM extends ViewModel {
         return mShowProgressLD;
     }
 
-    public MutableLiveData<List<PublicTab>> getPublicTabLD() {
-        return mPublicTabLD;
+    public MutableLiveData<Pair<Boolean, List<PublicTab>>> getPublicTabLD() {
+        return mPublicTabPairLD;
+    }
+
+    public List<PublicTab> getPublicTabList() {
+        Pair<Boolean, List<PublicTab>> pair = mPublicTabPairLD.getValue();
+        return pair != null ? pair.second : new ArrayList<PublicTab>();
     }
 }
