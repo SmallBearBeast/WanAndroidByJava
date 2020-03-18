@@ -15,6 +15,7 @@ import com.example.libframework.Rv.VHBridge;
 import com.example.libframework.Rv.VHolder;
 
 public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
+
     @NonNull
     @Override
     protected BannerVHolder onCreateViewHolder(@NonNull View view) {
@@ -26,12 +27,27 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         return R.layout.item_banner;
     }
 
+    @Override
+    protected boolean isSupportLifecycle() {
+        return true;
+    }
+
     class BannerVHolder extends VHolder<Banner>{
         private LoopViewPager mLvpBanner;
 
         public BannerVHolder(View itemView) {
             super(itemView);
             mLvpBanner = findViewById(R.id.lvp_banner);
+        }
+
+        @Override
+        protected void onStart() {
+            mLvpBanner.startLoop();
+        }
+
+        @Override
+        protected void onStop() {
+            mLvpBanner.stopLoop();
         }
 
         @Override

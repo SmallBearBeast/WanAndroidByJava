@@ -1,7 +1,5 @@
 package com.bear.wanandroidbyjava.Module.System;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +12,7 @@ import com.bear.wanandroidbyjava.Module.System.Nav.NavFrag;
 import com.bear.wanandroidbyjava.Module.System.Tree.TreeCom;
 import com.bear.wanandroidbyjava.Module.System.Tree.TreeFrag;
 import com.bear.wanandroidbyjava.R;
+
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libframework.CoreUI.FragComponent;
 import com.google.android.material.tabs.TabLayout;
@@ -23,7 +22,7 @@ public class SystemCom extends FragComponent {
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mTabLayout = findViewById(R.id.tl_title_layout);
         mViewPager = findViewById(R.id.vp_sys_container);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -39,10 +38,16 @@ public class SystemCom extends FragComponent {
         }
     }
 
+    @Override
+    protected void onDestroyView() {
+        mTabLayout = null;
+        mViewPager = null;
+    }
+
     private static class SystemFragAdapter extends FragmentPagerAdapter {
 
         private SystemFragAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @NonNull
@@ -62,6 +67,4 @@ public class SystemCom extends FragComponent {
             return position == 0 ? ResourceUtil.getString(R.string.str_system) : ResourceUtil.getString(R.string.str_navigation);
         }
     }
-
-
 }

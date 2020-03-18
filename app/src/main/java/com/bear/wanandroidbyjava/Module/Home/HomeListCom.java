@@ -14,6 +14,7 @@ import com.bear.wanandroidbyjava.Bean.Banner;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -96,11 +97,11 @@ public class HomeListCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mPbLoading = findViewById(R.id.pb_loading);
         mRecyclerView = findViewById(R.id.rv_home_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mVHAdapter = new VHAdapter();
+        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new BannerVHBridge(), Banner.class);
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
@@ -144,5 +145,13 @@ public class HomeListCom extends FragComponent {
 
     private void doNetWork() {
         mHomeListVM.refresh();
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mRecyclerView = null;
+        mPbLoading = null;
+        mVHAdapter = null;
+        mDataManager = null;
     }
 }

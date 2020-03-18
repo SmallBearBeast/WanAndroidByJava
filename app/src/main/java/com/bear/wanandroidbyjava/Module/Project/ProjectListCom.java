@@ -17,6 +17,7 @@ import com.bear.wanandroidbyjava.Module.Home.LoadMoreVHBridge;
 import com.bear.wanandroidbyjava.Module.Home.NoMoreDataVHBridge;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -51,11 +52,11 @@ public class ProjectListCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mPbProjectListLoading = findViewById(R.id.pb_project_list_loading);
         mRecyclerView = findViewById(R.id.rv_project_list_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mVHAdapter = new VHAdapter();
+        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
         mVHAdapter.register(new LoadMoreVHBridge(), BRIDGE_LOAD_MORE);
@@ -155,5 +156,13 @@ public class ProjectListCom extends FragComponent {
 
     public void scrollToTop() {
         RvUtil.scrollToTop(mRecyclerView, 3, 0);
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mRecyclerView = null;
+        mPbProjectListLoading = null;
+        mVHAdapter = null;
+        mDataManager = null;
     }
 }

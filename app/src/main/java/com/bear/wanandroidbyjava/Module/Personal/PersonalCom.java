@@ -5,9 +5,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bear.wanandroidbyjava.R;
+
 import com.example.libframework.CoreUI.FragComponent;
 
-public class PersonalCom extends FragComponent implements View.OnClickListener{
+public class PersonalCom extends FragComponent implements View.OnClickListener {
     private ImageView mIvUserBackground;
     private ImageView mIvUserIcon;
     private TextView mTvUserName;
@@ -16,7 +17,7 @@ public class PersonalCom extends FragComponent implements View.OnClickListener{
     private TextView mTvUserGrade;
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mIvUserBackground = findViewById(R.id.iv_user_background);
         mIvUserIcon = findViewById(R.id.iv_user_icon);
         mTvUserName = findViewById(R.id.tv_user_name);
@@ -48,5 +49,15 @@ public class PersonalCom extends FragComponent implements View.OnClickListener{
             case R.id.ll_my_setting:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mIvUserBackground = null;
+        mIvUserIcon = null;
+        mTvUserName = null;
+        mTvUserId = null;
+        mTvUserRank = null;
+        mTvUserGrade = null;
     }
 }

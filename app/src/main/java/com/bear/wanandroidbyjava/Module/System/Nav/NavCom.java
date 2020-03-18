@@ -12,6 +12,7 @@ import com.bear.wanandroidbyjava.Bean.Nav;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -38,10 +39,10 @@ public class NavCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mPbNavLoading = findViewById(R.id.pb_nav_loading);
         mRecyclerView = findViewById(R.id.rv_navi_container);
-        mVhAdapter = new VHAdapter();
+        mVhAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
         mDataManager = mVhAdapter.getDataManager();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
         mVhAdapter.register(new NavVHBridge(), Nav.class);
@@ -98,5 +99,13 @@ public class NavCom extends FragComponent {
 
     public void scrollToTop() {
         RvUtil.scrollToTop(mRecyclerView, true);
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mRecyclerView = null;
+        mPbNavLoading = null;
+        mVhAdapter = null;
+        mDataManager = null;
     }
 }

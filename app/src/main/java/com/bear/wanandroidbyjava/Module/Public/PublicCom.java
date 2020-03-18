@@ -14,6 +14,7 @@ import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.NoSwitchViewPager;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -38,7 +39,7 @@ public class PublicCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mPbPublicTabLoading = findViewById(R.id.pb_public_tab_loading);
         mNoSwitchViewPager = findViewById(R.id.vp_article_container);
         mPublicListFragAdapter = new PublicListFragAdapter(mMain.getChildFragmentManager());
@@ -47,7 +48,7 @@ public class PublicCom extends FragComponent {
 
         mRvTabContainer = findViewById(R.id.rv_tab_container);
         mRvTabContainer.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mTabListAdapter = new VHAdapter();
+        mTabListAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
         mTabListAdapter.register(new PublicTabVHBridge(), PublicTab.class);
         mRvTabContainer.setAdapter(mTabListAdapter);
         mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabList());
@@ -123,5 +124,14 @@ public class PublicCom extends FragComponent {
         if (publicListCom != null) {
             publicListCom.scrollToTop();
         }
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mRvTabContainer = null;
+        mPbPublicTabLoading = null;
+        mTabListAdapter = null;
+        mNoSwitchViewPager = null;
+        mPublicListFragAdapter = null;
     }
 }

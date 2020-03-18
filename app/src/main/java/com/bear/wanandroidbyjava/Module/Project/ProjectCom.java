@@ -12,6 +12,7 @@ import com.bear.wanandroidbyjava.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -35,7 +36,7 @@ public class ProjectCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mPbProjectLoading = findViewById(R.id.pb_project_loading);
         mViewPager = findViewById(R.id.vp_project_container);
         mTabLayout = findViewById(R.id.tl_project_layout);
@@ -101,5 +102,10 @@ public class ProjectCom extends FragComponent {
     @Override
     protected void onFirstVisible() {
         mProjectVM.fetchProjectTab();
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mPbProjectLoading = null; mViewPager = null; mTabLayout = null; mProjectListFragAdapter = null;
     }
 }

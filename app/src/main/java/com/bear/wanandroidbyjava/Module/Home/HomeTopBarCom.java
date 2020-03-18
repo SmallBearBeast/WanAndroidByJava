@@ -10,7 +10,7 @@ import com.example.libframework.CoreUI.FragComponent;
 public class HomeTopBarCom extends FragComponent {
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

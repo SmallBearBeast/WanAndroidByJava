@@ -12,6 +12,7 @@ import com.bear.wanandroidbyjava.Bean.Tree;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
+
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -26,7 +27,7 @@ import java.util.Set;
 public class TreeCom extends FragComponent {
     private RecyclerView mRecyclerView;
     private ProgressBar mPbTreeLoading;
-    private VHAdapter mVhAdapter;
+    private VHAdapter mVHAdapter;
     private DataManager mDataManager;
     private TreeVM mTreeVM;
 
@@ -38,14 +39,14 @@ public class TreeCom extends FragComponent {
     }
 
     @Override
-    protected void onCreateView(View contentView) {
+    protected void onCreateView() {
         mRecyclerView = findViewById(R.id.rv_tree_container);
         mPbTreeLoading = findViewById(R.id.pb_tree_loading);
-        mVhAdapter = new VHAdapter();
-        mDataManager = mVhAdapter.getDataManager();
+        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mDataManager = mVHAdapter.getDataManager();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mVhAdapter.register(new TreeVHBridge(), Tree.class);
-        mRecyclerView.setAdapter(mVhAdapter);
+        mVHAdapter.register(new TreeVHBridge(), Tree.class);
+        mRecyclerView.setAdapter(mVHAdapter);
         mDataManager.setData(mTreeVM.getTreeLD().getValue());
     }
 
@@ -98,5 +99,13 @@ public class TreeCom extends FragComponent {
 
     public void scrollToTop() {
         RvUtil.scrollToTop(mRecyclerView, true);
+    }
+
+    @Override
+    protected void onDestroyView() {
+        mRecyclerView = null;
+        mPbTreeLoading = null;
+        mVHAdapter = null;
+        mDataManager = null;
     }
 }

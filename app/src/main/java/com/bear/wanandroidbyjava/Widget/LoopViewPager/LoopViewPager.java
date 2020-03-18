@@ -7,10 +7,6 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -26,22 +22,6 @@ public class LoopViewPager extends ViewPager {
 
     public LoopViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        if (context instanceof AppCompatActivity) {
-            AppCompatActivity appCompatActivity = (AppCompatActivity) context;
-            appCompatActivity.getLifecycle().addObserver(new LifecycleEventObserver() {
-                @Override
-                public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                    switch (event) {
-                        case ON_START:
-                            startLoop();
-                            break;
-                        case ON_STOP:
-                            stopLoop();
-                            break;
-                    }
-                }
-            });
-        }
     }
 
     @Override

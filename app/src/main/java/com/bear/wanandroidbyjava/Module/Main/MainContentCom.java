@@ -1,6 +1,5 @@
 package com.bear.wanandroidbyjava.Module.Main;
 
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bear.wanandroidbyjava.R;
@@ -14,7 +13,7 @@ public class MainContentCom extends ActComponent {
     protected void onCreate() {
         super.onCreate();
         mViewPager = findViewById(R.id.vp_main_container);
-        mMainAdapter = new MainAdapter(mMain.getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_SET_USER_VISIBLE_HINT);
+        mMainAdapter = new MainAdapter(mMain.getSupportFragmentManager());
         mViewPager.setAdapter(mMainAdapter);
     }
 
