@@ -17,8 +17,8 @@ import java.util.List;
 public class MainAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragmentList = new ArrayList<>();
 
-    public MainAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+    public MainAdapter(@NonNull FragmentManager fm) {
+        super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         fragmentList.add(HomeFrag.newInstance());
         fragmentList.add(SystemFrag.newInstance());
         fragmentList.add(PublicFrag.newInstance());

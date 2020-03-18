@@ -14,7 +14,7 @@ public class ProjectListFragAdapter extends FragmentPagerAdapter {
     private List<ProjectTab> mProjectTabList = new ArrayList<>();
 
     public ProjectListFragAdapter(@NonNull FragmentManager fm) {
-        super(fm);
+        super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     @NonNull

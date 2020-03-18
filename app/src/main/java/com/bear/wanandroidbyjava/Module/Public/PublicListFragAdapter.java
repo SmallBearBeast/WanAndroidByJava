@@ -14,7 +14,7 @@ public class PublicListFragAdapter extends FragmentPagerAdapter {
     private List<PublicTab> mPublicTabList = new ArrayList<>();
 
     public PublicListFragAdapter(@NonNull FragmentManager fm) {
-        super(fm);
+        super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     @NonNull
