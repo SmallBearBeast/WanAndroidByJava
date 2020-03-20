@@ -16,11 +16,11 @@ public class HomeTopBarCom extends FragComponent {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.iv_square:
-                        mMain.mComActivity.goAct(SquareAct.class);
+                        SquareAct.go(mComActivity);
                         break;
 
                     case R.id.iv_search:
-                        mMain.mComActivity.goAct(SearchAct.class);
+                        SearchAct.go(mComActivity);
                         break;
                 }
             }

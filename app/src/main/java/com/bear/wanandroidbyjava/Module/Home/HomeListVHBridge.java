@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bear.wanandroidbyjava.Bean.Article;
+import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.StringUtil;
 import com.example.libframework.Rv.VHBridge;
@@ -71,6 +73,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.cl_item_container:
+                    WebAct.go(mContext, mData);
                     break;
 
                 case R.id.iv_collect:

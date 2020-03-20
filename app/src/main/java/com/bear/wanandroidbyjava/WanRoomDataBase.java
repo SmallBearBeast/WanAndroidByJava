@@ -18,7 +18,6 @@ import com.bear.wanandroidbyjava.Entity.ProjectTabArticleRef;
 import com.bear.wanandroidbyjava.Entity.ProjectTabE;
 import com.bear.wanandroidbyjava.Entity.PublicTabArticleRef;
 import com.bear.wanandroidbyjava.Entity.PublicTabE;
-import com.example.libbase.Util.MainThreadUtil;
 import com.example.liblog.SLog;
 
 @Database(version = 1, exportSchema = false,

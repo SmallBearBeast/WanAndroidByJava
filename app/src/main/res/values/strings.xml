@@ -18,4 +18,7 @@
     <string name="str_my_todo">我的TODO</string>
     <string name="str_about_developer">关于作者</string>
     <string name="str_my_setting">系统设置</string>
+    <string name="str_search">搜索</string>
+    <string name="str_cancel">取消</string>
+    <string name="str_please_input">请输入搜索内容</string>
 </resources>

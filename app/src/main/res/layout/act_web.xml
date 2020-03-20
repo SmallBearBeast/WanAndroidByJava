@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50">
+
+        <ImageView
+            android:id="@+id/iv_collect"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginStart="@dimen/dp_15"
+            android:padding="@dimen/dp_6"
+            android:src="@drawable/ic_un_collect"
+            android:tint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:src="@drawable/ic_baidu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <EditText
+            android:id="@+id/et_search_input"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_8"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textSize="@dimen/dp_12"
+            android:theme="@style/MyEditText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/iv_collect"
+            app:layout_constraintRight_toLeftOf="@+id/fl_icon_container"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="https://www.google.com.hk" />
+
+        <FrameLayout
+            android:id="@+id/fl_icon_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tv_search"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_clear_input"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:padding="@dimen/dp_6"
+                android:src="@drawable/ic_clear_input"
+                android:tint="@color/color_5c5c5c"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_web_icon"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:padding="@dimen/dp_7"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:text="@string/str_search"
+            android:textColor="@color/color_ffa500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/pb_web_loading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:progressTint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:progress="50" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_web_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_action_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45">
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_12"
+            android:src="@drawable/ic_cancel"
+            android:tint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/iv_browser_type"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_browser_type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_12"
+            android:src="@drawable/ic_browser"
+            android:tint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/iv_cancel"
+            app:layout_constraintRight_toLeftOf="@+id/iv_more"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_12"
+            android:src="@drawable/ic_more"
+            android:tint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/iv_browser_type"
+            app:layout_constraintRight_toLeftOf="@+id/iv_forward"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_forward"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_12"
+            android:src="@drawable/ic_forward"
+            android:tint="@color/color_5c5c5c"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/iv_more"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
