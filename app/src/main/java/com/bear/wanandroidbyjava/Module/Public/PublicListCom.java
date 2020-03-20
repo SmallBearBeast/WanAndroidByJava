@@ -41,6 +41,24 @@ public class PublicListCom extends FragComponent {
     private DataManager mDataManager;
     private PublicListVM mPublicListVM;
 
+    private EventCallback mEventCallback = new EventCallback() {
+        @Override
+        protected void onEvent(Event event) {
+            switch (event.eventKey) {
+                case EventKey.KEY_NET_CHANGE:
+                    if (event.data instanceof Boolean && (Boolean) event.data && mPublicListVM.isFirstLoad()) {
+                        doNetWork();
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        protected Set<String> eventKeySet() {
+            return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
+        }
+    };
+
     public PublicListCom(int tabId) {
         mTabId = tabId;
     }
@@ -49,6 +67,12 @@ public class PublicListCom extends FragComponent {
     protected void onCreate() {
         initData();
         initBus();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Bus.get().unRegister(mEventCallback);
     }
 
     @Override
@@ -126,23 +150,7 @@ public class PublicListCom extends FragComponent {
     }
 
     private void initBus() {
-        Bus.get().register(new EventCallback() {
-            @Override
-            protected void onEvent(Event event) {
-                switch (event.eventKey) {
-                    case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && mPublicListVM.isFirstLoad()) {
-                            doNetWork();
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            protected Set<String> eventKeySet() {
-                return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
-            }
-        });
+        Bus.get().register(mEventCallback);
     }
 
     @Override

@@ -31,6 +31,24 @@ public class TreeCom extends FragComponent {
     private DataManager mDataManager;
     private TreeVM mTreeVM;
 
+    private EventCallback mEventCallback = new EventCallback() {
+        @Override
+        protected void onEvent(Event event) {
+            switch (event.eventKey) {
+                case EventKey.KEY_NET_CHANGE:
+                    if (event.data instanceof Boolean && (Boolean) event.data && mTreeVM.isFirstLoad()) {
+                        mTreeVM.fetchTree();
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        protected Set<String> eventKeySet() {
+            return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
+        }
+    };
+
     @Override
     protected void onCreate() {
         super.onCreate();
@@ -48,6 +66,12 @@ public class TreeCom extends FragComponent {
         mVHAdapter.register(new TreeVHBridge(), Tree.class);
         mRecyclerView.setAdapter(mVHAdapter);
         mDataManager.setData(mTreeVM.getTreeLD().getValue());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Bus.get().unRegister(mEventCallback);
     }
 
     private void initData() {
@@ -69,23 +93,7 @@ public class TreeCom extends FragComponent {
     }
 
     private void initBus() {
-        Bus.get().register(new EventCallback() {
-            @Override
-            protected void onEvent(Event event) {
-                switch (event.eventKey) {
-                    case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && mTreeVM.isFirstLoad()) {
-                            mTreeVM.fetchTree();
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            protected Set<String> eventKeySet() {
-                return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
-            }
-        });
+        Bus.get().register(mEventCallback);
     }
 
     @Override

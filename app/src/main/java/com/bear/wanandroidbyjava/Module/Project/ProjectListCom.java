@@ -41,6 +41,24 @@ public class ProjectListCom extends FragComponent {
     private DataManager mDataManager;
     private ProjectListVM mProjectListVM;
 
+    private EventCallback mEventCallback = new EventCallback() {
+        @Override
+        protected void onEvent(Event event) {
+            switch (event.eventKey) {
+                case EventKey.KEY_NET_CHANGE:
+                    if (event.data instanceof Boolean && (Boolean) event.data && !mProjectListVM.isFirstLoad()) {
+                        doNetWork();
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        protected Set<String> eventKeySet() {
+            return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
+        }
+    };
+
     public ProjectListCom(int tabId) {
         mTabId = tabId;
     }
@@ -89,6 +107,12 @@ public class ProjectListCom extends FragComponent {
         mDataManager.setData(mProjectListVM.getTotalList());
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Bus.get().unRegister(mEventCallback);
+    }
+
     private void initData() {
         mProjectListVM = new ViewModelProvider(mMain).get(ProjectListVM.class);
         mProjectListVM.getLoadMoreArticleLD().observe(mMain, new Observer<List<Article>>() {
@@ -126,23 +150,7 @@ public class ProjectListCom extends FragComponent {
     }
 
     private void initBus() {
-        Bus.get().register(new EventCallback() {
-            @Override
-            protected void onEvent(Event event) {
-                switch (event.eventKey) {
-                    case EventKey.KEY_NET_CHANGE:
-                        if (event.data instanceof Boolean && (Boolean) event.data && !mProjectListVM.isFirstLoad()) {
-                            doNetWork();
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            protected Set<String> eventKeySet() {
-                return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
-            }
-        });
+        Bus.get().register(mEventCallback);
     }
 
     @Override
