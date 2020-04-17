@@ -2,15 +2,12 @@ package com.bear.wanandroidbyjava.Module.Web;
 
 import android.graphics.Bitmap;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.example.libbase.Util.TimeUtil;
 import com.example.liblog.SLog;
 
-import java.util.Map;
-
-public class WebTimeClient extends WebViewClient {
-    private static final String TAG = WebAct.TAG + "-WebTimeClient";
+public class WebTimeCallback extends ComWebView.WebCallback {
+    private static final String TAG = WebAct.TAG + "-WebTimeCallback";
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);

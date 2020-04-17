@@ -22,26 +22,36 @@ import com.example.liblog.SLog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseWebView extends WebView {
-    private static final String TAG = "BaseWebView";
+public class ComWebView extends WebView {
+    private static final String TAG = "ComWebView";
+    public static final String APP_CACHE_PATH = "ComWebView";
+    public static final String SCHEME_HTTP = "http";
+    public static final String SCHEME_HTTPS = "https";
+    public static final String SCHEME_MARKET = "market";
+    public static final String SCHEME_INTENT = "intent";
+    public static final String SCHEME_TEL = "tel";
+    public static final String SCHEME_SMS = "sms";
+    public static final String SCHEME_MAILTO = "mailto";
     private static boolean DEBUG = BuildConfig.DEBUG;
-    private List<WebViewClient> mWebViewClientList = new ArrayList<>();
-    private List<WebChromeClient> mWebChromeClientList = new ArrayList<>();
+    private List<WebCallback> mWebCallbackList = new ArrayList<>();
     private List<String> mValidSchemeList = new ArrayList<>();
     private List<String> mBlackHostList = new ArrayList<>();
 
     {
-        mValidSchemeList.add("http");
-        mValidSchemeList.add("https");
-        mValidSchemeList.add("market");
-        mValidSchemeList.add("intent");
+        mValidSchemeList.add(SCHEME_HTTP);
+        mValidSchemeList.add(SCHEME_HTTPS);
+        mValidSchemeList.add(SCHEME_MARKET);
+        mValidSchemeList.add(SCHEME_INTENT);
+        mValidSchemeList.add(SCHEME_TEL);
+        mValidSchemeList.add(SCHEME_SMS);
+        mValidSchemeList.add(SCHEME_MAILTO);
     }
 
-    public BaseWebView(Context context) {
+    public ComWebView(Context context) {
         this(context, null);
     }
 
-    public BaseWebView(Context context, AttributeSet attrs) {
+    public ComWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -63,8 +73,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onProgressChanged: newProgress = " + newProgress);
                 }
-                for (WebChromeClient client : mWebChromeClientList) {
-                    client.onProgressChanged(view, newProgress);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onProgressChanged(view, newProgress);
                 }
             }
 
@@ -73,8 +83,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onReceivedIcon: ");
                 }
-                for (WebChromeClient client : mWebChromeClientList) {
-                    client.onReceivedIcon(view, icon);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onReceivedIcon(view, icon);
                 }
             }
 
@@ -83,8 +93,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onReceivedTitle: title = " + title);
                 }
-                for (WebChromeClient client : mWebChromeClientList) {
-                    client.onReceivedTitle(view, title);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onReceivedTitle(view, title);
                 }
             }
         });
@@ -105,10 +115,11 @@ public class BaseWebView extends WebView {
                     return true;
                 }
                 if (mValidSchemeList.contains(scheme)) {
-                    for (WebViewClient client : mWebViewClientList) {
-                        client.shouldOverrideUrlLoading(view, url);
+                    boolean result = false;
+                    for (WebCallback webCallback : mWebCallbackList) {
+                        result = result || webCallback.shouldOverrideUrlLoading(view, url);
                     }
-                    return false;
+                    return result;
                 }
                 return true;
             }
@@ -118,8 +129,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onPageStarted: url = " + url);
                 }
-                for (WebViewClient client : mWebViewClientList) {
-                    client.onPageStarted(view, url, favicon);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onPageStarted(view, url, favicon);
                 }
             }
 
@@ -128,8 +139,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onPageFinished: url = " + url);
                 }
-                for (WebViewClient client : mWebViewClientList) {
-                    client.onPageFinished(view, url);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onPageFinished(view, url);
                 }
             }
 
@@ -138,8 +149,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onReceivedError: errorCode = " + errorCode + ", description = " + description + ", failingUrl = " + failingUrl);
                 }
-                for (WebViewClient client : mWebViewClientList) {
-                    client.onReceivedError(view, errorCode, description, failingUrl);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onReceivedError(view, errorCode, description, failingUrl);
                 }
             }
 
@@ -149,8 +160,8 @@ public class BaseWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onReceivedSslError: url = " + error.getUrl());
                 }
-                for (WebViewClient client : mWebViewClientList) {
-                    client.onReceivedSslError(view, handler, error);
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onReceivedSslError(view, handler, error);
                 }
                 handler.proceed();
             }
@@ -159,31 +170,34 @@ public class BaseWebView extends WebView {
 
     private void initWebSettings() {
         WebSettings webSettings = getSettings();
-        // 允许js代码
+        // Allow running js code.
         webSettings.setJavaScriptEnabled(true);
+        // Allow js code to open new window.
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        // web页面调整
+        // WebView page adjustment.
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        // 5.0以上开启混合模式加载
+        // Open mixed mode to load resource above Android 5.0, It may not be safe.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        // 允许SessionStorage/LocalStorage存储
+        // Allow SessionStorage/LocalStorage storage.
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
-        // 禁用放缩
+        // Disable zoom.
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(false);
-        // 允许缓存，设置缓存位置
+        // Disable text zoom.
+        webSettings.setTextZoom(100);
+        // Allow cache and set cache location.
         webSettings.setAppCacheEnabled(true);
-        webSettings.setAppCachePath(getContext().getDir("WanWebCache", 0).getPath());
-        // 允许WebView使用File协议
+        webSettings.setAppCachePath(getContext().getDir(APP_CACHE_PATH, 0).getPath());
+        // Allow WebView to use File protocol.
         webSettings.setAllowFileAccess(true);
-        // 设置UA
+        // Set UA.
         webSettings.setUserAgentString(webSettings.getUserAgentString() + getContext().getPackageName());
-        // 自动加载图片
         webSettings.setLoadsImagesAutomatically(true);
+        // Allow third-party cookies.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
         }
@@ -224,11 +238,49 @@ public class BaseWebView extends WebView {
         return false;
     }
 
-    public void addWebViewClient(@NonNull WebViewClient webViewClient) {
-        mWebViewClientList.add(webViewClient);
+    public void addWebCallback(@NonNull WebCallback webCallback) {
+        mWebCallbackList.add(webCallback);
     }
 
-    public void addWebChromeClient(@NonNull WebChromeClient webChromeClient) {
-        mWebChromeClientList.add(webChromeClient);
+    public void addValidScheme(@NonNull String scheme) {
+        mValidSchemeList.add(scheme);
+    }
+
+    public void addBlackHost(@NonNull String host) {
+        mBlackHostList.add(host);
+    }
+
+    public static class WebCallback {
+        public void onProgressChanged(WebView view, int newProgress) {
+
+        }
+
+        public void onReceivedIcon(WebView view, Bitmap icon) {
+
+        }
+
+        public void onReceivedTitle(WebView view, String title) {
+
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return false;
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+        }
+
+        public void onPageFinished(WebView view, String url) {
+
+        }
+
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+
+        }
     }
 }

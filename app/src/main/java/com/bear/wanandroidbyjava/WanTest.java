@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WanTest {
+    private static Pattern S_PATTERN_1 = Pattern.compile("^(http|https)(://)([A-Za-z0-9.]++$|[A-Za-z0-9.]++[/?].*+)");
     public static void main(String[] args) {
         System.out.println("http://baidu.com = " + isValidUrl("http://baidu.com&"));
         System.out.println("http://baidu.com/ = " + isValidUrl("http://baidu.com&/"));
@@ -14,9 +15,7 @@ public class WanTest {
     }
 
     private static boolean isValidUrl(String url) {
-        Pattern pattern = Pattern.compile("^(http|https)(://)([A-Za-z0-9.]++$|[A-Za-z0-9.]++[/?].*+)");
-        Matcher mat = pattern.matcher(url.trim());
+        Matcher mat = S_PATTERN_1.matcher(url.trim());
         return mat.matches();
-//        ([/?]?)(.)*+
     }
 }

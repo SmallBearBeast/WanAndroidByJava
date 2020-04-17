@@ -1,6 +1,12 @@
 package com.bear.wanandroidbyjava.Module.Web;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +20,7 @@ import androidx.annotation.IntDef;
 
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
+import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.OtherUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
@@ -21,6 +28,7 @@ import com.example.libframework.CoreUI.ActComponent;
 import com.example.libframework.Wrapper.TextWatcherWrapper;
 import com.example.liblog.SLog;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
