@@ -56,7 +56,8 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
     private String mWebTitle;
 
     private boolean mIsLoading = false;
-    private @BrowserType int mSearchType = BROWSER_TYPE_BAIDU;
+    private @BrowserType
+    int mSearchType = BROWSER_TYPE_BAIDU;
 
     @Override
     protected void onCreate() {
@@ -122,13 +123,14 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
     }
 
     public void setWebProgress(int progress) {
-        if (progress > 0 && progress <= 100) {
-            mPbWebLoading.setProgress(progress);
-        }
-        if (progress == 100) {
-            mPbWebLoading.setProgress(progress);
-            mPbWebLoading.setVisibility(View.GONE);
-            mEtSearchInput.setText(mWebTitle);
+        progress = (int) (progress / 80f * 100);
+        if (mPbWebLoading.getVisibility() == View.VISIBLE) {
+            if (progress >= 0 && progress <= 100) {
+                mPbWebLoading.setProgress(progress);
+            } else {
+                mPbWebLoading.setVisibility(View.GONE);
+                mEtSearchInput.setText(mWebTitle);
+            }
         }
     }
 
@@ -147,6 +149,9 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
     }
 
     public void setWebTitle(String title) {
+        if (isValidUrl(title)) {
+            return;
+        }
         mWebTitle = title;
         mEtSearchInput.setText(mWebTitle);
     }

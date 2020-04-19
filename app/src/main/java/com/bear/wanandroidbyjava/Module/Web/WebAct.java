@@ -37,6 +37,7 @@ public class WebAct extends ComponentAct {
         return R.layout.act_web;
     }
 
+    // TODO: 2020-04-19 WebAct is set to an independent process when version is less than 7.
     public static void go(Context context, Article article) {
         Intent intent = new Intent(context, WebAct.class);
         intent.putExtra(KEY_WEB_CONTENT_ARTICLE, article);

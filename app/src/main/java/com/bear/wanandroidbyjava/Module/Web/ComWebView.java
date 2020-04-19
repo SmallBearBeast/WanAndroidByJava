@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -60,6 +62,7 @@ public class ComWebView extends WebView {
         setFocusable(true);
         setFocusableInTouchMode(true);
         setEnabled(true);
+        setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 
         initWebSettings();
         initWebViewClient();
@@ -149,8 +152,16 @@ public class ComWebView extends WebView {
                 if (DEBUG) {
                     SLog.d(TAG, "onReceivedError: errorCode = " + errorCode + ", description = " + description + ", failingUrl = " + failingUrl);
                 }
-                for (WebCallback webCallback : mWebCallbackList) {
-                    webCallback.onReceivedError(view, errorCode, description, failingUrl);
+                if ((failingUrl != null && !failingUrl.equals(view.getUrl()) && !failingUrl.equals(view.getOriginalUrl()))
+                        || (failingUrl == null && errorCode != ERROR_BAD_URL) || errorCode == ERROR_UNKNOWN) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(failingUrl)) {
+                    if (failingUrl.equals(view.getUrl())) {
+                        for (WebCallback webCallback : mWebCallbackList) {
+                            webCallback.onReceivedError(view, errorCode, description, failingUrl);
+                        }
+                    }
                 }
             }
 
@@ -163,7 +174,6 @@ public class ComWebView extends WebView {
                 for (WebCallback webCallback : mWebCallbackList) {
                     webCallback.onReceivedSslError(view, handler, error);
                 }
-                handler.proceed();
             }
         });
     }
@@ -201,6 +211,15 @@ public class ComWebView extends WebView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
         }
+        setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                for (WebCallback webCallback : mWebCallbackList) {
+                    webCallback.onDownloadStart(url, userAgent, contentDisposition, mimetype, contentLength);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -280,6 +299,10 @@ public class ComWebView extends WebView {
         }
 
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+
+        }
+
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
 
         }
     }
