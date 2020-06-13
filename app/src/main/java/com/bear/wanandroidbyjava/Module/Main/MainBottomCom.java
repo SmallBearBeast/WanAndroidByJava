@@ -11,10 +11,12 @@ import com.bear.wanandroidbyjava.Module.Public.PublicCom;
 import com.bear.wanandroidbyjava.Module.System.SystemCom;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
-import com.example.libframework.CoreUI.ActComponent;
+import com.example.libframework.CoreUI.ComponentAct;
+import com.example.libframework.CoreUI.ComponentService;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
 
-public class MainBottomCom extends ActComponent {
+public class MainBottomCom extends ViewComponent<ComponentAct> implements View.OnClickListener{
     private int mLastClickViewId;
     private long mLastClickTs;
     private static final int TWO_CLICK_INTERVAL = 500;
@@ -41,47 +43,47 @@ public class MainBottomCom extends ActComponent {
                 mImageViews[position].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
             }
         });
-        setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long curTs = System.currentTimeMillis();
-                if (mLastClickViewId != v.getId() || curTs - mLastClickTs > TWO_CLICK_INTERVAL) {
-                    switch (v.getId()) {
-                        case R.id.ll_home:
-                            mMain.getComponent(MainContentCom.class).switchTab(0);
-                            break;
-                        case R.id.ll_system:
-                            mMain.getComponent(MainContentCom.class).switchTab(1);
-                            break;
-                        case R.id.ll_public:
-                            mMain.getComponent(MainContentCom.class).switchTab(2);
-                            break;
-                        case R.id.ll_project:
-                            mMain.getComponent(MainContentCom.class).switchTab(3);
-                            break;
-                        case R.id.ll_personal:
-                            mMain.getComponent(MainContentCom.class).switchTab(4);
-                            break;
-                    }
-                } else {
-                    switch (v.getId()) {
-                        case R.id.ll_home:
-                            mMain.getComponent(HomeListCom.class).scrollToTop();
-                            break;
-                        case R.id.ll_system:
-                            mMain.getComponent(SystemCom.class).scrollToTop();
-                            break;
-                        case R.id.ll_public:
-                            mMain.getComponent(PublicCom.class).scrollToTop();
-                            break;
-                        case R.id.ll_project:
-                            mMain.getComponent(ProjectCom.class).scrollToTop();
-                            break;
-                    }
-                }
-                mLastClickViewId = v.getId();
-                mLastClickTs = curTs;
+        clickListener(this, R.id.ll_home, R.id.ll_system, R.id.ll_public, R.id.ll_project, R.id.ll_personal);
+    }
+
+    @Override
+    public void onClick(View v) {
+        long curTs = System.currentTimeMillis();
+        if (mLastClickViewId != v.getId() || curTs - mLastClickTs > TWO_CLICK_INTERVAL) {
+            switch (v.getId()) {
+                case R.id.ll_home:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(0);
+                    break;
+                case R.id.ll_system:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(1);
+                    break;
+                case R.id.ll_public:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(2);
+                    break;
+                case R.id.ll_project:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(3);
+                    break;
+                case R.id.ll_personal:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(4);
+                    break;
             }
-        }, R.id.ll_home, R.id.ll_system, R.id.ll_public, R.id.ll_project, R.id.ll_personal);
+        } else {
+            switch (v.getId()) {
+                case R.id.ll_home:
+                    ComponentService.get().getComponent(HomeListCom.class).scrollToTop();
+                    break;
+                case R.id.ll_system:
+                    ComponentService.get().getComponent(SystemCom.class).scrollToTop();
+                    break;
+                case R.id.ll_public:
+                    ComponentService.get().getComponent(PublicCom.class).scrollToTop();
+                    break;
+                case R.id.ll_project:
+                    ComponentService.get().getComponent(ProjectCom.class).scrollToTop();
+                    break;
+            }
+        }
+        mLastClickViewId = v.getId();
+        mLastClickTs = curTs;
     }
 }

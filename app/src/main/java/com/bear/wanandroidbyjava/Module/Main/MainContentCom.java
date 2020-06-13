@@ -3,9 +3,10 @@ package com.bear.wanandroidbyjava.Module.Main;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ActComponent;
+import com.example.libframework.CoreUI.ComponentAct;
+import com.example.libframework.CoreUI.ViewComponent;
 
-public class MainContentCom extends ActComponent {
+public class MainContentCom extends ViewComponent<ComponentAct> {
     public ViewPager mViewPager;
     public MainAdapter mMainAdapter;
 
@@ -13,7 +14,7 @@ public class MainContentCom extends ActComponent {
     protected void onCreate() {
         super.onCreate();
         mViewPager = findViewById(R.id.vp_main_container);
-        mMainAdapter = new MainAdapter(mMain.getSupportFragmentManager());
+        mMainAdapter = new MainAdapter(getDependence().getSupportFragmentManager());
         mViewPager.setAdapter(mMainAdapter);
     }
 

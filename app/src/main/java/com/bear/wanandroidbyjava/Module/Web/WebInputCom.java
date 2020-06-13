@@ -20,19 +20,19 @@ import androidx.annotation.IntDef;
 
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
-import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.OtherUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
-import com.example.libframework.CoreUI.ActComponent;
+import com.example.libframework.CoreUI.ComponentAct;
+import com.example.libframework.CoreUI.ComponentService;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Wrapper.TextWatcherWrapper;
 import com.example.liblog.SLog;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebInputCom extends ActComponent implements View.OnClickListener {
+public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
     private static final String TAG = WebAct.TAG + "-WebInputCom";
 
     public static final int BROWSER_TYPE_BAIDU = 1;
@@ -61,7 +61,7 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
 
     @Override
     protected void onCreate() {
-        mArticle = mMain.get(WebAct.KEY_WEB_CONTENT_ARTICLE);
+        mArticle = getDependence().get(WebAct.KEY_WEB_CONTENT_ARTICLE);
         mWebSearchText = mArticle.link;
         mWebTitle = mArticle.title;
         mIvCollect = findViewById(R.id.iv_collect);
@@ -72,7 +72,7 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
         mPbWebLoading = findViewById(R.id.pb_web_loading);
         mIvWebIcon = findViewById(R.id.iv_web_icon);
         setUpEditText();
-        setOnClickListener(this, R.id.iv_collect, R.id.iv_clear_input, R.id.tv_search);
+        clickListener(this, R.id.iv_collect, R.id.iv_clear_input, R.id.tv_search);
     }
 
     private void setUpEditText() {
@@ -108,7 +108,7 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search();
-                    OtherUtil.hideSoftInput(mMain, mEtSearchInput);
+                    OtherUtil.hideSoftInput(getDependence(), mEtSearchInput);
                     return true;
                 }
                 return false;
@@ -177,11 +177,11 @@ public class WebInputCom extends ActComponent implements View.OnClickListener {
         mIvWebIcon.setVisibility(View.INVISIBLE);
         if (isValidUrl(mWebSearchText)) {
             SLog.d(TAG, "search: loadUrl = " + mWebSearchText);
-            mMain.getComponent(WebContentCom.class).loadUrl(mWebSearchText);
+            ComponentService.get().getComponent(WebContentCom.class).loadUrl(mWebSearchText);
         } else {
             String searchUrl = getSearchUrlByType();
             SLog.d(TAG, "search: searchUrl = " + searchUrl);
-            mMain.getComponent(WebContentCom.class).loadUrl(searchUrl);
+            ComponentService.get().getComponent(WebContentCom.class).loadUrl(searchUrl);
         }
     }
 

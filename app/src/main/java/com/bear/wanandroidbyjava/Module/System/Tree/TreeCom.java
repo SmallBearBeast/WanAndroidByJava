@@ -16,7 +16,8 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Rv.DataManager;
 import com.example.libframework.Rv.RvUtil;
 import com.example.libframework.Rv.VHAdapter;
@@ -24,7 +25,7 @@ import com.example.libframework.Rv.VHAdapter;
 import java.util.List;
 import java.util.Set;
 
-public class TreeCom extends FragComponent {
+public class TreeCom extends ViewComponent<ComponentFrag> {
     private RecyclerView mRecyclerView;
     private ProgressBar mPbTreeLoading;
     private VHAdapter mVHAdapter;
@@ -60,9 +61,9 @@ public class TreeCom extends FragComponent {
     protected void onCreateView() {
         mRecyclerView = findViewById(R.id.rv_tree_container);
         mPbTreeLoading = findViewById(R.id.pb_tree_loading);
-        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         mVHAdapter.register(new TreeVHBridge(), Tree.class);
         mRecyclerView.setAdapter(mVHAdapter);
         mDataManager.setData(mTreeVM.getTreeLD().getValue());
@@ -75,14 +76,14 @@ public class TreeCom extends FragComponent {
     }
 
     private void initData() {
-        mTreeVM = new ViewModelProvider(mMain).get(TreeVM.class);
-        mTreeVM.getTreeLD().observe(mMain, new Observer<List<Tree>>() {
+        mTreeVM = new ViewModelProvider(getDependence()).get(TreeVM.class);
+        mTreeVM.getTreeLD().observe(getDependence(), new Observer<List<Tree>>() {
             @Override
             public void onChanged(List<Tree> trees) {
                 mDataManager.setData(trees);
             }
         });
-        mTreeVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+        mTreeVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {

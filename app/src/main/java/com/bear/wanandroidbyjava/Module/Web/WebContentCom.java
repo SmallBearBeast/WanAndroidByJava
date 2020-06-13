@@ -11,18 +11,20 @@ import android.widget.FrameLayout;
 
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ActComponent;
+import com.example.libframework.CoreUI.ComponentAct;
+import com.example.libframework.CoreUI.ComponentService;
+import com.example.libframework.CoreUI.ViewComponent;
 
-public class WebContentCom extends ActComponent {
+public class WebContentCom extends ViewComponent<ComponentAct> {
     private static final String TAG = WebAct.TAG + "-WebContentCom";
     private ComWebView mWvContent;
     private Article mArticle;
 
     @Override
     protected void onCreate() {
-        mArticle = mMain.get(WebAct.KEY_WEB_CONTENT_ARTICLE);
+        mArticle = getDependence().get(WebAct.KEY_WEB_CONTENT_ARTICLE);
         FrameLayout flWebContainer = findViewById(R.id.fl_web_container);
-        mWvContent = new ComWebView(mMain.getApplicationContext());
+        mWvContent = new ComWebView(getDependence().getApplicationContext());
         flWebContainer.addView(mWvContent, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         initWebCallback();
         mWvContent.loadUrl(mArticle.link);
@@ -52,7 +54,7 @@ public class WebContentCom extends ActComponent {
                     }
                     if (intent != null) {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mMain.startActivity(intent);
+                        getDependence().startActivity(intent);
                         return true;
                     }
                 } catch (Exception e) {
@@ -63,12 +65,12 @@ public class WebContentCom extends ActComponent {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                mMain.getComponent(WebInputCom.class).onPageStarted(url);
+                ComponentService.get().getComponent(WebInputCom.class).onPageStarted(url);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                mMain.getComponent(WebInputCom.class).onPageFinished();
+                ComponentService.get().getComponent(WebInputCom.class).onPageFinished();
             }
 
             @Override
@@ -78,17 +80,17 @@ public class WebContentCom extends ActComponent {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                mMain.getComponent(WebInputCom.class).setWebProgress(newProgress);
+                ComponentService.get().getComponent(WebInputCom.class).setWebProgress(newProgress);
             }
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                mMain.getComponent(WebInputCom.class).setWebIcon(icon);
+                ComponentService.get().getComponent(WebInputCom.class).setWebIcon(icon);
             }
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                mMain.getComponent(WebInputCom.class).setWebTitle(title);
+                ComponentService.get().getComponent(WebInputCom.class).setWebTitle(title);
             }
         });
         mWvContent.addWebCallback(new WebTimeCallback());

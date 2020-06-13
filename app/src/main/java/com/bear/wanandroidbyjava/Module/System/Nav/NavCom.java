@@ -16,7 +16,8 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Rv.DataManager;
 import com.example.libframework.Rv.RvUtil;
 import com.example.libframework.Rv.VHAdapter;
@@ -24,7 +25,7 @@ import com.example.libframework.Rv.VHAdapter;
 import java.util.List;
 import java.util.Set;
 
-public class NavCom extends FragComponent {
+public class NavCom extends ViewComponent<ComponentFrag> {
     private RecyclerView mRecyclerView;
     private ProgressBar mPbNavLoading;
     private VHAdapter mVhAdapter;
@@ -60,9 +61,9 @@ public class NavCom extends FragComponent {
     protected void onCreateView() {
         mPbNavLoading = findViewById(R.id.pb_nav_loading);
         mRecyclerView = findViewById(R.id.rv_navi_container);
-        mVhAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mVhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVhAdapter.getDataManager();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         mVhAdapter.register(new NavVHBridge(), Nav.class);
         mRecyclerView.setAdapter(mVhAdapter);
         mDataManager.setData(mNavVM.getNavLD().getValue());
@@ -75,14 +76,14 @@ public class NavCom extends FragComponent {
     }
 
     private void initData() {
-        mNavVM = new ViewModelProvider(mMain).get(NavVM.class);
-        mNavVM.getNavLD().observe(mMain, new Observer<List<Nav>>() {
+        mNavVM = new ViewModelProvider(getDependence()).get(NavVM.class);
+        mNavVM.getNavLD().observe(getDependence(), new Observer<List<Nav>>() {
             @Override
             public void onChanged(List<Nav> navList) {
                 mDataManager.setData(navList);
             }
         });
-        mNavVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+        mNavVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -111,9 +112,6 @@ public class NavCom extends FragComponent {
 
     @Override
     protected void onDestroyView() {
-        mRecyclerView = null;
-        mPbNavLoading = null;
-        mVhAdapter = null;
-        mDataManager = null;
+        clear(mRecyclerView, mPbNavLoading, mVhAdapter, mDataManager);
     }
 }

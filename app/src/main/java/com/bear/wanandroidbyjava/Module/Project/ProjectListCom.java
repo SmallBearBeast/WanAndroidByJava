@@ -21,7 +21,8 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Rv.DataManager;
 import com.example.libframework.Rv.DataType;
 import com.example.libframework.Rv.RvUtil;
@@ -30,7 +31,7 @@ import com.example.libframework.Rv.VHAdapter;
 import java.util.List;
 import java.util.Set;
 
-public class ProjectListCom extends FragComponent {
+public class ProjectListCom extends ViewComponent<ComponentFrag> {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
@@ -73,8 +74,8 @@ public class ProjectListCom extends FragComponent {
     protected void onCreateView() {
         mPbProjectListLoading = findViewById(R.id.pb_project_list_loading);
         mRecyclerView = findViewById(R.id.rv_project_list_container);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
         mVHAdapter.register(new LoadMoreVHBridge(), BRIDGE_LOAD_MORE);
@@ -114,8 +115,8 @@ public class ProjectListCom extends FragComponent {
     }
 
     private void initData() {
-        mProjectListVM = new ViewModelProvider(mMain).get(ProjectListVM.class);
-        mProjectListVM.getLoadMoreArticleLD().observe(mMain, new Observer<List<Article>>() {
+        mProjectListVM = new ViewModelProvider(getDependence()).get(ProjectListVM.class);
+        mProjectListVM.getLoadMoreArticleLD().observe(getDependence(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
@@ -128,7 +129,7 @@ public class ProjectListCom extends FragComponent {
                 }
             }
         });
-        mProjectListVM.getRefreshArticlePairLD().observe(mMain, new Observer<Pair<Boolean, List<Article>>>() {
+        mProjectListVM.getRefreshArticlePairLD().observe(getDependence(), new Observer<Pair<Boolean, List<Article>>>() {
             @Override
             public void onChanged(Pair<Boolean, List<Article>> pair) {
                 if (!CollectionUtil.isEmpty(pair.second)) {
@@ -139,7 +140,7 @@ public class ProjectListCom extends FragComponent {
                 }
             }
         });
-        mProjectListVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+        mProjectListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -168,9 +169,6 @@ public class ProjectListCom extends FragComponent {
 
     @Override
     protected void onDestroyView() {
-        mRecyclerView = null;
-        mPbProjectListLoading = null;
-        mVHAdapter = null;
-        mDataManager = null;
+        clear(mRecyclerView, mPbProjectListLoading, mVHAdapter, mDataManager);
     }
 }

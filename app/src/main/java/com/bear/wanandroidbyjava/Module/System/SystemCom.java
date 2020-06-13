@@ -14,10 +14,12 @@ import com.bear.wanandroidbyjava.Module.System.Tree.TreeFrag;
 import com.bear.wanandroidbyjava.R;
 
 import com.example.libbase.Util.ResourceUtil;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ComponentService;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.google.android.material.tabs.TabLayout;
 
-public class SystemCom extends FragComponent {
+public class SystemCom extends ViewComponent<ComponentFrag> {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -26,15 +28,15 @@ public class SystemCom extends FragComponent {
         mTabLayout = findViewById(R.id.tl_title_layout);
         mViewPager = findViewById(R.id.vp_sys_container);
         mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setAdapter(new SystemFragAdapter(mMain.getChildFragmentManager()));
+        mViewPager.setAdapter(new SystemFragAdapter(getDependence().getChildFragmentManager()));
     }
 
     public void scrollToTop() {
         int index = mViewPager.getCurrentItem();
         if (index == 0) {
-            mMain.mComActivity.getComponent(TreeCom.class).scrollToTop();
+            ComponentService.get().getComponent(TreeCom.class).scrollToTop();
         } else if (index == 1) {
-            mMain.mComActivity.getComponent(NavCom.class).scrollToTop();
+            ComponentService.get().getComponent(NavCom.class).scrollToTop();
         }
     }
 

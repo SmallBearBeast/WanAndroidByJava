@@ -6,9 +6,10 @@ import android.widget.TextView;
 
 import com.bear.wanandroidbyjava.R;
 
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ViewComponent;
 
-public class PersonalCom extends FragComponent implements View.OnClickListener {
+public class PersonalCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
     private ImageView mIvUserBackground;
     private ImageView mIvUserIcon;
     private TextView mTvUserName;
@@ -24,13 +25,7 @@ public class PersonalCom extends FragComponent implements View.OnClickListener {
         mTvUserId = findViewById(R.id.tv_user_id);
         mTvUserRank = findViewById(R.id.tv_user_rank);
         mTvUserGrade = findViewById(R.id.tv_user_grade);
-
-        findViewAndSetListener(this, R.id.ll_my_integral);
-        findViewAndSetListener(this, R.id.ll_my_share);
-        findViewAndSetListener(this, R.id.ll_my_collect);
-        findViewAndSetListener(this, R.id.ll_my_todo);
-        findViewAndSetListener(this, R.id.ll_about_developer);
-        findViewAndSetListener(this, R.id.ll_my_setting);
+        clickListener(this, R.id.ll_my_integral, R.id.ll_my_share, R.id.ll_my_collect, R.id.ll_my_todo, R.id.ll_about_developer, R.id.ll_my_setting);
     }
 
     @Override

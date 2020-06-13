@@ -14,17 +14,18 @@ import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.NoSwitchViewPager;
 import com.example.libbase.Util.CollectionUtil;
-
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ComponentService;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Rv.VHAdapter;
 
 import java.util.List;
 import java.util.Set;
 
-public class PublicCom extends FragComponent {
+public class PublicCom extends ViewComponent<ComponentFrag> {
     private RecyclerView mRvTabContainer;
     private ProgressBar mPbPublicTabLoading;
     private VHAdapter mTabListAdapter;
@@ -60,13 +61,13 @@ public class PublicCom extends FragComponent {
     protected void onCreateView() {
         mPbPublicTabLoading = findViewById(R.id.pb_public_tab_loading);
         mNoSwitchViewPager = findViewById(R.id.vp_article_container);
-        mPublicListFragAdapter = new PublicListFragAdapter(mMain.getChildFragmentManager());
+        mPublicListFragAdapter = new PublicListFragAdapter(getDependence().getChildFragmentManager());
         mNoSwitchViewPager.setAdapter(mPublicListFragAdapter);
         mPublicListFragAdapter.setPublicTabList(mPublicTabVM.getPublicTabList());
 
         mRvTabContainer = findViewById(R.id.rv_tab_container);
-        mRvTabContainer.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mTabListAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mRvTabContainer.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        mTabListAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mTabListAdapter.register(new PublicTabVHBridge(), PublicTab.class);
         mRvTabContainer.setAdapter(mTabListAdapter);
         mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabList());
@@ -79,8 +80,8 @@ public class PublicCom extends FragComponent {
     }
 
     private void initData() {
-        mPublicTabVM = new ViewModelProvider(mMain).get(PublicTabVM.class);
-        mPublicTabVM.getPublicTabLD().observe(mMain, new Observer<Pair<Boolean, List<PublicTab>>>() {
+        mPublicTabVM = new ViewModelProvider(getDependence()).get(PublicTabVM.class);
+        mPublicTabVM.getPublicTabLD().observe(getDependence(), new Observer<Pair<Boolean, List<PublicTab>>>() {
             @Override
             public void onChanged(Pair<Boolean, List<PublicTab>> pair) {
                 if (!CollectionUtil.isEmpty(pair.second)) {
@@ -92,7 +93,7 @@ public class PublicCom extends FragComponent {
                 }
             }
         });
-        mPublicTabVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+        mPublicTabVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -128,7 +129,7 @@ public class PublicCom extends FragComponent {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
-        PublicListCom publicListCom = mMain.mComActivity.getComponent(PublicListCom.class, curPublicTab.publicTabId);
+        PublicListCom publicListCom = ComponentService.get().getComponent(PublicListCom.class, curPublicTab.publicTabId);
         if (publicListCom != null) {
             publicListCom.scrollToTop();
         }
@@ -136,10 +137,6 @@ public class PublicCom extends FragComponent {
 
     @Override
     protected void onDestroyView() {
-        mRvTabContainer = null;
-        mPbPublicTabLoading = null;
-        mTabListAdapter = null;
-        mNoSwitchViewPager = null;
-        mPublicListFragAdapter = null;
+        clear(mRvTabContainer, mPbPublicTabLoading, mTabListAdapter, mNoSwitchViewPager, mPublicListFragAdapter);
     }
 }

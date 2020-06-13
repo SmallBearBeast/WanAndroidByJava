@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 import com.example.libframework.CoreUI.ComponentAct;
-import com.example.liblog.SLog;
 
 public class WebAct extends ComponentAct {
     public static final String TAG = "web_tag";

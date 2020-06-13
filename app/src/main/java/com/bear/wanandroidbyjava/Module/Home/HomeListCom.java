@@ -18,7 +18,8 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.FragComponent;
+import com.example.libframework.CoreUI.ComponentFrag;
+import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Rv.DataManager;
 import com.example.libframework.Rv.DataType;
 import com.example.libframework.Rv.RvUtil;
@@ -27,7 +28,7 @@ import com.example.libframework.Rv.VHAdapter;
 import java.util.List;
 import java.util.Set;
 
-public class HomeListCom extends FragComponent {
+public class HomeListCom extends ViewComponent<ComponentFrag> {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
@@ -70,14 +71,14 @@ public class HomeListCom extends FragComponent {
     }
 
     private void initData() {
-        mHomeListVM = new ViewModelProvider(mMain).get(HomeListVM.class);
-        mHomeListVM.getTotalListLD().observe(mMain, new Observer<List>() {
+        mHomeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
+        mHomeListVM.getTotalListLD().observe(getDependence(), new Observer<List>() {
             @Override
             public void onChanged(List list) {
                 mDataManager.setData(list);
             }
         });
-        mHomeListVM.getArticleListLD().observe(mMain, new Observer<List<Article>>() {
+        mHomeListVM.getArticleListLD().observe(getDependence(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
@@ -90,7 +91,7 @@ public class HomeListCom extends FragComponent {
                 }
             }
         });
-        mHomeListVM.getShowProgressLD().observe(mMain, new Observer<Boolean>() {
+        mHomeListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -108,8 +109,8 @@ public class HomeListCom extends FragComponent {
     protected void onCreateView() {
         mPbLoading = findViewById(R.id.pb_loading);
         mRecyclerView = findViewById(R.id.rv_home_container);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mComActivity));
-        mVHAdapter = new VHAdapter(mMain.getViewLifecycleOwner().getLifecycle());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new BannerVHBridge(), Banner.class);
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
@@ -157,9 +158,6 @@ public class HomeListCom extends FragComponent {
 
     @Override
     protected void onDestroyView() {
-        mRecyclerView = null;
-        mPbLoading = null;
-        mVHAdapter = null;
-        mDataManager = null;
+        clear(mRecyclerView, mPbLoading, mVHAdapter, mDataManager);
     }
 }
