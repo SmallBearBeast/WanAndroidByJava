@@ -12,9 +12,9 @@ import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
+import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
-import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
@@ -35,7 +35,7 @@ public class PublicListVM extends ViewModel {
     private MutableLiveData<List<Article>> mLoadMoreArticleLD = new MutableLiveData<>();
 
     private void refreshFromDb(final int id) {
-        ThreadUtil.execute(new Runnable() {
+        ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -131,7 +131,7 @@ public class PublicListVM extends ViewModel {
     }
 
     public void saveTabArticleList(final int publicTabId, final List<Article> publicArticleList) {
-        ThreadUtil.execute(new Runnable() {
+        ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
                 try {

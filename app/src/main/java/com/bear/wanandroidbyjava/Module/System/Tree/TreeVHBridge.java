@@ -63,7 +63,7 @@ public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
 
         private View createFlowView(SubTree subTree) {
             View flowView = LayoutInflater.from(getContext()).inflate(R.layout.layout_sub_tree_view, null);
-            XmlDrawableUtil.slCRect(R.color.color_aaaaaa, R.color.color_5c5c5c, 100).setView(flowView);
+            XmlDrawableUtil.slRect(true, R.color.color_aaaaaa, R.color.color_5c5c5c, 100f).setView(flowView);
             TextView tv = flowView.findViewById(R.id.tv_sub_tree_name);
             tv.setText(subTree.name);
             flowView.setTag(subTree);

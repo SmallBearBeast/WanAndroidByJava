@@ -11,8 +11,8 @@ import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
+import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.StringUtil;
-import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
@@ -42,7 +42,7 @@ public class ProjectVM extends ViewModel {
     };
 
     private void fetchProjectTabFromDb() {
-        ThreadUtil.execute(new Runnable() {
+        ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -95,7 +95,7 @@ public class ProjectVM extends ViewModel {
     }
 
     public void saveProjectTabList(final List<ProjectTab> projectTabList) {
-        ThreadUtil.execute(new Runnable() {
+        ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
                 try {

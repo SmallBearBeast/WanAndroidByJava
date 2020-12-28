@@ -11,9 +11,9 @@ import com.bear.wanandroidbyjava.NetBean.BannerBean;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.example.libbase.Util.CollectionUtil;
+import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
-import com.example.libbase.Util.ThreadUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
@@ -148,7 +148,7 @@ public class HomeListVM extends ViewModel {
         if (mIsFirstLoad) {
             mShowProgressLD.postValue(true);
         }
-        ThreadUtil.execute(new Runnable() {
+        ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
                 fetchBanner();

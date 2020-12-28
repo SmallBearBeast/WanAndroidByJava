@@ -1,12 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Web;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,7 +18,7 @@ import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
-import com.example.libbase.Util.OtherUtil;
+import com.example.libbase.Util.KeyBoardUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 import com.example.libframework.Wrapper.TextWatcherWrapper;
@@ -109,7 +103,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search();
-                    OtherUtil.hideSoftInput(getDependence(), mEtSearchInput);
+                    KeyBoardUtil.hideSoftInput(getDependence(), mEtSearchInput);
                     return true;
                 }
                 return false;
