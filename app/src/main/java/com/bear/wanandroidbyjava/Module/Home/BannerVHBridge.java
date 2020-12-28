@@ -7,12 +7,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bear.librv.VHBridge;
+import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Bean.Banner;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.LoopViewPager.LoopViewPager;
 import com.bumptech.glide.Glide;
-import com.example.libframework.Rv.VHBridge;
-import com.example.libframework.Rv.VHolder;
 
 public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
 
@@ -32,7 +32,7 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         return true;
     }
 
-    class BannerVHolder extends VHolder<Banner>{
+    class BannerVHolder extends VHolder<Banner> {
         private LoopViewPager mLvpBanner;
 
         public BannerVHolder(View itemView) {

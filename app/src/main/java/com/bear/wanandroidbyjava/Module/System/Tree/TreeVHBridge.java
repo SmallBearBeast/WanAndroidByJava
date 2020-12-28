@@ -6,14 +6,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bear.librv.VHBridge;
+import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Bean.SubTree;
 import com.bear.wanandroidbyjava.Bean.Tree;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.FlowLayout;
 import com.example.libbase.Util.ToastUtil;
 import com.example.libbase.Util.XmlDrawableUtil;
-import com.example.libframework.Rv.VHBridge;
-import com.example.libframework.Rv.VHolder;
 
 public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
     @NonNull
@@ -62,7 +62,7 @@ public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
         }
 
         private View createFlowView(SubTree subTree) {
-            View flowView = LayoutInflater.from(mContext).inflate(R.layout.layout_sub_tree_view, null);
+            View flowView = LayoutInflater.from(getContext()).inflate(R.layout.layout_sub_tree_view, null);
             XmlDrawableUtil.slCRect(R.color.color_aaaaaa, R.color.color_5c5c5c, 100).setView(flowView);
             TextView tv = flowView.findViewById(R.id.tv_sub_tree_name);
             tv.setText(subTree.name);

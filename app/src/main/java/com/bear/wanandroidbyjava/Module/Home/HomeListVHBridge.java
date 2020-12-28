@@ -1,18 +1,17 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bear.librv.VHBridge;
+import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.StringUtil;
-import com.example.libframework.Rv.VHBridge;
-import com.example.libframework.Rv.VHolder;
 
 public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
 
@@ -27,7 +26,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         return R.layout.item_article;
     }
 
-    class HomeVHolder extends VHolder<Article>{
+    class HomeVHolder extends VHolder<Article> {
         private TextView mTvNewMark;
         private TextView mTvAuthorName;
         private TextView mTvTagName;
@@ -73,7 +72,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.cl_item_container:
-                    WebAct.go(mContext, mData);
+                    WebAct.go(getContext(), getData());
                     break;
 
                 case R.id.iv_collect:

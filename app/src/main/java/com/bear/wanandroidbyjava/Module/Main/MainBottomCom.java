@@ -5,15 +5,15 @@ import android.widget.ImageView;
 
 import androidx.viewpager.widget.ViewPager;
 
+import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.Module.Home.HomeListCom;
 import com.bear.wanandroidbyjava.Module.Project.ProjectCom;
 import com.bear.wanandroidbyjava.Module.Public.PublicCom;
 import com.bear.wanandroidbyjava.Module.System.SystemCom;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
-import com.example.libframework.CoreUI.ComponentAct;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
 
 public class MainBottomCom extends ViewComponent<ComponentAct> implements View.OnClickListener{

@@ -2,9 +2,9 @@ package com.bear.wanandroidbyjava.Module.Main;
 
 import androidx.viewpager.widget.ViewPager;
 
+import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ComponentAct;
-import com.example.libframework.CoreUI.ViewComponent;
 
 public class MainContentCom extends ViewComponent<ComponentAct> {
     public ViewPager mViewPager;

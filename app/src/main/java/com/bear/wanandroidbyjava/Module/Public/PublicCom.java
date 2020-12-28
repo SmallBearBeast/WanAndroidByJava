@@ -9,6 +9,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ViewComponent;
+import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Bean.PublicTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
@@ -17,10 +21,6 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.ComponentFrag;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
-import com.example.libframework.Rv.VHAdapter;
 
 import java.util.List;
 import java.util.Set;

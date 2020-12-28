@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import com.bear.libcomponent.ComponentFrag;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ComponentFrag;
 
 public class TreeFrag extends ComponentFrag {
     @Override

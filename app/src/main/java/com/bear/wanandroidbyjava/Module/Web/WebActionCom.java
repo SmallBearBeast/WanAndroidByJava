@@ -5,11 +5,11 @@ import android.view.View;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.DensityUtil;
-import com.example.libframework.CoreUI.ComponentAct;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
 
 public class WebActionCom extends ViewComponent<ComponentAct> implements View.OnClickListener{
     private static final String TAG = WebAct.TAG + "-WebActionCom";

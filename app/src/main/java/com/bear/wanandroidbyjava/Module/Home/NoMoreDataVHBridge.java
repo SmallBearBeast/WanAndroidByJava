@@ -4,9 +4,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bear.librv.VHBridge;
+import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.Rv.VHBridge;
-import com.example.libframework.Rv.VHolder;
 
 public class NoMoreDataVHBridge extends VHBridge {
     @NonNull

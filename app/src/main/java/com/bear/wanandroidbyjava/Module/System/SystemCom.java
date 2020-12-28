@@ -7,6 +7,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavCom;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavFrag;
 import com.bear.wanandroidbyjava.Module.System.Tree.TreeCom;
@@ -14,9 +17,6 @@ import com.bear.wanandroidbyjava.Module.System.Tree.TreeFrag;
 import com.bear.wanandroidbyjava.R;
 
 import com.example.libbase.Util.ResourceUtil;
-import com.example.libframework.CoreUI.ComponentFrag;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
 import com.google.android.material.tabs.TabLayout;
 
 public class SystemCom extends ViewComponent<ComponentFrag> {

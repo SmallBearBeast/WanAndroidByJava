@@ -2,11 +2,11 @@ package com.bear.wanandroidbyjava.Module.Home;
 
 import android.view.View;
 
+import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Module.Search.SearchAct;
 import com.bear.wanandroidbyjava.Module.Square.SquareAct;
-import com.example.libframework.CoreUI.ComponentFrag;
-import com.example.libframework.CoreUI.ViewComponent;
 
 public class HomeTopBarCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
 

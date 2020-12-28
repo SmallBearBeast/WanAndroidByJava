@@ -5,8 +5,7 @@ import android.content.Intent;
 
 import androidx.core.content.ContextCompat;
 
-import com.bear.wanandroidbyjava.Module.Square.SquareAct;
-import com.example.libframework.CoreUI.ComponentAct;
+import com.bear.libcomponent.ComponentAct;
 
 public class SearchAct extends ComponentAct {
     @Override

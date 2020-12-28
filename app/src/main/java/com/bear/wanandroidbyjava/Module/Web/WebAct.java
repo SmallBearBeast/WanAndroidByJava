@@ -7,9 +7,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ShareVM;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ComponentAct;
 
 public class WebAct extends ComponentAct {
     public static final String TAG = "web_tag";
@@ -27,7 +28,7 @@ public class WebAct extends ComponentAct {
     protected void handleIntent(Intent intent) {
         Article article = intent.getParcelableExtra(KEY_WEB_CONTENT_ARTICLE);
         if (article != null) {
-            put(KEY_WEB_CONTENT_ARTICLE, article);
+            ShareVM.put(this, KEY_WEB_CONTENT_ARTICLE, article);
         }
     }
 
@@ -45,7 +46,8 @@ public class WebAct extends ComponentAct {
 
     @Override
     public void onBackPressed() {
-        if(!getComponent(WebContentCom.class).goBack()) {
+        super.onBackPressed();
+        if (!getComponent(WebContentCom.class).goBack()) {
             finish();
         }
     }

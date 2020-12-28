@@ -5,9 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bear.wanandroidbyjava.Module.Public.PublicListCom;
+import com.bear.libcomponent.ComponentFrag;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ComponentFrag;
 
 public class ProjectListFrag extends ComponentFrag {
     private static final String TAB_ID = "tab_id";

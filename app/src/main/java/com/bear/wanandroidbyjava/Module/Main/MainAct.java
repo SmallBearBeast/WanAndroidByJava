@@ -3,8 +3,8 @@ package com.bear.wanandroidbyjava.Module.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bear.libcomponent.ComponentAct;
 import com.bear.wanandroidbyjava.R;
-import com.example.libframework.CoreUI.ComponentAct;
 import com.example.liblog.SLog;
 
 public class MainAct extends ComponentAct {

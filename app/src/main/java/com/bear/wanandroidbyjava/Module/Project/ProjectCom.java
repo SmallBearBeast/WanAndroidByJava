@@ -8,6 +8,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
@@ -16,9 +19,6 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
-import com.example.libframework.CoreUI.ComponentFrag;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;

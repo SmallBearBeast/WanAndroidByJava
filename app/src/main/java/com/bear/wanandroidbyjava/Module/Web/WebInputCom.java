@@ -18,14 +18,15 @@ import android.widget.TextView;
 
 import androidx.annotation.IntDef;
 
+import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.ShareVM;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.OtherUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
-import com.example.libframework.CoreUI.ComponentAct;
-import com.example.libframework.CoreUI.ComponentService;
-import com.example.libframework.CoreUI.ViewComponent;
 import com.example.libframework.Wrapper.TextWatcherWrapper;
 import com.example.liblog.SLog;
 
@@ -61,7 +62,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
 
     @Override
     protected void onCreate() {
-        mArticle = getDependence().get(WebAct.KEY_WEB_CONTENT_ARTICLE);
+        mArticle = ShareVM.get(getDependence(), WebAct.KEY_WEB_CONTENT_ARTICLE);
         mWebSearchText = mArticle.link;
         mWebTitle = mArticle.title;
         mIvCollect = findViewById(R.id.iv_collect);

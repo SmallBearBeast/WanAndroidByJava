@@ -4,10 +4,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
 
-import com.example.libframework.CoreUI.ComponentFrag;
-import com.example.libframework.CoreUI.ViewComponent;
 
 public class PersonalCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
     private ImageView mIvUserBackground;

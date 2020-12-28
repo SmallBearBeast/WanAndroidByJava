@@ -37,6 +37,9 @@ dependencies {
     implementation(name: 'libframework_1.0.0', ext: 'aar')
     implementation(name: 'liblog_1.0.0', ext: 'aar')
     implementation(name: 'libokhttp_1.0.0', ext: 'aar')
+    implementation(name: 'libcomponent_1.0.0', ext: 'aar')
+    implementation(name: 'librv_1.0.0', ext: 'aar')
+    implementation(name: 'libkv_1.0.0', ext: 'aar')
 
     //okhttp网络请求框架
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
