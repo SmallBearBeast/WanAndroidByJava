@@ -16,69 +16,68 @@ import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
 
-public class MainBottomCom extends ViewComponent<ComponentAct> implements View.OnClickListener{
+public class MainBottomCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
+    private static final long CLICK_INTERVAL = 500;
     private int mLastClickViewId;
     private long mLastClickTs;
-    private static final int TWO_CLICK_INTERVAL = 500;
-    private ViewPager mViewPager;
-    private ImageView[] mImageViews = new ImageView[5];
+    private ImageView[] mTabIconIvs = new ImageView[5];
 
     @Override
     protected void onCreate() {
         super.onCreate();
-        mViewPager = findViewById(R.id.vp_main_container);
+        ViewPager mViewPager = findViewById(R.id.vp_main_container);
         int[] viewIds = new int[]{
-                R.id.iv_home, R.id.iv_system, R.id.iv_public, R.id.iv_project, R.id.iv_personal
+                R.id.iv_home_tab_icon, R.id.iv_system_tab_icon, R.id.iv_public_tab_icon, R.id.iv_project_tab_icon, R.id.iv_personal_tab_icon
         };
         for (int i = 0; i < viewIds.length; i++) {
-            mImageViews[i] = findViewById(viewIds[i]);
+            mTabIconIvs[i] = findViewById(viewIds[i]);
         }
-        mImageViews[0].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
+        mTabIconIvs[0].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
         mViewPager.addOnPageChangeListener(new OnPageChangeListenerWrapper() {
             @Override
             public void onPageSelected(int position) {
-                for (int i = 0; i < mImageViews.length; i++) {
-                    mImageViews[i].setColorFilter(ResourceUtil.getColor(R.color.color_5c5c5c));
+                for (ImageView imageView : mTabIconIvs) {
+                    imageView.setColorFilter(ResourceUtil.getColor(R.color.color_5c5c5c));
                 }
-                mImageViews[position].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
+                mTabIconIvs[position].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
             }
         });
-        clickListener(this, R.id.ll_home, R.id.ll_system, R.id.ll_public, R.id.ll_project, R.id.ll_personal);
+        clickListener(this, R.id.ll_home_tab, R.id.ll_system_tab, R.id.ll_public_tab, R.id.ll_project_tab, R.id.ll_personal_tab);
     }
 
     @Override
     public void onClick(View v) {
         long curTs = System.currentTimeMillis();
-        if (mLastClickViewId != v.getId() || curTs - mLastClickTs > TWO_CLICK_INTERVAL) {
+        if (mLastClickViewId != v.getId() || curTs - mLastClickTs > CLICK_INTERVAL) {
             switch (v.getId()) {
-                case R.id.ll_home:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(0);
+                case R.id.ll_home_tab:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_HOME);
                     break;
-                case R.id.ll_system:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(1);
+                case R.id.ll_system_tab:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_SYSTEM);
                     break;
-                case R.id.ll_public:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(2);
+                case R.id.ll_public_tab:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PUBLIC);
                     break;
-                case R.id.ll_project:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(3);
+                case R.id.ll_project_tab:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PROJECT);
                     break;
-                case R.id.ll_personal:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(4);
+                case R.id.ll_personal_tab:
+                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PERSONAL);
                     break;
             }
         } else {
             switch (v.getId()) {
-                case R.id.ll_home:
+                case R.id.ll_home_tab:
                     ComponentService.get().getComponent(HomeListCom.class).scrollToTop();
                     break;
-                case R.id.ll_system:
+                case R.id.ll_system_tab:
                     ComponentService.get().getComponent(SystemCom.class).scrollToTop();
                     break;
-                case R.id.ll_public:
+                case R.id.ll_public_tab:
                     ComponentService.get().getComponent(PublicCom.class).scrollToTop();
                     break;
-                case R.id.ll_project:
+                case R.id.ll_project_tab:
                     ComponentService.get().getComponent(ProjectCom.class).scrollToTop();
                     break;
             }

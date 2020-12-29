@@ -26,7 +26,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         return R.layout.item_article;
     }
 
-    class HomeVHolder extends VHolder<Article> {
+    static class HomeVHolder extends VHolder<Article> {
         private TextView mTvNewMark;
         private TextView mTvAuthorName;
         private TextView mTvTagName;
@@ -35,7 +35,6 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         private TextView mTvArticleDesc;
         private TextView mTvTopMark;
         private TextView mTvChapterName;
-        private ImageView mIvCollect;
 
         public HomeVHolder(View itemView) {
             super(itemView);
@@ -47,7 +46,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
             mTvArticleDesc = findViewById(R.id.tv_article_desc);
             mTvTopMark = findViewById(R.id.tv_top_mark);
             mTvChapterName = findViewById(R.id.tv_chapter_name);
-            mIvCollect = findViewById(R.id.iv_collect);
+            ImageView mIvCollect = findViewById(R.id.iv_collect);
             setOnClickListener(itemView, mIvCollect);
         }
 

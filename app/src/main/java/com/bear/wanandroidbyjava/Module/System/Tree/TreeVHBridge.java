@@ -27,7 +27,7 @@ public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
         return R.layout.item_tree;
     }
 
-    class TreeVHolder extends VHolder<Tree> {
+    static class TreeVHolder extends VHolder<Tree> {
         private TextView mTvTreeTitle;
         private FlowLayout mFlSubTreeContainer;
 

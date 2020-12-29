@@ -57,7 +57,7 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         }
     }
 
-    class BannerAdapter extends PagerAdapter {
+    static class BannerAdapter extends PagerAdapter {
         private Banner mBanner;
 
         public BannerAdapter(Banner banner) {

@@ -8,6 +8,7 @@ import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.R;
 
+@SuppressWarnings({"rawtypes"})
 public class LoadMoreVHBridge extends VHBridge {
     @NonNull
     @Override

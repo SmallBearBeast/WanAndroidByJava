@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
 public class HomeListVM extends ViewModel {
     private static final String TAG = "HomeListVM";
     private int mNextPageIndex = 1;

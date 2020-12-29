@@ -28,6 +28,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings({"rawtypes"})
 public class HomeListCom extends ViewComponent<ComponentFrag> {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
@@ -42,12 +43,10 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     private EventCallback mEventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
-            switch (event.eventKey) {
-                case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && mHomeListVM.isFirstLoad()) {
-                        doNetWork();
-                    }
-                    break;
+            if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
+                if (event.data instanceof Boolean && (Boolean) event.data && mHomeListVM.isFirstLoad()) {
+                    doNetWork();
+                }
             }
         }
 
@@ -118,10 +117,10 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         mVHAdapter.register(new NoMoreDataVHBridge(), BRIDGE_NO_MORE_DATA);
         mVHAdapter.setOnGetDataType(new VHAdapter.OnGetDataType() {
             @Override
-            public int getType(Object obj, int pos) {
-                if (obj.equals(BRIDGE_LOAD_MORE)) {
+            public int getType(Object data, int pos) {
+                if (data.equals(BRIDGE_LOAD_MORE)) {
                     return BRIDGE_LOAD_MORE;
-                } else if (obj.equals(BRIDGE_NO_MORE_DATA)) {
+                } else if (data.equals(BRIDGE_NO_MORE_DATA)) {
                     return BRIDGE_NO_MORE_DATA;
                 }
                 return -1;
