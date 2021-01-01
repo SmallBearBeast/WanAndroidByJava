@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ViewComponent;
+import com.bear.librv.CustomData;
 import com.bear.librv.DataManager;
-import com.bear.librv.DataType;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Bean.Article;
@@ -84,19 +84,8 @@ public class PublicListCom extends ViewComponent<ComponentFrag> {
         mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
-        mVHAdapter.register(new LoadMoreVHBridge(), BRIDGE_LOAD_MORE);
-        mVHAdapter.register(new NoMoreDataVHBridge(), BRIDGE_NO_MORE_DATA);
-        mVHAdapter.setOnGetDataType(new VHAdapter.OnGetDataType() {
-            @Override
-            public int getType(Object obj, int pos) {
-                if (obj.equals(BRIDGE_LOAD_MORE)) {
-                    return BRIDGE_LOAD_MORE;
-                } else if (obj.equals(BRIDGE_NO_MORE_DATA)) {
-                    return BRIDGE_NO_MORE_DATA;
-                }
-                return -1;
-            }
-        });
+        mVHAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
+        mVHAdapter.register(new NoMoreDataVHBridge(), CustomData.of(BRIDGE_NO_MORE_DATA));
         mRecyclerView.setAdapter(mVHAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -131,12 +120,12 @@ public class PublicListCom extends ViewComponent<ComponentFrag> {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
-                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
-                    mDataManager.addLast(DataType.of(BRIDGE_NO_MORE_DATA));
+                    mDataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
+                    mDataManager.addLast(CustomData.of(BRIDGE_NO_MORE_DATA));
                 } else {
-                    mDataManager.remove(DataType.of(BRIDGE_LOAD_MORE));
+                    mDataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
                     mDataManager.addLast(articles);
-                    mDataManager.addLast(DataType.of(BRIDGE_LOAD_MORE));
+                    mDataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
                 }
             }
         });
