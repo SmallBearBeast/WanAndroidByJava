@@ -13,22 +13,20 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 
 public class WebContentCom extends ViewComponent<ComponentAct> {
     private static final String TAG = WebAct.TAG + "-WebContentCom";
     private ComWebView mWvContent;
-    private Article mArticle;
 
     @Override
     protected void onCreate() {
-        mArticle = ShareVM.get(getDependence(), WebAct.KEY_WEB_CONTENT_ARTICLE);
         FrameLayout flWebContainer = findViewById(R.id.fl_web_container);
         mWvContent = new ComWebView(getDependence().getApplicationContext());
         flWebContainer.addView(mWvContent, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         initWebCallback();
-        mWvContent.loadUrl(mArticle.link);
+        String link = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
+        mWvContent.loadUrl(link);
     }
 
     @Override

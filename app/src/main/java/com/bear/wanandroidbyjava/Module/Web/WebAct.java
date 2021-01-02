@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ShareVM;
-import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 
 public class WebAct extends ComponentAct {
     public static final String TAG = "web_tag";
-    public static final String KEY_WEB_CONTENT_ARTICLE = "key_web_content_article";
+    public static final String KEY_WEB_LINK = "key_web_link";
+    public static final String KEY_WEB_TITLE = "key_web_title";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,10 +27,10 @@ public class WebAct extends ComponentAct {
 
     @Override
     protected void handleIntent(Intent intent) {
-        Article article = intent.getParcelableExtra(KEY_WEB_CONTENT_ARTICLE);
-        if (article != null) {
-            ShareVM.put(this, KEY_WEB_CONTENT_ARTICLE, article);
-        }
+        String title = intent.getStringExtra(KEY_WEB_TITLE);
+        String link = intent.getStringExtra(KEY_WEB_LINK);
+        ShareVM.put(this, KEY_WEB_TITLE, title);
+        ShareVM.put(this, KEY_WEB_LINK, link);
     }
 
     @Override
@@ -38,9 +39,10 @@ public class WebAct extends ComponentAct {
     }
 
     // TODO: 2020-04-19 WebAct is set to an independent process when version is less than 7.
-    public static void go(Context context, Article article) {
+    public static void go(Context context, String title, @NonNull String link) {
         Intent intent = new Intent(context, WebAct.class);
-        intent.putExtra(KEY_WEB_CONTENT_ARTICLE, article);
+        intent.putExtra(KEY_WEB_TITLE, title);
+        intent.putExtra(KEY_WEB_LINK, link);
         ContextCompat.startActivity(context, intent, null);
     }
 

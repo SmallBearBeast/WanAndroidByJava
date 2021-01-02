@@ -46,7 +46,6 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
     private ImageView mIvClearInput;
     private TextView mTvSearch;
     private ProgressBar mPbWebLoading;
-    private Article mArticle;
     private String mWebSearchText;
     private String mWebTitle;
 
@@ -56,9 +55,8 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
 
     @Override
     protected void onCreate() {
-        mArticle = ShareVM.get(getDependence(), WebAct.KEY_WEB_CONTENT_ARTICLE);
-        mWebSearchText = mArticle.link;
-        mWebTitle = mArticle.title;
+        mWebSearchText = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
+        mWebTitle = ShareVM.get(getDependence(), WebAct.KEY_WEB_TITLE);
         mIvCollect = findViewById(R.id.iv_collect);
         mEtSearchInput = findViewById(R.id.et_search_input);
         mIvClearInput = findViewById(R.id.iv_clear_input);
@@ -78,7 +76,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
             public void afterTextChanged(Editable s) {
                 boolean focus = mEtSearchInput.hasFocus();
                 mIvClearInput.setVisibility(focus && s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
-                if (!mWebTitle.equals(s.toString())) {
+                if (!s.toString().equals(mWebTitle)) {
                     mWebSearchText = s.toString();
                 }
             }

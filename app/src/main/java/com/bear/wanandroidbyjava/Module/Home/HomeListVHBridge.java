@@ -71,7 +71,8 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.cl_item_container:
-                    WebAct.go(getContext(), getData());
+                    Article article = getData();
+                    WebAct.go(getContext(), article.title, article.link);
                     break;
 
                 case R.id.iv_collect:

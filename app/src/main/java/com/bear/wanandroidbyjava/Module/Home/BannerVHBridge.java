@@ -10,9 +10,11 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Bean.Banner;
+import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.LoopViewPager.LoopViewPager;
 import com.bumptech.glide.Glide;
+import com.example.libbase.OnProtectClickListener;
 
 public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
 
@@ -32,7 +34,7 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         return true;
     }
 
-    class BannerVHolder extends VHolder<Banner> {
+    static class BannerVHolder extends VHolder<Banner> {
         private LoopViewPager mLvpBanner;
 
         public BannerVHolder(View itemView) {
@@ -76,13 +78,19 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             ImageView iv = new ImageView(container.getContext());
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             iv.setLayoutParams(lp);
             container.addView(iv);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(iv).load(mBanner.imageUrlList.get(position)).into(iv);
+            iv.setOnClickListener(new OnProtectClickListener() {
+                @Override
+                public void onProtectClick(View view) {
+                    WebAct.go(view.getContext(), null, mBanner.clickUrlList.get(position));
+                }
+            });
             return iv;
         }
 
