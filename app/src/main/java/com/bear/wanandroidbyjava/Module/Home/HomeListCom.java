@@ -71,7 +71,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
 
     private void initData() {
         mHomeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
-        mHomeListVM.getTotalListLD().observe(getDependence(), new Observer<List>() {
+        mHomeListVM.getTotalDataListLD().observe(getDependence(), new Observer<List>() {
             @Override
             public void onChanged(List list) {
                 mDataManager.setData(list);
@@ -129,7 +129,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
                 }
             }
         });
-        mDataManager.setData(mHomeListVM.getTotalList());
+        mDataManager.setData(mHomeListVM.getTotalDataList());
     }
 
     public void scrollToTop() {

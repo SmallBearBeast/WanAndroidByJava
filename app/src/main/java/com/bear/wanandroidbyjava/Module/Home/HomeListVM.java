@@ -34,8 +34,8 @@ public class HomeListVM extends ViewModel {
     private boolean mFetchingData;
     private boolean mHasRefresh = false;
     private CountDownLatch mCountDownLatch;
-    private List mTotalList = new CopyOnWriteArrayList();
-    private List mLastTotalList = new CopyOnWriteArrayList();
+    private List mTotalDataList = new CopyOnWriteArrayList();
+    private List mLastTotalDataList = new CopyOnWriteArrayList();
     private MutableLiveData<List<Article>> mArticleListLD = new MutableLiveData<>();
     private MutableLiveData<List> mTotalListLD = new MutableLiveData<>();
     private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
@@ -60,7 +60,7 @@ public class HomeListVM extends ViewModel {
                         Banner banner = new Banner();
                         banner.imageUrlList = imageUrlList;
                         banner.clickUrlList = clickUrlList;
-                        mTotalList.add(0, banner);
+                        mTotalDataList.add(0, banner);
                         SLog.d(TAG, "fetchBanner: banner = " + banner);
                         mCountDownLatch.countDown();
                     }
@@ -93,11 +93,11 @@ public class HomeListVM extends ViewModel {
                                 articleList.add(article);
                                 article.top = true;
                             }
-                            if (!mTotalList.isEmpty()) {
-                                if (mTotalList.get(0) instanceof Banner) {
-                                    mTotalList.addAll(1, articleList);
+                            if (!mTotalDataList.isEmpty()) {
+                                if (mTotalDataList.get(0) instanceof Banner) {
+                                    mTotalDataList.addAll(1, articleList);
                                 } else {
-                                    mTotalList.addAll(0, articleList);
+                                    mTotalDataList.addAll(0, articleList);
                                 }
                             }
                             SLog.d(TAG, "fetchTopArticles: articleListSize = " + articleList.size() + ", articleList = " + articleList);
@@ -144,8 +144,8 @@ public class HomeListVM extends ViewModel {
             return;
         }
         mFetchingData = true;
-        mLastTotalList = mTotalList;
-        mTotalList.clear();
+        mLastTotalDataList = mTotalDataList;
+        mTotalDataList.clear();
         mCountDownLatch = new CountDownLatch(3);
         if (!mHasRefresh) {
             mShowProgressLD.postValue(true);
@@ -167,12 +167,12 @@ public class HomeListVM extends ViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            SLog.d(TAG, "checkRefreshFinish: mTotalListSize = " + mTotalList.size());
-            if (CollectionUtil.isEmpty(mTotalList)) {
-                mTotalList = mLastTotalList;
+            SLog.d(TAG, "checkRefreshFinish: mTotalDataListSize = " + mTotalDataList.size());
+            if (CollectionUtil.isEmpty(mTotalDataList)) {
+                mTotalDataList = mLastTotalDataList;
             }
-            if (!CollectionUtil.isEmpty(mTotalList)) {
-                mTotalListLD.postValue(mTotalList);
+            if (!CollectionUtil.isEmpty(mTotalDataList)) {
+                mTotalListLD.postValue(mTotalDataList);
                 mHasRefresh = true;
             }
             mShowProgressLD.postValue(false);
@@ -198,8 +198,8 @@ public class HomeListVM extends ViewModel {
                             for (ArticleBean articleBean : articleBeanList) {
                                 articleList.add(articleBean.toArticle());
                             }
-                            mTotalList.addAll(articleList);
-                            SLog.d(TAG, "fetchNormalArticles: articleListSize = " + articleList.size() + ", mTotalListSize = " + mTotalList.size() + ", articleList = " + articleList);
+                            mTotalDataList.addAll(articleList);
+                            SLog.d(TAG, "fetchNormalArticles: articleListSize = " + articleList.size() + ", mTotalDataListSize = " + mTotalDataList.size() + ", articleList = " + articleList);
                             if (pageIndex == 1) {
                                 mCountDownLatch.countDown();
                             } else {
@@ -227,15 +227,15 @@ public class HomeListVM extends ViewModel {
         return mHasRefresh;
     }
 
-    public List getTotalList() {
-        return mTotalList;
+    public List getTotalDataList() {
+        return mTotalDataList;
     }
 
     public MutableLiveData<List<Article>> getArticleListLD() {
         return mArticleListLD;
     }
 
-    public MutableLiveData<List> getTotalListLD() {
+    public MutableLiveData<List> getTotalDataListLD() {
         return mTotalListLD;
     }
 
