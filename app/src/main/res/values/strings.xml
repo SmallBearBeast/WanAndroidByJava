@@ -21,4 +21,6 @@
     <string name="str_search">搜索</string>
     <string name="str_cancel">取消</string>
     <string name="str_please_input">请输入搜索内容</string>
+
+    <string name="str_feature_not_open">功能尚未开放</string>
 </resources>

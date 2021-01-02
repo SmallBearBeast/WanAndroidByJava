@@ -8,6 +8,7 @@ import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Module.Search.SearchAct;
 import com.bear.wanandroidbyjava.Module.Square.SquareAct;
 import com.example.libbase.OnProtectClickListener;
+import com.example.libbase.Util.ToastUtil;
 
 public class HomeTopBarCom extends ViewComponent<ComponentFrag> {
 
@@ -18,11 +19,13 @@ public class HomeTopBarCom extends ViewComponent<ComponentFrag> {
             public void onProtectClick(View view) {
                 switch (view.getId()) {
                     case R.id.iv_square:
-                        SquareAct.go(getComActivity());
+                        ToastUtil.showToast(R.string.str_feature_not_open);
+//                        SquareAct.go(getComActivity());
                         break;
 
                     case R.id.iv_search:
-                        SearchAct.go(getComActivity());
+                        ToastUtil.showToast(R.string.str_feature_not_open);
+//                        SearchAct.go(getComActivity());
                         break;
                 }
             }
