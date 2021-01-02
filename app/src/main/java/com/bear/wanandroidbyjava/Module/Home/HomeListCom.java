@@ -44,7 +44,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         @Override
         protected void onEvent(Event event) {
             if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
-                if (event.data instanceof Boolean && (Boolean) event.data && mHomeListVM.isFirstLoad()) {
+                if (event.data instanceof Boolean && (Boolean) event.data && !mHomeListVM.hasRefresh()) {
                     doNetWork();
                 }
             }
