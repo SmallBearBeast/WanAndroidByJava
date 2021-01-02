@@ -75,6 +75,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
             @Override
             public void onChanged(List list) {
                 mDataManager.setData(list);
+                mDataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
             }
         });
         mHomeListVM.getArticleListLD().observe(getDependence(), new Observer<List<Article>>() {
