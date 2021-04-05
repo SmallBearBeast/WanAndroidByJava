@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel;
 import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.NetBean.ArticleListBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
@@ -16,9 +18,7 @@ import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class ProjectListVM extends ViewModel {
 
     private void fetchProject(int cid, final int pageIndex) {
         SLog.d(TAG, "fetchProject: cid = " + cid + ", pageIndex = " + pageIndex);
-        OkHelper.getInstance().getMethod(NetUrl.getProjectArticleList(cid, pageIndex), new OkCallback<WanResponce<ArticleListBean>>(new TypeToken<WanResponce<ArticleListBean>>() {}) {
+        OkHelper.getInstance().getMethod(NetUrl.getProjectArticleList(cid, pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {

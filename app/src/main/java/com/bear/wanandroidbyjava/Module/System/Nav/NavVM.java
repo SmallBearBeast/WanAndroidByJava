@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Bean.Nav;
 import com.bear.wanandroidbyjava.NetBean.NavBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class NavVM extends ViewModel {
     public void fetchNav() {
         SLog.d(TAG, "fetchNav: start");
         mShowProgressLD.postValue(true);
-        OkHelper.getInstance().getMethod(NetUrl.NAV, new OkCallback<WanResponce<List<NavBean>>>(new TypeToken<WanResponce<List<NavBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.NAV, new WanOkCallback<List<NavBean>>(WanTypeToken.NAV_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<NavBean>> data) {
                 if (data != null) {

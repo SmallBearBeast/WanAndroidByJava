@@ -8,16 +8,16 @@ import com.bear.wanandroidbyjava.Bean.Banner;
 import com.bear.wanandroidbyjava.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.NetBean.BannerBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class HomeListVM extends ViewModel {
 
     private void fetchBanner() {
         SLog.d(TAG, "fetchBanner: start");
-        OkHelper.getInstance().getMethod(NetUrl.BANNER, new OkCallback<WanResponce<List<BannerBean>>>(new TypeToken<WanResponce<List<BannerBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.BANNER, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<BannerBean>> data) {
                 if (data != null) {
@@ -77,7 +77,7 @@ public class HomeListVM extends ViewModel {
 
     private void fetchTopArticles() {
         SLog.d(TAG, "fetchTopArticles: start");
-        OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new OkCallback<WanResponce<List<ArticleBean>>>(new TypeToken<WanResponce<List<ArticleBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ArticleBean>> data) {
                 if (data != null) {
@@ -181,7 +181,7 @@ public class HomeListVM extends ViewModel {
 
     private void fetchNormalArticles(final int pageIndex) {
         SLog.d(TAG, "fetchNormalArticles: pageIndex = " + pageIndex + ", mFetchingData = " + mFetchingData);
-        OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(pageIndex), new OkCallback<WanResponce<ArticleListBean>>(new TypeToken<WanResponce<ArticleListBean>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {

@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Bean.PublicTab;
 import com.bear.wanandroidbyjava.NetBean.PublicTabBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
@@ -15,9 +17,7 @@ import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class PublicTabVM extends ViewModel {
             mShowProgressLD.postValue(false);
             return;
         }
-        OkHelper.getInstance().getMethod(NetUrl.PUBLIC_TAB, new OkCallback<WanResponce<List<PublicTabBean>>>(new TypeToken<WanResponce<List<PublicTabBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.PUBLIC_TAB, new WanOkCallback<List<PublicTabBean>>(WanTypeToken.PUBLIC_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<PublicTabBean>> data) {
                 if (data != null) {

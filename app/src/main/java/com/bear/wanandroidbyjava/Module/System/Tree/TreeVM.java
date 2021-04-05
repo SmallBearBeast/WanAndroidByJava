@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Bean.Tree;
 import com.bear.wanandroidbyjava.NetBean.TreeBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class TreeVM extends ViewModel {
     public void fetchTree() {
         SLog.d(TAG, "fetchTree: start");
         mShowProgressLD.postValue(true);
-        OkHelper.getInstance().getMethod(NetUrl.TREE, new OkCallback<WanResponce<List<TreeBean>>>(new TypeToken<WanResponce<List<TreeBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.TREE, new WanOkCallback<List<TreeBean>>(WanTypeToken.TREE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<TreeBean>> data) {
                 if (data != null) {

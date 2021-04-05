@@ -7,16 +7,16 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.NetBean.ProjectTabBean;
+import com.bear.wanandroidbyjava.NetBean.WanOkCallback;
 import com.bear.wanandroidbyjava.NetBean.WanResponce;
+import com.bear.wanandroidbyjava.NetBean.WanTypeToken;
 import com.bear.wanandroidbyjava.NetUrl;
 import com.bear.wanandroidbyjava.WanRoomDataBase;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkCallback;
 import com.example.libokhttp.OkHelper;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class ProjectVM extends ViewModel {
         SLog.d(TAG, "fetchProjectTab: start");
         mShowProgressLD.postValue(true);
         fetchProjectTabFromDb();
-        OkHelper.getInstance().getMethod(NetUrl.PROJECT_TAB, new OkCallback<WanResponce<List<ProjectTabBean>>>(new TypeToken<WanResponce<List<ProjectTabBean>>>(){}) {
+        OkHelper.getInstance().getMethod(NetUrl.PROJECT_TAB, new WanOkCallback<List<ProjectTabBean>>(WanTypeToken.PROJECT_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ProjectTabBean>> data) {
                 if (data != null) {
