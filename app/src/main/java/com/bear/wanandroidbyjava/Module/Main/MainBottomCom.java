@@ -25,7 +25,7 @@ public class MainBottomCom extends ViewComponent<ComponentAct> implements View.O
     @Override
     protected void onCreate() {
         super.onCreate();
-        ViewPager mViewPager = findViewById(R.id.vp_main_container);
+        ViewPager mViewPager = findViewById(R.id.mainViewPager);
         int[] viewIds = new int[]{
                 R.id.iv_home_tab_icon, R.id.iv_system_tab_icon, R.id.iv_public_tab_icon, R.id.iv_project_tab_icon, R.id.iv_personal_tab_icon
         };
