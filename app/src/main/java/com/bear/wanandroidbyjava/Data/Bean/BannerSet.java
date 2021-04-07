@@ -2,13 +2,13 @@ package com.bear.wanandroidbyjava.Data.Bean;
 
 import java.util.List;
 
-public class Banner {
+public class BannerSet {
     public List<String> imageUrlList;
     public List<String> clickUrlList;
 
     @Override
     public String toString() {
-        return "Banner{" +
+        return "BannerSet{" +
                 "imageUrlList=" + imageUrlList +
                 ", clickUrlList=" + clickUrlList +
                 '}';

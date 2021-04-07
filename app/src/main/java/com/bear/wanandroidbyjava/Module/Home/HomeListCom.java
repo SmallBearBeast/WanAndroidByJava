@@ -16,7 +16,7 @@ import com.bear.librv.DataManager;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.Article;
-import com.bear.wanandroidbyjava.Data.Bean.Banner;
+import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
@@ -112,7 +112,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
-        mVHAdapter.register(new BannerVHBridge(), Banner.class);
+        mVHAdapter.register(new BannerVHBridge(), BannerSet.class);
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
         mVHAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
         mVHAdapter.register(new NoMoreDataVHBridge(), CustomData.of(BRIDGE_NO_MORE_DATA));

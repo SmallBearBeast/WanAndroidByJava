@@ -47,6 +47,7 @@ public class ArticleBean {
         article.superChapterName = superChapterName;
         article.collect = collect;
         article.fresh = fresh;
+        // TODO: 2021/4/7 niceDate will be 刚刚, need transfer to long
         article.dateStr = StringUtil.isEmpty(niceDate) ? niceShareDate : niceDate;
         article.title = title;
         article.description = desc;

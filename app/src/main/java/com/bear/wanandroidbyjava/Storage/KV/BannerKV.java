@@ -1,28 +1,32 @@
 package com.bear.wanandroidbyjava.Storage.KV;
 
-import com.bear.wanandroidbyjava.Data.Bean.Banner;
+import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.StringUtil;
 
+import java.util.List;
+
 public class BannerKV {
-    public static Banner getBanner() {
-        String kvBannerImageUrlList = SpValHelper.kvBannerImageUrlList.get();
-        String kvBannerClickUrlList = SpValHelper.kvBannerClickUrlList.get();
-        if (StringUtil.isEmpty(kvBannerImageUrlList) && StringUtil.isEmpty(kvBannerClickUrlList)) {
+    public static BannerSet getBannerSet() {
+        String kvBannerImageUrlListStr = SpValHelper.kvBannerImageUrlList.get();
+        String kvBannerClickUrlListStr = SpValHelper.kvBannerClickUrlList.get();
+        if (StringUtil.isEmpty(kvBannerImageUrlListStr) && StringUtil.isEmpty(kvBannerClickUrlListStr)) {
             return null;
         }
-        String[] imageUrls = kvBannerImageUrlList.split(",");
-        String[] clickUrls = kvBannerClickUrlList.split(",");
-        if (CollectionUtil.isSameLength(imageUrls, clickUrls)) {
-            Banner banner = new Banner();
-            banner.imageUrlList = CollectionUtil.asListNull(imageUrls);
-            banner.clickUrlList = CollectionUtil.asListNull(clickUrls);
-            return banner;
-        }
-        return null;
+        BannerSet bannerSet = new BannerSet();
+        bannerSet.imageUrlList = StringUtil.splitToList(kvBannerImageUrlListStr, ",", String.class);
+        bannerSet.clickUrlList = StringUtil.splitToList(kvBannerClickUrlListStr, ",", String.class);
+        return bannerSet;
     }
 
-    public static void saveBanner(Banner banner) {
-        // TODO: 2021/4/7
+    public static void saveBannerSet(BannerSet bannerSet) {
+        List<String> imageUrlList = bannerSet.imageUrlList;
+        List<String> clickUrlList = bannerSet.clickUrlList;
+        if (CollectionUtil.isSameLength(imageUrlList, clickUrlList)) {
+            String imageUrlStr = StringUtil.joinToString(imageUrlList, ",");
+            String clickUrlStr = StringUtil.joinToString(clickUrlList, ",");
+            SpValHelper.kvBannerImageUrlList.set(imageUrlStr);
+            SpValHelper.kvBannerClickUrlList.set(clickUrlStr);
+        }
     }
 }

@@ -2,7 +2,9 @@ package com.bear.wanandroidbyjava;
 
 import android.app.Application;
 
+import com.bear.libkv.SpVal.SpHelper;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
+import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.AppInitUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
@@ -25,5 +27,7 @@ public class WanApp extends Application {
             }
         });
         WanRoomDataBase.init(this);
+        SpHelper.init(this);
+        SpHelper.preload(SpValHelper.SP_GLOBAL_CONFIG);
     }
 }

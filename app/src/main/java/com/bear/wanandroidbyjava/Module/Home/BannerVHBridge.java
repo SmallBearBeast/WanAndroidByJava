@@ -9,7 +9,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
-import com.bear.wanandroidbyjava.Data.Bean.Banner;
+import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.LoopViewPager.LoopViewPager;
@@ -34,7 +34,7 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         return true;
     }
 
-    static class BannerVHolder extends VHolder<Banner> {
+    static class BannerVHolder extends VHolder<BannerSet> {
         private LoopViewPager mLvpBanner;
 
         public BannerVHolder(View itemView) {
@@ -53,22 +53,22 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
         }
 
         @Override
-        public void bindFull(int pos, Banner banner) {
-            super.bindFull(pos, banner);
-            mLvpBanner.setAdapter(new BannerAdapter(banner));
+        public void bindFull(int pos, BannerSet bannerSet) {
+            super.bindFull(pos, bannerSet);
+            mLvpBanner.setAdapter(new BannerAdapter(bannerSet));
         }
     }
 
     static class BannerAdapter extends PagerAdapter {
-        private Banner mBanner;
+        private BannerSet mBannerSet;
 
-        public BannerAdapter(Banner banner) {
-            mBanner = banner;
+        public BannerAdapter(BannerSet bannerSet) {
+            mBannerSet = bannerSet;
         }
 
         @Override
         public int getCount() {
-            return mBanner.imageUrlList.size();
+            return mBannerSet.imageUrlList.size();
         }
 
         @Override
@@ -84,11 +84,11 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
             iv.setLayoutParams(lp);
             container.addView(iv);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(iv).load(mBanner.imageUrlList.get(position)).into(iv);
+            Glide.with(iv).load(mBannerSet.imageUrlList.get(position)).into(iv);
             iv.setOnClickListener(new OnProtectClickListener() {
                 @Override
                 public void onProtectClick(View view) {
-                    WebAct.go(view.getContext(), null, mBanner.clickUrlList.get(position));
+                    WebAct.go(view.getContext(), null, mBannerSet.clickUrlList.get(position));
                 }
             });
             return iv;

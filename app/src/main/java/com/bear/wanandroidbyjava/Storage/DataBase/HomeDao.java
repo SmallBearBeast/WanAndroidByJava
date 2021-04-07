@@ -11,7 +11,7 @@ import java.util.List;
 
 @Dao
 public abstract class HomeDao extends ArticleDao {
-    @Query("SELECT * FROM ArticleE WHERE category = 1 ORDER BY insertTime")
+    @Query("SELECT * FROM ArticleE WHERE category = 1 ORDER BY dateStr DESC")
     abstract List<ArticleE> queryMainArticleE();
 
     public List<Article> queryHomeArticle() {
