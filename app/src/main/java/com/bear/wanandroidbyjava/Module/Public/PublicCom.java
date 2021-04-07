@@ -13,7 +13,7 @@ import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.librv.VHAdapter;
-import com.bear.wanandroidbyjava.Bean.PublicTab;
+import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.NoSwitchViewPager;

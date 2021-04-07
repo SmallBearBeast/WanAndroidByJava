@@ -16,7 +16,6 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.KeyBoardUtil;
 import com.example.libbase.Util.StringUtil;

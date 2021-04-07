@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.bear.libcomponent.ComponentAct;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
-import com.bear.wanandroidbyjava.Bean.PublicTab;
+import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
 

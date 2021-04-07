@@ -16,7 +16,7 @@ import com.bear.librv.CustomData;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
-import com.bear.wanandroidbyjava.Bean.Article;
+import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.Module.Home.HomeListVHBridge;
 import com.bear.wanandroidbyjava.Module.Home.LoadMoreVHBridge;

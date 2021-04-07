@@ -2,6 +2,7 @@ package com.bear.wanandroidbyjava;
 
 import android.app.Application;
 
+import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
 import com.example.libbase.Util.AppInitUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;

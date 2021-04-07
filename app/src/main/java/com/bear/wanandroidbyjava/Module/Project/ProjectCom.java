@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Bean.ProjectTab;
+import com.bear.wanandroidbyjava.Data.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;

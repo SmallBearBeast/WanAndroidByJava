@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
-import com.bear.wanandroidbyjava.Bean.SubTree;
-import com.bear.wanandroidbyjava.Bean.Tree;
+import com.bear.wanandroidbyjava.Data.Bean.SubTree;
+import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.FlowLayout;
 import com.example.libbase.Util.ToastUtil;

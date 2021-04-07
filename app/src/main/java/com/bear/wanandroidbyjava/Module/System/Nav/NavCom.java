@@ -13,7 +13,7 @@ import com.bear.libcomponent.ViewComponent;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
-import com.bear.wanandroidbyjava.Bean.Nav;
+import com.bear.wanandroidbyjava.Data.Bean.Nav;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.CollectionUtil;
