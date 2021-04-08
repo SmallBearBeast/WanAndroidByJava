@@ -34,8 +34,8 @@ public class HomeListVM extends ViewModel {
     private static final int TIME_OUT_DURATION = 10;
     private int mNextPageIndex = 1;
     private boolean mCanLoadMore;
-    private boolean mFetchingData;
-    private boolean mHasRefresh = false;
+    private boolean mIsLoadingData;
+    private boolean mIsFinishFirstRefresh = false;
     private CountDownLatch mCountDownLatch;
     private List mTotalDataList = new CopyOnWriteArrayList();
     private List mLastTotalDataList = new CopyOnWriteArrayList();
@@ -43,19 +43,19 @@ public class HomeListVM extends ViewModel {
     private MutableLiveData<List> mTotalListLD = new MutableLiveData<>();
     private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
 
-    private void fetchBanner() {
-        SLog.d(TAG, "fetchBanner: start");
+    private void loadBannerSet() {
+        SLog.d(TAG, "loadBannerSet: start");
         OkHelper.getInstance().getMethod(NetUrl.BANNER, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<BannerBean>> data) {
                 if (data != null) {
-                    SLog.d(TAG, "fetchBanner: errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
+                    SLog.d(TAG, "loadBannerSet: errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (CollectionUtil.isEmpty(data.data)) {
-                        SLog.d(TAG, "fetchBanner: bannerBeanList is empty");
+                        SLog.d(TAG, "loadBannerSet: bannerBeanList is empty");
                     } else {
                         BannerSet bannerSet = DataHelper.bannerBeanToBannerSet(data.data);
                         mTotalDataList.add(0, bannerSet);
-                        SLog.d(TAG, "fetchBanner: banner = " + bannerSet);
+                        SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
                         mCountDownLatch.countDown();
                         BannerKV.saveBannerSet(bannerSet);
                     }
@@ -64,22 +64,22 @@ public class HomeListVM extends ViewModel {
 
             @Override
             protected void onFail() {
-                SLog.d(TAG, "fetchBanner: onFail");
+                SLog.d(TAG, "loadBannerSet: onFail");
                 mCountDownLatch.countDown();
             }
         });
     }
 
-    private void fetchTopArticles() {
-        SLog.d(TAG, "fetchTopArticles: start");
+    private void loadTopArticles() {
+        SLog.d(TAG, "loadTopArticles: start");
         OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ArticleBean>> data) {
                 if (data != null) {
-                    SLog.d(TAG, "fetchTopArticles: errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
+                    SLog.d(TAG, "loadTopArticles: errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (data.data != null) {
                         if (CollectionUtil.isEmpty(data.data)) {
-                            SLog.d(TAG, "fetchTopArticles: articleBeanList is empty");
+                            SLog.d(TAG, "loadTopArticles: articleBeanList is empty");
                         } else {
                             List<Article> articleList = DataHelper.articleBeanToArticle(data.data, true);
                             if (!mTotalDataList.isEmpty()) {
@@ -89,7 +89,7 @@ public class HomeListVM extends ViewModel {
                                     mTotalDataList.addAll(0, articleList);
                                 }
                             }
-                            SLog.d(TAG, "fetchTopArticles: articleListSize = " + articleList.size() +
+                            SLog.d(TAG, "loadTopArticles: articleListSize = " + articleList.size() +
                                     ", articleList = " + articleList);
                             mCountDownLatch.countDown();
                             WanRoomDataBase.get().homeDao().insertHomeArticle(articleList);
@@ -100,7 +100,7 @@ public class HomeListVM extends ViewModel {
 
             @Override
             protected void onFail() {
-                SLog.d(TAG, "fetchTopArticles: onFail");
+                SLog.d(TAG, "loadTopArticles: onFail");
                 mCountDownLatch.countDown();
             }
         });
@@ -111,42 +111,42 @@ public class HomeListVM extends ViewModel {
             SLog.d(TAG, "loadMore: net is unConnected");
             return;
         }
-        SLog.d(TAG, "loadMore: mCanLoadMore = " + mCanLoadMore + ", mFetchingData = "
-                + mFetchingData + ", mNextPageIndex = " + mNextPageIndex);
+        SLog.d(TAG, "loadMore: mCanLoadMore = " + mCanLoadMore + ", mIsLoadingData = "
+                + mIsLoadingData + ", mNextPageIndex = " + mNextPageIndex);
         if (!canLoadMore()) {
             return;
         }
-        mFetchingData = true;
-        fetchNormalArticles(mNextPageIndex);
+        mIsLoadingData = true;
+        loadNormalArticles(mNextPageIndex);
     }
 
     public boolean canLoadMore() {
-        return mCanLoadMore && !mFetchingData;
+        return mCanLoadMore && !mIsLoadingData;
     }
 
     public void refresh() {
         if (!NetWorkUtil.isConnected()) {
-            SLog.d(TAG, "refresh: net is unConnected");
+            SLog.d(TAG, "refresh: net is not connected");
             mShowProgressLD.postValue(false);
             return;
         }
-        SLog.d(TAG, "refresh: mFetchingData = " + mFetchingData);
-        if (mFetchingData) {
+        SLog.d(TAG, "refresh: mIsLoadingData = " + mIsLoadingData);
+        if (mIsLoadingData) {
             return;
         }
-        mFetchingData = true;
+        mIsLoadingData = true;
         mLastTotalDataList = mTotalDataList;
         mTotalDataList.clear();
         mCountDownLatch = new CountDownLatch(3);
-        if (!mHasRefresh) {
+        if (!mIsFinishFirstRefresh) {
             mShowProgressLD.postValue(true);
         }
         ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
-                fetchBanner();
-                fetchTopArticles();
-                fetchNormalArticles(START_PAGE_INDEX);
+                loadBannerSet();
+                loadTopArticles();
+                loadNormalArticles(START_PAGE_INDEX);
                 checkRefreshFinish();
             }
         });
@@ -164,30 +164,30 @@ public class HomeListVM extends ViewModel {
             }
             if (!CollectionUtil.isEmpty(mTotalDataList)) {
                 mTotalListLD.postValue(mTotalDataList);
-                mHasRefresh = true;
+                mIsFinishFirstRefresh = true;
             }
             mShowProgressLD.postValue(false);
         }
     }
 
-    private void fetchNormalArticles(final int pageIndex) {
-        SLog.d(TAG, "fetchNormalArticles: pageIndex = " + pageIndex + ", mFetchingData = " + mFetchingData);
+    private void loadNormalArticles(final int pageIndex) {
+        SLog.d(TAG, "loadNormalArticles: pageIndex = " + pageIndex + ", mIsLoadingData = " + mIsLoadingData);
         OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {
-                    SLog.d(TAG, "fetchNormalArticles: errorCode = " + data.errorCode +
+                    SLog.d(TAG, "loadNormalArticles: errorCode = " + data.errorCode +
                             (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (data.data != null) {
                         if (CollectionUtil.isEmpty(data.data.datas)) {
-                            SLog.d(TAG, "fetchNormalArticles: articleBeanList is empty");
+                            SLog.d(TAG, "loadNormalArticles: articleBeanList is empty");
                             mCanLoadMore = false;
                             mArticleListLD.postValue(null);
                         } else {
                             mCanLoadMore = true;
                             List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
                             mTotalDataList.addAll(articleList);
-                            SLog.d(TAG, "fetchNormalArticles: articleListSize = " + articleList.size() +
+                            SLog.d(TAG, "loadNormalArticles: articleListSize = " + articleList.size() +
                                     ", mTotalDataListSize = " + mTotalDataList.size() + ", articleList = " + articleList);
                             if (pageIndex == 1) {
                                 mCountDownLatch.countDown();
@@ -199,13 +199,13 @@ public class HomeListVM extends ViewModel {
                         mNextPageIndex = pageIndex + 1;
                     }
                 }
-                mFetchingData = false;
+                mIsLoadingData = false;
             }
 
             @Override
             protected void onFail() {
-                SLog.d(TAG, "fetchNormalArticles: onFail");
-                mFetchingData = false;
+                SLog.d(TAG, "loadNormalArticles: onFail");
+                mIsLoadingData = false;
                 if (pageIndex == 1) {
                     mCountDownLatch.countDown();
                 }
@@ -213,8 +213,8 @@ public class HomeListVM extends ViewModel {
         });
     }
 
-    public boolean hasRefresh() {
-        return mHasRefresh;
+    public boolean isFinishFirstRefresh() {
+        return mIsFinishFirstRefresh;
     }
 
     public List getTotalDataList() {
