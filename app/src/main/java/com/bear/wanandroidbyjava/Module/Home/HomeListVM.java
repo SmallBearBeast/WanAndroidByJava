@@ -12,8 +12,7 @@ import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
 import com.bear.wanandroidbyjava.Net.NetUrl;
-import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
-import com.bear.wanandroidbyjava.Storage.KV.BannerKV;
+import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Tool.Help.DataHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.ExecutorUtil;
@@ -45,7 +44,7 @@ public class HomeListVM extends ViewModel {
     private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
 
     public void refresh() {
-        loadDataFromDB();
+        loadDataFromStorage();
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is not connected");
             mShowProgressLD.postValue(false);
@@ -65,15 +64,23 @@ public class HomeListVM extends ViewModel {
         loadAllData();
     }
 
-    private void loadDataFromDB() {
+    private void loadDataFromStorage() {
         ExecutorUtil.execute(new Runnable(){
             @Override
             public void run() {
-                BannerSet bannerSet = BannerKV.getBannerSet();
-                List<Article> articleList = WanRoomDataBase.get().homeDao().queryHomeArticle();
                 List dataList = new ArrayList();
-                dataList.add(bannerSet);
-                dataList.addAll(articleList);
+                BannerSet bannerSet = HomeStorage.getBannerSet();
+                if (bannerSet != null) {
+                    dataList.add(bannerSet);
+                }
+                List<Article> topArticleList = HomeStorage.getTopArticleList();
+                if (!CollectionUtil.isEmpty(topArticleList)) {
+                    dataList.addAll(topArticleList);
+                }
+                List<Article> normalArticleList = HomeStorage.getNormalArticleList();
+                if (!CollectionUtil.isEmpty(normalArticleList)) {
+                    dataList.addAll(normalArticleList);
+                }
                 mRefreshDataListLD.postValue(dataList);
             }
         });
@@ -125,7 +132,7 @@ public class HomeListVM extends ViewModel {
                         mTotalDataList.add(0, bannerSet);
                         SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
                         completeOneLoadTask();
-                        BannerKV.saveBannerSet(bannerSet);
+                        HomeStorage.saveBannerSet(bannerSet);
                     }
                 }
             }
@@ -161,7 +168,7 @@ public class HomeListVM extends ViewModel {
                             SLog.d(TAG, "loadTopArticle: articleListSize = " + articleList.size() +
                                     ", articleList = " + articleList);
                             completeOneLoadTask();
-                            WanRoomDataBase.get().homeDao().insertHomeArticle(articleList);
+                            HomeStorage.saveTopArticleList(articleList);
                         }
                     }
                 }
@@ -196,7 +203,7 @@ public class HomeListVM extends ViewModel {
                                     ", mTotalDataListSize = " + mTotalDataList.size() + ", articleList = " + articleList);
                             if (pageIndex == 1) {
                                 completeOneLoadTask();
-                                WanRoomDataBase.get().homeDao().insertHomeArticle(articleList);
+                                HomeStorage.saveNormalArticleList(articleList);
                             } else {
                                 mLoadMoreArticleListLD.postValue(articleList);
                             }

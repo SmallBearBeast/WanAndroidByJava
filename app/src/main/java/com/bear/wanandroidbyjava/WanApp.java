@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.bear.libkv.SpVal.SpHelper;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
@@ -14,9 +15,11 @@ import com.example.libokhttp.OkHelper;
 
 public class WanApp extends Application {
     private static final String TAG = "WanApp";
+    private static Context context;
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         OkHelper.init(this, null);
         AppInitUtil.init(this);
         NetReceiver.init(this, new NetReceiver.NetChangeListener() {
@@ -29,5 +32,9 @@ public class WanApp extends Application {
         WanRoomDataBase.init(this);
         SpHelper.init(this);
         SpHelper.preload(SpValHelper.SP_GLOBAL_CONFIG);
+    }
+
+    public static Context getAppContext() {
+        return context;
     }
 }

@@ -25,7 +25,6 @@ public abstract class WanRoomDataBase extends RoomDatabase {
     public abstract ArticleDao articleDao();
     public abstract PublicDao publicDao();
     public abstract ProjectDao projectDao();
-    public abstract HomeDao homeDao();
 
     public static void init(Application app) {
         INSTANCE = Room.databaseBuilder(app, WanRoomDataBase.class, "wan_database")
