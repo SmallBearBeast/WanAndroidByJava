@@ -2,8 +2,10 @@ package com.bear.wanandroidbyjava.Tool.Help;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
+import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.Data.NetBean.BannerBean;
+import com.bear.wanandroidbyjava.Data.NetBean.TreeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +36,13 @@ public class DataHelper {
         bannerSet.imageUrlList = imageUrlList;
         bannerSet.clickUrlList = clickUrlList;
         return bannerSet;
+    }
+
+    public static List<Tree> treeBeanToTree(List<TreeBean> treeBeanList) {
+        List<Tree> treeList = new ArrayList<>();
+        for (TreeBean treeBean : treeBeanList) {
+            treeList.add(treeBean.toTree());
+        }
+        return treeList;
     }
 }

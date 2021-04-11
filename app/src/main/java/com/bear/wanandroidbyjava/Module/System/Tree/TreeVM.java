@@ -4,66 +4,62 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
-import com.bear.wanandroidbyjava.Data.NetBean.TreeBean;
-import com.bear.wanandroidbyjava.Net.WanOkCallback;
-import com.bear.wanandroidbyjava.Net.WanResponce;
-import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Manager.TreeManager;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.StringUtil;
+import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TreeVM extends ViewModel {
+public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
     private static final String TAG = "TreeVM";
-    private boolean mIsFirstLoad = true;
-    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
-    private MutableLiveData<List<Tree>> mTreeLD = new MutableLiveData<>();
+    private boolean isFirstLoad = true;
+    private TreeManager treeManager= new TreeManager();
+    private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
+    private MutableLiveData<List<Tree>> treeLD = new MutableLiveData<>();
 
-    public void fetchTree() {
-        SLog.d(TAG, "fetchTree: start");
-        mShowProgressLD.postValue(true);
-        OkHelper.getInstance().getMethod(NetUrl.TREE, new WanOkCallback<List<TreeBean>>(WanTypeToken.TREE_TOKEN) {
-            @Override
-            protected void onSuccess(WanResponce<List<TreeBean>> data) {
-                if (data != null) {
-                    SLog.d(TAG, "fetchTree: data.errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", data.errorMsg = " + data.errorMsg));
-                    if (CollectionUtil.isEmpty(data.data)) {
-                        SLog.d(TAG, "fetchTree: treeBeanList is empty");
-                    } else {
-                        List<TreeBean> treeBeanList = data.data;
-                        List<Tree> treeList = new ArrayList<>();
-                        for (TreeBean treeBean : treeBeanList) {
-                            treeList.add(treeBean.toTree());
-                        }
-                        mTreeLD.postValue(treeList);
-                        mIsFirstLoad = false;
-                        SLog.d(TAG, "fetchTree: treeBeanList.size = " + treeBeanList.size() + ", treeBeanList = " + treeBeanList);
-                    }
-                }
-                mShowProgressLD.postValue(false);
-            }
-
-            @Override
-            protected void onFail() {
-                SLog.d(TAG, "fetchTree: onFail");
-                mShowProgressLD.postValue(false);
-            }
-        });
+    public void loadTreeData() {
+        treeManager.loadDataFromStorage(this);
+        if (!NetWorkUtil.isConnected()) {
+            SLog.d(TAG, "loadTreeData: net is not connected");
+            showProgressLD.postValue(false);
+            return;
+        }
+        if (isFirstLoad) {
+            showProgressLD.postValue(true);
+        }
+        treeManager.loadDataFromNet(this);
     }
 
     public MutableLiveData<List<Tree>> getTreeLD() {
-        return mTreeLD;
+        return treeLD;
     }
 
     public MutableLiveData<Boolean> getShowProgressLD() {
-        return mShowProgressLD;
+        return showProgressLD;
     }
 
     public boolean isFirstLoad() {
-        return mIsFirstLoad;
+        return isFirstLoad;
+    }
+
+    @Override
+    public void onLoad(List<Tree> treeList, boolean fromNet) {
+        if (fromNet) {
+            if (!CollectionUtil.isEmpty(treeList)) {
+                treeLD.postValue(treeList);
+                isFirstLoad = false;
+            } else {
+                List<Tree> lastTreeList = treeLD.getValue();
+                if (CollectionUtil.isEmpty(lastTreeList)) {
+                    treeLD.postValue(null);
+                }
+            }
+            showProgressLD.postValue(false);
+        } else {
+            if (!CollectionUtil.isEmpty(treeList)) {
+                treeLD.postValue(treeList);
+            }
+        }
     }
 }

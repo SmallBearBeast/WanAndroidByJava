@@ -26,19 +26,19 @@ import java.util.List;
 import java.util.Set;
 
 public class TreeCom extends ViewComponent<ComponentFrag> {
-    private RecyclerView mRecyclerView;
-    private ProgressBar mPbTreeLoading;
-    private VHAdapter mVHAdapter;
-    private DataManager mDataManager;
-    private TreeVM mTreeVM;
+    private RecyclerView recyclerView;
+    private ProgressBar pbTreeLoading;
+    private VHAdapter vhAdapter;
+    private DataManager dataManager;
+    private TreeVM treeVM;
 
-    private EventCallback mEventCallback = new EventCallback() {
+    private EventCallback eventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
             switch (event.eventKey) {
                 case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && mTreeVM.isFirstLoad()) {
-                        mTreeVM.fetchTree();
+                    if (event.data instanceof Boolean && (Boolean) event.data && treeVM.isFirstLoad()) {
+                        treeVM.loadTreeData();
                     }
                     break;
             }
@@ -59,42 +59,42 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onCreateView() {
-        mRecyclerView = findViewById(R.id.rv_tree_container);
-        mPbTreeLoading = findViewById(R.id.pb_tree_loading);
-        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
-        mDataManager = mVHAdapter.getDataManager();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        mVHAdapter.register(new TreeVHBridge(), Tree.class);
-        mRecyclerView.setAdapter(mVHAdapter);
-        mDataManager.setData(mTreeVM.getTreeLD().getValue());
+        recyclerView = findViewById(R.id.rv_tree_container);
+        pbTreeLoading = findViewById(R.id.pb_tree_loading);
+        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        dataManager = vhAdapter.getDataManager();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        vhAdapter.register(new TreeVHBridge(), Tree.class);
+        recyclerView.setAdapter(vhAdapter);
+        dataManager.setData(treeVM.getTreeLD().getValue());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Bus.get().unRegister(mEventCallback);
+        Bus.get().unRegister(eventCallback);
     }
 
     private void initData() {
-        mTreeVM = new ViewModelProvider(getDependence()).get(TreeVM.class);
-        mTreeVM.getTreeLD().observe(getDependence(), new Observer<List<Tree>>() {
+        treeVM = new ViewModelProvider(getDependence()).get(TreeVM.class);
+        treeVM.getTreeLD().observe(getDependence(), new Observer<List<Tree>>() {
             @Override
             public void onChanged(List<Tree> trees) {
-                mDataManager.setData(trees);
+                dataManager.setData(trees);
             }
         });
-        mTreeVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        treeVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
-                    mPbTreeLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                    pbTreeLoading.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             }
         });
     }
 
     private void initBus() {
-        Bus.get().register(mEventCallback);
+        Bus.get().register(eventCallback);
     }
 
     @Override
@@ -103,18 +103,15 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
     }
 
     private void doNetWork() {
-        mTreeVM.fetchTree();
+        treeVM.loadTreeData();
     }
 
     public void scrollToTop() {
-        RvUtil.scrollToTop(mRecyclerView, true);
+        RvUtil.scrollToTop(recyclerView, true);
     }
 
     @Override
     protected void onDestroyView() {
-        mRecyclerView = null;
-        mPbTreeLoading = null;
-        mVHAdapter = null;
-        mDataManager = null;
+        clear(recyclerView, pbTreeLoading, vhAdapter, dataManager);
     }
 }
