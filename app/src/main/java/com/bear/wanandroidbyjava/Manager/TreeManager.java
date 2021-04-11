@@ -25,15 +25,13 @@ public class TreeManager {
             protected void onSuccess(WanResponce<List<TreeBean>> data) {
                 if (data != null) {
                     SLog.d(TAG, "loadTreeDataFromNet: data.errorCode = " + data.errorCode + (StringUtil.isEmpty(data.errorMsg) ? "" : ", data.errorMsg = " + data.errorMsg));
-                    if (CollectionUtil.isEmpty(data.data)) {
-                        SLog.d(TAG, "loadTreeDataFromNet: treeBeanList is empty");
-                    } else {
-                        List<Tree> treeList = DataHelper.treeBeanToTree(data.data);
+                    List<Tree> treeList = DataHelper.treeBeanToTree(data.data);
+                    SLog.d(TAG, "loadTreeDataFromNet: treeList.size = " + treeList.size() + ", treeList = " + treeList);
+                    if (!CollectionUtil.isEmpty(treeList)) {
                         SysStorage.saveTreeList(treeList);
-                        if (listener != null) {
-                            listener.onLoad(treeList, true);
-                        }
-                        SLog.d(TAG, "loadTreeDataFromNet: treeList.size = " + treeList.size() + ", treeList = " + treeList);
+                    }
+                    if (listener != null) {
+                        listener.onLoad(treeList, true);
                     }
                 }
             }

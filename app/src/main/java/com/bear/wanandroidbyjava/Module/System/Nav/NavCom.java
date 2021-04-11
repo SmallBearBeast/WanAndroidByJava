@@ -26,19 +26,19 @@ import java.util.List;
 import java.util.Set;
 
 public class NavCom extends ViewComponent<ComponentFrag> {
-    private RecyclerView mRecyclerView;
-    private ProgressBar mPbNavLoading;
-    private VHAdapter mVhAdapter;
-    private DataManager mDataManager;
-    private NavVM mNavVM;
+    private RecyclerView recyclerView;
+    private ProgressBar pbNavLoading;
+    private VHAdapter vhAdapter;
+    private DataManager dataManager;
+    private NavVM navVM;
 
-    private EventCallback mEventCallback = new EventCallback() {
+    private EventCallback eventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
             switch (event.eventKey) {
                 case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && mNavVM.isFirstLoad()) {
-                        mNavVM.fetchNav();
+                    if (event.data instanceof Boolean && (Boolean) event.data && navVM.isFirstLoad()) {
+                        navVM.loadNavData();
                     }
                     break;
             }
@@ -59,42 +59,42 @@ public class NavCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onCreateView() {
-        mPbNavLoading = findViewById(R.id.pb_nav_loading);
-        mRecyclerView = findViewById(R.id.rv_navi_container);
-        mVhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
-        mDataManager = mVhAdapter.getDataManager();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        mVhAdapter.register(new NavVHBridge(), Nav.class);
-        mRecyclerView.setAdapter(mVhAdapter);
-        mDataManager.setData(mNavVM.getNavLD().getValue());
+        pbNavLoading = findViewById(R.id.pb_nav_loading);
+        recyclerView = findViewById(R.id.rv_navi_container);
+        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        dataManager = vhAdapter.getDataManager();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        vhAdapter.register(new NavVHBridge(), Nav.class);
+        recyclerView.setAdapter(vhAdapter);
+        dataManager.setData(navVM.getNavLD().getValue());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Bus.get().unRegister(mEventCallback);
+        Bus.get().unRegister(eventCallback);
     }
 
     private void initData() {
-        mNavVM = new ViewModelProvider(getDependence()).get(NavVM.class);
-        mNavVM.getNavLD().observe(getDependence(), new Observer<List<Nav>>() {
+        navVM = new ViewModelProvider(getDependence()).get(NavVM.class);
+        navVM.getNavLD().observe(getDependence(), new Observer<List<Nav>>() {
             @Override
             public void onChanged(List<Nav> navList) {
-                mDataManager.setData(navList);
+                dataManager.setData(navList);
             }
         });
-        mNavVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        navVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
-                    mPbNavLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                    pbNavLoading.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             }
         });
     }
 
     private void initBus() {
-        Bus.get().register(mEventCallback);
+        Bus.get().register(eventCallback);
     }
 
     @Override
@@ -103,15 +103,15 @@ public class NavCom extends ViewComponent<ComponentFrag> {
     }
 
     private void doNetWork() {
-        mNavVM.fetchNav();
+        navVM.loadNavData();
     }
 
     public void scrollToTop() {
-        RvUtil.scrollToTop(mRecyclerView, true);
+        RvUtil.scrollToTop(recyclerView, true);
     }
 
     @Override
     protected void onDestroyView() {
-        clear(mRecyclerView, mPbNavLoading, mVhAdapter, mDataManager);
+        clear(recyclerView, pbNavLoading, vhAdapter, dataManager);
     }
 }
