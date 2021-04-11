@@ -74,16 +74,8 @@ public class Article extends ExtObj implements Parcelable {
         return "Article{" +
                 "articleId=" + articleId +
                 ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
                 ", author='" + author + '\'' +
-                ", dateStr='" + dateStr + '\'' +
-                ", chapterName='" + chapterName + '\'' +
-                ", superChapterName='" + superChapterName + '\'' +
                 ", link='" + link + '\'' +
-                ", tag='" + tag + '\'' +
-                ", fresh=" + fresh +
-                ", collect=" + collect +
-                ", top=" + top +
                 '}';
     }
 

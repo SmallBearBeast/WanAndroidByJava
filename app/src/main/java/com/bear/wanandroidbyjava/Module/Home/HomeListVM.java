@@ -8,10 +8,11 @@ import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.Data.NetBean.BannerBean;
+import com.bear.wanandroidbyjava.Manager.HomeManager;
+import com.bear.wanandroidbyjava.Net.NetUrl;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Net.NetUrl;
 import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Tool.Help.DataHelper;
 import com.example.libbase.Util.CollectionUtil;
@@ -28,206 +29,32 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
-public class HomeListVM extends ViewModel {
+public class HomeListVM extends ViewModel implements HomeManager.HomeDataListener {
     private static final String TAG = "HomeListVM";
-    private static final int FIRST_PAGE_INDEX = 1;
-    private static final int TIME_OUT_DURATION = 10;
-    private int mNextPageIndex = 1;
-    private int mRefreshCompleteCount = 3;
-    private boolean mCanLoadMore = false;
-    private boolean mIsLoadingData = false;
-    private boolean mIsFinishFirstRefresh = false;
-    private CountDownLatch mCountDownLatch;
-    private List mTotalDataList = new CopyOnWriteArrayList();
-    private MutableLiveData<List<Article>> mLoadMoreArticleListLD = new MutableLiveData<>();
-    private MutableLiveData<List> mRefreshDataListLD = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mShowProgressLD = new MutableLiveData<>();
+    private boolean canLoadMore = true;
+    private boolean isLoadingData = false;
+    private boolean isFinishFirstRefresh = false;
+    private HomeManager homeManager = new HomeManager();
+    private MutableLiveData<List<Article>> loadMoreArticleListLD = new MutableLiveData<>();
+    private MutableLiveData<List> refreshDataListLD = new MutableLiveData<>();
+    private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
 
     public void refresh() {
-        loadDataFromStorage();
+        homeManager.loadDataFromStorage(this);
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is not connected");
-            mShowProgressLD.postValue(false);
+            showProgressLD.postValue(false);
             return;
         }
-        SLog.d(TAG, "refresh: mIsLoadingData = " + mIsLoadingData);
-        if (mIsLoadingData) {
+        SLog.d(TAG, "refresh: isLoadingData = " + isLoadingData);
+        if (isLoadingData) {
             return;
         }
-        mIsLoadingData = true;
-        mTotalDataList.clear();
-        mRefreshCompleteCount = 3;
-        mCountDownLatch = new CountDownLatch(3);
-        if (!mIsFinishFirstRefresh) {
-            mShowProgressLD.postValue(true);
+        isLoadingData = true;
+        if (!isFinishFirstRefresh) {
+            showProgressLD.postValue(true);
         }
-        loadAllData();
-    }
-
-    private void loadDataFromStorage() {
-        ExecutorUtil.execute(new Runnable(){
-            @Override
-            public void run() {
-                List dataList = new ArrayList();
-                BannerSet bannerSet = HomeStorage.getBannerSet();
-                if (bannerSet != null) {
-                    dataList.add(bannerSet);
-                }
-                List<Article> topArticleList = HomeStorage.getTopArticleList();
-                if (!CollectionUtil.isEmpty(topArticleList)) {
-                    dataList.addAll(topArticleList);
-                }
-                List<Article> normalArticleList = HomeStorage.getNormalArticleList();
-                if (!CollectionUtil.isEmpty(normalArticleList)) {
-                    dataList.addAll(normalArticleList);
-                }
-                mRefreshDataListLD.postValue(dataList);
-            }
-        });
-    }
-    
-    private void loadAllData() {
-        ExecutorUtil.execute(new Runnable() {
-            @Override
-            public void run() {
-                loadBannerSet();
-                loadTopArticle();
-                loadNormalArticle(FIRST_PAGE_INDEX);
-                checkRefreshFinish();
-            }
-        });
-    }
-    
-    private void checkRefreshFinish() {
-        try {
-            mCountDownLatch.await(TIME_OUT_DURATION, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            SLog.d(TAG, "checkRefreshFinish: mRefreshCompleteCount = " + mRefreshCompleteCount +
-                    ", mTotalDataListSize = " + mTotalDataList.size());
-            if (mRefreshCompleteCount == 0 && !CollectionUtil.isEmpty(mTotalDataList)) {
-                mRefreshDataListLD.postValue(mTotalDataList);
-                mIsFinishFirstRefresh = true;
-            } else {
-                List dataList = mRefreshDataListLD.getValue();
-                mTotalDataList = dataList != null ? dataList : new CopyOnWriteArrayList();
-            }
-            mShowProgressLD.postValue(false);
-        }
-    }
-
-    private void loadBannerSet() {
-        SLog.d(TAG, "loadBannerSet: start");
-        OkHelper.getInstance().getMethod(NetUrl.BANNER, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
-            @Override
-            protected void onSuccess(WanResponce<List<BannerBean>> data) {
-                if (data != null) {
-                    SLog.d(TAG, "loadBannerSet: errorCode = " + data.errorCode
-                            + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
-                    if (CollectionUtil.isEmpty(data.data)) {
-                        SLog.d(TAG, "loadBannerSet: bannerBeanList is empty");
-                    } else {
-                        BannerSet bannerSet = DataHelper.bannerBeanToBannerSet(data.data);
-                        mTotalDataList.add(0, bannerSet);
-                        SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
-                        completeOneLoadTask();
-                        HomeStorage.saveBannerSet(bannerSet);
-                    }
-                }
-            }
-
-            @Override
-            protected void onFail() {
-                SLog.d(TAG, "loadBannerSet: onFail");
-                mCountDownLatch.countDown();
-            }
-        });
-    }
-
-    private void loadTopArticle() {
-        SLog.d(TAG, "loadTopArticle: start");
-        OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
-            @Override
-            protected void onSuccess(WanResponce<List<ArticleBean>> data) {
-                if (data != null) {
-                    SLog.d(TAG, "loadTopArticle: errorCode = " + data.errorCode +
-                            (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
-                    if (data.data != null) {
-                        if (CollectionUtil.isEmpty(data.data)) {
-                            SLog.d(TAG, "loadTopArticle: articleBeanList is empty");
-                        } else {
-                            List<Article> articleList = DataHelper.articleBeanToArticle(data.data, true);
-                            if (!mTotalDataList.isEmpty()) {
-                                if (mTotalDataList.get(0) instanceof BannerSet) {
-                                    mTotalDataList.addAll(1, articleList);
-                                } else {
-                                    mTotalDataList.addAll(0, articleList);
-                                }
-                            }
-                            SLog.d(TAG, "loadTopArticle: articleListSize = " + articleList.size() +
-                                    ", articleList = " + articleList);
-                            completeOneLoadTask();
-                            HomeStorage.saveTopArticleList(articleList);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            protected void onFail() {
-                SLog.d(TAG, "loadTopArticle: onFail");
-                mCountDownLatch.countDown();
-            }
-        });
-    }
-
-    private void loadNormalArticle(final int pageIndex) {
-        SLog.d(TAG, "loadNormalArticle: pageIndex = " + pageIndex + ", mIsLoadingData = " + mIsLoadingData);
-        OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
-            @Override
-            protected void onSuccess(WanResponce<ArticleListBean> data) {
-                if (data != null) {
-                    SLog.d(TAG, "loadNormalArticle: errorCode = " + data.errorCode +
-                            (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
-                    if (data.data != null) {
-                        if (CollectionUtil.isEmpty(data.data.datas)) {
-                            SLog.d(TAG, "loadNormalArticle: articleBeanList is empty");
-                            mCanLoadMore = false;
-                            mLoadMoreArticleListLD.postValue(null);
-                        } else {
-                            mCanLoadMore = true;
-                            List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
-                            mTotalDataList.addAll(articleList);
-                            SLog.d(TAG, "loadNormalArticle: articleListSize = " + articleList.size() +
-                                    ", mTotalDataListSize = " + mTotalDataList.size() + ", articleList = " + articleList);
-                            if (pageIndex == 1) {
-                                completeOneLoadTask();
-                                HomeStorage.saveNormalArticleList(articleList);
-                            } else {
-                                mLoadMoreArticleListLD.postValue(articleList);
-                            }
-                        }
-                        mNextPageIndex = pageIndex + 1;
-                    }
-                }
-                mIsLoadingData = false;
-            }
-
-            @Override
-            protected void onFail() {
-                SLog.d(TAG, "loadNormalArticle: onFail");
-                mIsLoadingData = false;
-                if (pageIndex == 1) {
-                    mCountDownLatch.countDown();
-                }
-            }
-        });
-    }
-
-    private void completeOneLoadTask() {
-        mRefreshCompleteCount --;
-        mCountDownLatch.countDown();
+        homeManager.loadAllData(this);
     }
 
     public void loadMore() {
@@ -235,36 +62,68 @@ public class HomeListVM extends ViewModel {
             SLog.d(TAG, "loadMore: net is unConnected");
             return;
         }
-        SLog.d(TAG, "loadMore: mCanLoadMore = " + mCanLoadMore + ", mIsLoadingData = "
-                + mIsLoadingData + ", mNextPageIndex = " + mNextPageIndex);
+        SLog.d(TAG, "loadMore: canLoadMore = " + canLoadMore + ", isLoadingData = " + isLoadingData);
         if (!canLoadMore()) {
             return;
         }
-        mIsLoadingData = true;
-        loadNormalArticle(mNextPageIndex);
+        isLoadingData = true;
+        homeManager.loadMoreNormalArticle(this);
     }
 
     public boolean canLoadMore() {
-        return mCanLoadMore && !mIsLoadingData;
+        return canLoadMore && !isLoadingData;
     }
 
     public boolean isFinishFirstRefresh() {
-        return mIsFinishFirstRefresh;
+        return isFinishFirstRefresh;
     }
 
     public List getTotalDataList() {
-        return mTotalDataList;
+        return homeManager.getTotalDataList();
     }
 
     public MutableLiveData<List<Article>> getArticleListLD() {
-        return mLoadMoreArticleListLD;
+        return loadMoreArticleListLD;
     }
 
     public MutableLiveData<List> getTotalDataListLD() {
-        return mRefreshDataListLD;
+        return refreshDataListLD;
     }
 
     public MutableLiveData<Boolean> getShowProgressLD() {
-        return mShowProgressLD;
+        return showProgressLD;
+    }
+
+    @Override
+    public void onRefresh(List dataList, boolean fromNet) {
+        // TODO: 2021/4/11 The sequence of loading data from Net and Storage
+        if (fromNet) {
+            isLoadingData = false;
+            if (!CollectionUtil.isEmpty(dataList)) {
+                refreshDataListLD.postValue(dataList);
+                isFinishFirstRefresh = true;
+            } else {
+                List lastDataList = refreshDataListLD.getValue();
+                if (CollectionUtil.isEmpty(lastDataList)) {
+                    refreshDataListLD.postValue(null);
+                }
+            }
+            showProgressLD.postValue(false);
+        } else {
+            if (!CollectionUtil.isEmpty(dataList)) {
+                refreshDataListLD.postValue(dataList);
+            }
+        }
+    }
+
+    @Override
+    public void onLoadMore(List<Article> articleList) {
+        isLoadingData = false;
+        if (CollectionUtil.isEmpty(articleList)) {
+            canLoadMore = false;
+        } else {
+            canLoadMore = true;
+            loadMoreArticleListLD.postValue(articleList);
+        }
     }
 }
