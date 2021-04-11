@@ -22,8 +22,10 @@ public class NavManager {
         ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
+                List<Nav> navList = SysStorage.getNavList();
+                SLog.d(TAG, "loadDataFromStorage: navList = " + navList);
                 if (listener != null) {
-                    listener.onLoad(SysStorage.getNavList(), false);
+                    listener.onLoad(navList, false);
                 }
             }
         });

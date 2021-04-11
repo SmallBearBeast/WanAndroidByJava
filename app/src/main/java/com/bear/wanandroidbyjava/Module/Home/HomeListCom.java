@@ -34,17 +34,17 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
-    private RecyclerView mRecyclerView;
-    private ProgressBar mPbLoading;
-    private VHAdapter mVHAdapter;
-    private DataManager mDataManager;
-    private HomeListVM mHomeListVM;
+    private RecyclerView recyclerView;
+    private ProgressBar pbLoading;
+    private VHAdapter vhAdapter;
+    private DataManager dataManager;
+    private HomeListVM homeListVM;
 
     private EventCallback mEventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
             if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
-                if (event.data instanceof Boolean && (Boolean) event.data && !mHomeListVM.isFinishFirstRefresh()) {
+                if (event.data instanceof Boolean && (Boolean) event.data && !homeListVM.isFinishFirstRefresh()) {
                     doNetWork();
                 }
             }
@@ -70,32 +70,32 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     }
 
     private void initData() {
-        mHomeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
-        mHomeListVM.getTotalDataListLD().observe(getDependence(), new Observer<List>() {
+        homeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
+        homeListVM.getRefreshDataListLD().observe(getDependence(), new Observer<List>() {
             @Override
             public void onChanged(List list) {
-                mDataManager.setData(list);
-                mDataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
+                dataManager.setData(list);
+                dataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
             }
         });
-        mHomeListVM.getArticleListLD().observe(getDependence(), new Observer<List<Article>>() {
+        homeListVM.getLoadMoreArticleListLD().observe(getDependence(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
-                    mDataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
-                    mDataManager.addLast(CustomData.of(BRIDGE_NO_MORE_DATA));
+                    dataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
+                    dataManager.addLast(CustomData.of(BRIDGE_NO_MORE_DATA));
                 } else {
-                    mDataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
-                    mDataManager.addLast(articles);
-                    mDataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
+                    dataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
+                    dataManager.addLast(articles);
+                    dataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
                 }
             }
         });
-        mHomeListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        homeListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
-                    mPbLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+                    pbLoading.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             }
         });
@@ -107,33 +107,33 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onCreateView() {
-        mPbLoading = findViewById(R.id.pb_loading);
-        mRecyclerView = findViewById(R.id.rv_home_container);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
-        mDataManager = mVHAdapter.getDataManager();
-        mVHAdapter.register(new BannerVHBridge(), BannerSet.class);
-        mVHAdapter.register(new HomeListVHBridge(), Article.class);
-        mVHAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
-        mVHAdapter.register(new NoMoreDataVHBridge(), CustomData.of(BRIDGE_NO_MORE_DATA));
-        mRecyclerView.setAdapter(mVHAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        pbLoading = findViewById(R.id.pb_loading);
+        recyclerView = findViewById(R.id.rv_home_container);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
+        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        dataManager = vhAdapter.getDataManager();
+        vhAdapter.register(new BannerVHBridge(), BannerSet.class);
+        vhAdapter.register(new HomeListVHBridge(), Article.class);
+        vhAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
+        vhAdapter.register(new NoMoreDataVHBridge(), CustomData.of(BRIDGE_NO_MORE_DATA));
+        recyclerView.setAdapter(vhAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (!mHomeListVM.canLoadMore()) {
+                if (!homeListVM.canLoadMore()) {
                     return;
                 }
                 int lastVisibleItemPos = RvUtil.findLastVisibleItemPosition(recyclerView);
-                if (lastVisibleItemPos > mDataManager.size() - LOAD_MORE_OFFSET - 1) {
-                    mHomeListVM.loadMore();
+                if (lastVisibleItemPos > dataManager.size() - LOAD_MORE_OFFSET - 1) {
+                    homeListVM.loadMore();
                 }
             }
         });
-        mDataManager.setData(mHomeListVM.getTotalDataList());
+        dataManager.setData(homeListVM.getTotalDataList());
     }
 
     public void scrollToTop() {
-        RvUtil.scrollToTop(mRecyclerView, 3, 0);
+        RvUtil.scrollToTop(recyclerView, 3, 0);
     }
 
     @Override
@@ -142,11 +142,11 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     }
 
     private void doNetWork() {
-        mHomeListVM.refresh();
+        homeListVM.refresh();
     }
 
     @Override
     protected void onDestroyView() {
-        clear(mRecyclerView, mPbLoading, mVHAdapter, mDataManager);
+        clear(recyclerView, pbLoading, vhAdapter, dataManager);
     }
 }

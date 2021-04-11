@@ -47,6 +47,8 @@ public class TreeManager {
         ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
+                List<Tree> treeList = SysStorage.getTreeList();
+                SLog.d(TAG, "loadDataFromStorage: treeList = " + treeList);
                 if (listener != null) {
                     listener.onLoad(SysStorage.getTreeList(), false);
                 }

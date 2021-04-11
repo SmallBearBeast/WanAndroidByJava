@@ -82,11 +82,11 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         return homeManager.getTotalDataList();
     }
 
-    public MutableLiveData<List<Article>> getArticleListLD() {
+    public MutableLiveData<List<Article>> getLoadMoreArticleListLD() {
         return loadMoreArticleListLD;
     }
 
-    public MutableLiveData<List> getTotalDataListLD() {
+    public MutableLiveData<List> getRefreshDataListLD() {
         return refreshDataListLD;
     }
 

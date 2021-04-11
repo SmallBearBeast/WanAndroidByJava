@@ -50,6 +50,7 @@ public class HomeManager {
                 if (!CollectionUtil.isEmpty(normalArticleList)) {
                     totalDataList.addAll(normalArticleList);
                 }
+                SLog.d(TAG, "loadDataFromStorage: totalDataList = " + totalDataList);
                 if (listener != null) {
                     listener.onRefresh(totalDataList, false);
                 }
@@ -81,15 +82,13 @@ public class HomeManager {
                 if (data != null) {
                     SLog.d(TAG, "loadBannerSet: errorCode = " + data.errorCode
                             + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
-                    if (CollectionUtil.isEmpty(data.data)) {
-                        SLog.d(TAG, "loadBannerSet: bannerBeanList is empty");
-                    } else {
-                        BannerSet bannerSet = DataHelper.bannerBeanToBannerSet(data.data);
+                    BannerSet bannerSet = DataHelper.bannerBeanToBannerSet(data.data);
+                    SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
+                    if (bannerSet != null) {
                         tempTotalDataList.add(0, bannerSet);
-                        SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
-                        completeOneLoadTask();
                         HomeStorage.saveBannerSet(bannerSet);
                     }
+                    completeOneLoadTask();
                 }
             }
 
@@ -110,10 +109,10 @@ public class HomeManager {
                     SLog.d(TAG, "loadTopArticle: errorCode = " + data.errorCode +
                             (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (data.data != null) {
-                        if (CollectionUtil.isEmpty(data.data)) {
-                            SLog.d(TAG, "loadTopArticle: articleBeanList is empty");
-                        } else {
-                            List<Article> articleList = DataHelper.articleBeanToArticle(data.data, true);
+                        List<Article> articleList = DataHelper.articleBeanToArticle(data.data, true);
+                        SLog.d(TAG, "loadTopArticle: articleList.size = " + articleList.size() +
+                                ", articleList = " + articleList);
+                        if (!CollectionUtil.isEmpty(articleList)) {
                             if (!tempTotalDataList.isEmpty()) {
                                 if (tempTotalDataList.get(0) instanceof BannerSet) {
                                     tempTotalDataList.addAll(1, articleList);
@@ -121,11 +120,9 @@ public class HomeManager {
                                     tempTotalDataList.addAll(0, articleList);
                                 }
                             }
-                            SLog.d(TAG, "loadTopArticle: articleList.size = " + articleList.size() +
-                                    ", articleList = " + articleList);
-                            completeOneLoadTask();
                             HomeStorage.saveTopArticleList(articleList);
                         }
+                        completeOneLoadTask();
                     }
                 }
             }
@@ -147,16 +144,14 @@ public class HomeManager {
                     SLog.d(TAG, "loadFirstNormalArticle: errorCode = " + data.errorCode +
                             (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (data.data != null) {
-                        if (CollectionUtil.isEmpty(data.data.datas)) {
-                            SLog.d(TAG, "loadFirstNormalArticle: articleBeanList is empty");
-                        } else {
-                            List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
+                        List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
+                        SLog.d(TAG, "loadFirstNormalArticle: articleList.size = " + articleList.size()
+                                + ", articleList = " + articleList);
+                        if (!CollectionUtil.isEmpty(articleList)) {
                             tempTotalDataList.addAll(articleList);
-                            SLog.d(TAG, "loadFirstNormalArticle: articleList.size = " + articleList.size()
-                                    + ", articleList = " + articleList);
-                            completeOneLoadTask();
                             HomeStorage.saveNormalArticleList(articleList);
                         }
+                        completeOneLoadTask();
                         nextPageIndex++;
                     }
                 }
@@ -179,19 +174,14 @@ public class HomeManager {
                     SLog.d(TAG, "loadMoreNormalArticle: errorCode = " + data.errorCode +
                             (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     if (data.data != null) {
-                        if (CollectionUtil.isEmpty(data.data.datas)) {
-                            SLog.d(TAG, "loadMoreNormalArticle: articleBeanList is empty");
-                            if (listener != null) {
-                                listener.onLoadMore(null);
-                            }
-                        } else {
-                            List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
+                        List<Article> articleList = DataHelper.articleBeanToArticle(data.data.datas);
+                        SLog.d(TAG, "loadMoreNormalArticle: articleListSize = " + articleList.size() +
+                                ", totalDataListSize = " + totalDataList.size() + ", articleList = " + articleList);
+                        if (!CollectionUtil.isEmpty(articleList)) {
                             totalDataList.addAll(articleList);
-                            SLog.d(TAG, "loadMoreNormalArticle: articleListSize = " + articleList.size() +
-                                    ", totalDataListSize = " + totalDataList.size() + ", articleList = " + articleList);
-                            if (listener != null) {
-                                listener.onLoadMore(articleList);
-                            }
+                        }
+                        if (listener != null) {
+                            listener.onLoadMore(articleList);
                         }
                         nextPageIndex++;
                     }
