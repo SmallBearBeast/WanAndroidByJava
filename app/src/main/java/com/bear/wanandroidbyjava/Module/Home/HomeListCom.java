@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -34,6 +35,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
+    private static final int BRIDGE_LOAD_FAIL = 3;
     private RecyclerView recyclerView;
     private ProgressBar pbLoading;
     private VHAdapter vhAdapter;
@@ -44,8 +46,8 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         @Override
         protected void onEvent(Event event) {
             if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
-                if (event.data instanceof Boolean && (Boolean) event.data && !homeListVM.isFinishFirstRefresh()) {
-                    doNetWork();
+                if (event.data instanceof Boolean && (Boolean) event.data && !homeListVM.isFinishFirstNetRefresh()) {
+                    homeListVM.refresh(false);
                 }
             }
         }
@@ -59,7 +61,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
     @Override
     protected void onCreate() {
         super.onCreate();
-        initData();
+        initViewModel();
         initBus();
     }
 
@@ -69,36 +71,72 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         Bus.get().unRegister(mEventCallback);
     }
 
-    private void initData() {
+    private void initViewModel() {
         homeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
         homeListVM.getRefreshDataListLD().observe(getDependence(), new Observer<List>() {
             @Override
             public void onChanged(List list) {
-                dataManager.setData(list);
-                dataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
+                if (!CollectionUtil.isEmpty(list)) {
+                    dataManager.setData(list);
+                }
             }
         });
-        homeListVM.getLoadMoreArticleListLD().observe(getDependence(), new Observer<List<Article>>() {
+        homeListVM.getLoadMoreDataListLD().observe(getDependence(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
-                if (CollectionUtil.isEmpty(articles)) {
-                    dataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
-                    dataManager.addLast(CustomData.of(BRIDGE_NO_MORE_DATA));
-                } else {
-                    dataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
+                if (!CollectionUtil.isEmpty(articles)) {
                     dataManager.addLast(articles);
-                    dataManager.addLast(CustomData.of(BRIDGE_LOAD_MORE));
                 }
             }
         });
-        homeListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        homeListVM.getRefreshStateLD().observe(getDependence(), new Observer<Byte>() {
             @Override
-            public void onChanged(Boolean show) {
-                if (show != null) {
-                    pbLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+            public void onChanged(Byte refreshState) {
+                Log.d(TAG, "onChanged: refreshState = " + refreshState);
+                if (refreshState == null) {
+                    return;
+                }
+                switch (refreshState) {
+                    case HomeListVM.REFRESH_NO_NET:
+                        break;
+                    case HomeListVM.REFRESH_NO_DATA:
+                        break;
+                    case HomeListVM.REFRESH_PROGRESS_SHOW:
+                        pbLoading.setVisibility(View.VISIBLE);
+                        break;
+                    case HomeListVM.REFRESH_PROGRESS_HIDE:
+                        pbLoading.setVisibility(View.GONE);
+                        break;
                 }
             }
         });
+        homeListVM.getLoadMoreStateLD().observe(getDependence(), new Observer<Byte>() {
+            @Override
+            public void onChanged(Byte loadMoreState) {
+                Log.d(TAG, "onChanged: loadMoreState = " + loadMoreState);
+                if (loadMoreState == null) {
+                    return;
+                }
+                switch (loadMoreState) {
+                    case HomeListVM.LOAD_MORE_NO_NET:
+                        updateLastBridgeItem(BRIDGE_LOAD_FAIL);
+                        break;
+                    case HomeListVM.LOAD_MORE_NO_DATA:
+                        updateLastBridgeItem(BRIDGE_NO_MORE_DATA);
+                        break;
+                    case HomeListVM.LOAD_MORE_PROGRESS:
+                        updateLastBridgeItem(BRIDGE_LOAD_MORE);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void updateLastBridgeItem(int bridgeType) {
+        dataManager.remove(CustomData.of(BRIDGE_LOAD_MORE));
+        dataManager.remove(CustomData.of(BRIDGE_NO_MORE_DATA));
+        dataManager.remove(CustomData.of(BRIDGE_LOAD_FAIL));
+        dataManager.addLast(CustomData.of(bridgeType));
     }
 
     private void initBus() {
@@ -116,6 +154,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
         vhAdapter.register(new HomeListVHBridge(), Article.class);
         vhAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
         vhAdapter.register(new NoMoreDataVHBridge(), CustomData.of(BRIDGE_NO_MORE_DATA));
+        vhAdapter.register(new LoadFailVHBridge(), CustomData.of(BRIDGE_LOAD_FAIL));
         recyclerView.setAdapter(vhAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -129,7 +168,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
                 }
             }
         });
-        dataManager.setData(homeListVM.getTotalDataList());
+        homeListVM.refreshViewModel();
     }
 
     public void scrollToTop() {
@@ -138,15 +177,15 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onFirstVisible() {
-        doNetWork();
-    }
-
-    private void doNetWork() {
-        homeListVM.refresh();
+        homeListVM.refresh(true);
     }
 
     @Override
     protected void onDestroyView() {
         clear(recyclerView, pbLoading, vhAdapter, dataManager);
+    }
+
+    public void loadMore() {
+        homeListVM.loadMore();
     }
 }

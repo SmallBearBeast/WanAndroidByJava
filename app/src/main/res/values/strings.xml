@@ -11,6 +11,7 @@
     <string name="str_mark_top">置顶</string>
     <string name="str_navigation">导航</string>
     <string name="str_no_more_data">没有更多数据了</string>
+    <string name="str_load_fail_and_click">加载失败，请点击我重试</string>
 
     <string name="str_my_integral">我的积分</string>
     <string name="str_my_share">我的分享</string>

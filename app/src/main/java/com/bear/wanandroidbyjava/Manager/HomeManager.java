@@ -35,6 +35,7 @@ public class HomeManager {
     private List tempTotalDataList = new CopyOnWriteArrayList();
 
     public void loadDataFromStorage(final HomeDataListener listener) {
+        SLog.d(TAG, "loadDataFromStorage: ");
         ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -51,14 +52,12 @@ public class HomeManager {
                     totalDataList.addAll(normalArticleList);
                 }
                 SLog.d(TAG, "loadDataFromStorage: totalDataList = " + totalDataList);
-                if (listener != null) {
-                    listener.onRefresh(totalDataList, false);
-                }
+                callHomeDataListener(listener, false);
             }
         });
     }
 
-    public void loadAllData(final HomeDataListener listener) {
+    public void loadDataFromNet(final HomeDataListener listener) {
         ExecutorUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -207,15 +206,19 @@ public class HomeManager {
                 totalDataList.clear();
                 totalDataList.addAll(tempTotalDataList);
             }
-            if (listener != null) {
-                listener.onRefresh(totalDataList, true);
-            }
+            callHomeDataListener(listener, true);
         }
     }
 
     private void completeOneLoadTask() {
         refreshCompleteCount--;
         countDownLatch.countDown();
+    }
+
+    private synchronized void callHomeDataListener(HomeDataListener listener, boolean fromNet) {
+        if (listener != null) {
+            listener.onRefresh(totalDataList, fromNet);
+        }
     }
 
     public List getTotalDataList() {

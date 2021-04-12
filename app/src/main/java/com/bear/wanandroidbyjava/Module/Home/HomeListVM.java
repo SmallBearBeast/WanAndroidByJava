@@ -1,129 +1,163 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
-import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
-import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
-import com.bear.wanandroidbyjava.Data.NetBean.ArticleListBean;
-import com.bear.wanandroidbyjava.Data.NetBean.BannerBean;
 import com.bear.wanandroidbyjava.Manager.HomeManager;
-import com.bear.wanandroidbyjava.Net.NetUrl;
-import com.bear.wanandroidbyjava.Net.WanOkCallback;
-import com.bear.wanandroidbyjava.Net.WanResponce;
-import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Storage.HomeStorage;
-import com.bear.wanandroidbyjava.Tool.Help.DataHelper;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
-import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
-import com.example.libokhttp.OkHelper;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
 public class HomeListVM extends ViewModel implements HomeManager.HomeDataListener {
     private static final String TAG = "HomeListVM";
+    public static final byte LOAD_MORE_NO_NET = 1;
+    public static final byte LOAD_MORE_NO_DATA = 2;
+    public static final byte LOAD_MORE_PROGRESS = 3;
+    public static final byte REFRESH_NO_NET = 4;
+    public static final byte REFRESH_NO_DATA = 5;
+    public static final byte REFRESH_PROGRESS_SHOW = 6;
+    public static final byte REFRESH_PROGRESS_HIDE = 7;
+    private boolean isRefreshDone = false;
     private boolean canLoadMore = true;
-    private boolean isLoadingData = false;
-    private boolean isFinishFirstRefresh = false;
+    private boolean isLoadingNetData = false;
+    private boolean isFinishFirstNetRefresh = false;
     private HomeManager homeManager = new HomeManager();
-    private MutableLiveData<List<Article>> loadMoreArticleListLD = new MutableLiveData<>();
     private MutableLiveData<List> refreshDataListLD = new MutableLiveData<>();
-    private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
+    private MutableLiveData<List<Article>> loadMoreDataListLD = new MutableLiveData<>();
+    private MutableLiveData<Byte> refreshStateLD = new MutableLiveData<>();
+    private MutableLiveData<Byte> loadMoreStateLD = new MutableLiveData<>();
 
-    public void refresh() {
-        homeManager.loadDataFromStorage(this);
+    public void refresh(boolean includeStorage) {
+        if (includeStorage) {
+            homeManager.loadDataFromStorage(this);
+        }
+        SLog.d(TAG, "refresh: includeStorage = " + includeStorage + ", isLoadingNetData = " + isLoadingNetData);
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is not connected");
-            showProgressLD.postValue(false);
             return;
         }
-        SLog.d(TAG, "refresh: isLoadingData = " + isLoadingData);
-        if (isLoadingData) {
+        if (isLoadingNetData) {
             return;
         }
-        isLoadingData = true;
-        if (!isFinishFirstRefresh) {
-            showProgressLD.postValue(true);
+        isLoadingNetData = true;
+        if (!isFinishFirstNetRefresh) {
+            postRefreshState(REFRESH_PROGRESS_SHOW);
         }
-        homeManager.loadAllData(this);
+        homeManager.loadDataFromNet(this);
     }
 
     public void loadMore() {
+        SLog.d(TAG, "loadMore: canLoadMore = " + canLoadMore + ", isLoadingNetData = " + isLoadingNetData);
+        if (isLoadingNetData) {
+            return;
+        }
+        if (!canLoadMore) {
+            postLoadMoreState(LOAD_MORE_NO_DATA);
+            return;
+        }
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadMore: net is unConnected");
+            postLoadMoreState(LOAD_MORE_NO_NET);
             return;
         }
-        SLog.d(TAG, "loadMore: canLoadMore = " + canLoadMore + ", isLoadingData = " + isLoadingData);
-        if (!canLoadMore()) {
-            return;
-        }
-        isLoadingData = true;
+        postLoadMoreState(LOAD_MORE_PROGRESS);
+        isLoadingNetData = true;
         homeManager.loadMoreNormalArticle(this);
     }
 
-    public boolean canLoadMore() {
-        return canLoadMore && !isLoadingData;
+    private void postRefreshState(byte curRefreshState) {
+        Byte lastRefreshState = refreshStateLD.getValue();
+        if (lastRefreshState == null || lastRefreshState != curRefreshState) {
+            refreshStateLD.postValue(curRefreshState);
+        }
     }
 
-    public boolean isFinishFirstRefresh() {
-        return isFinishFirstRefresh;
+    private void postLoadMoreState(byte curLoadMoreState) {
+        Byte lastLoadMoreState = loadMoreStateLD.getValue();
+        if (lastLoadMoreState == null || lastLoadMoreState != curLoadMoreState) {
+            loadMoreStateLD.postValue(curLoadMoreState);
+        }
     }
 
-    public List getTotalDataList() {
+    public void refreshViewModel() {
+        if (!CollectionUtil.isEmpty(getTotalDataList())) {
+            refreshDataListLD.postValue(getTotalDataList());
+        }
+        postSelfValue(refreshStateLD);
+        postSelfValue(loadMoreStateLD);
+    }
+
+    private List getTotalDataList() {
         return homeManager.getTotalDataList();
     }
 
-    public MutableLiveData<List<Article>> getLoadMoreArticleListLD() {
-        return loadMoreArticleListLD;
+    private void postSelfValue(MutableLiveData liveData) {
+        Object value = liveData.getValue();
+        liveData.postValue(value);
     }
 
-    public MutableLiveData<List> getRefreshDataListLD() {
+    public boolean canLoadMore() {
+        return canLoadMore && !isLoadingNetData;
+    }
+
+    public boolean isFinishFirstNetRefresh() {
+        return isFinishFirstNetRefresh;
+    }
+
+    public LiveData<List<Article>> getLoadMoreDataListLD() {
+        return loadMoreDataListLD;
+    }
+
+    public LiveData<List> getRefreshDataListLD() {
         return refreshDataListLD;
     }
+    
+    public LiveData<Byte> getLoadMoreStateLD() {
+        return loadMoreStateLD;
+    }
 
-    public MutableLiveData<Boolean> getShowProgressLD() {
-        return showProgressLD;
+    public LiveData<Byte> getRefreshStateLD() {
+        return refreshStateLD;
     }
 
     @Override
     public void onRefresh(List dataList, boolean fromNet) {
-        // TODO: 2021/4/11 The sequence of loading data from Net and Storage
         if (fromNet) {
-            isLoadingData = false;
+            isLoadingNetData = false;
+            isFinishFirstNetRefresh = true;
+            if (!isRefreshDone) {
+                isRefreshDone = true;
+            }
             if (!CollectionUtil.isEmpty(dataList)) {
                 refreshDataListLD.postValue(dataList);
-                isFinishFirstRefresh = true;
             } else {
                 List lastDataList = refreshDataListLD.getValue();
                 if (CollectionUtil.isEmpty(lastDataList)) {
-                    refreshDataListLD.postValue(null);
+                    postRefreshState(REFRESH_NO_DATA);
                 }
             }
-            showProgressLD.postValue(false);
+            postRefreshState(REFRESH_PROGRESS_HIDE);
         } else {
-            if (!CollectionUtil.isEmpty(dataList)) {
-                refreshDataListLD.postValue(dataList);
+            if (!isRefreshDone) {
+                if (!NetWorkUtil.isConnected() && CollectionUtil.isEmpty(dataList)) {
+                    postRefreshState(REFRESH_NO_NET);
+                } else if (!CollectionUtil.isEmpty(dataList)) {
+                    refreshDataListLD.postValue(dataList);
+                }
             }
         }
     }
 
     @Override
     public void onLoadMore(List<Article> articleList) {
-        isLoadingData = false;
-        if (CollectionUtil.isEmpty(articleList)) {
-            canLoadMore = false;
-        } else {
-            canLoadMore = true;
-            loadMoreArticleListLD.postValue(articleList);
-        }
+        isLoadingNetData = false;
+        canLoadMore = !CollectionUtil.isEmpty(articleList);
+        loadMoreDataListLD.postValue(articleList);
+        postSelfValue(loadMoreStateLD);
     }
 }
