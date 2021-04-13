@@ -9,11 +9,13 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
     private static final String TAG = "TreeVM";
     private boolean isFirstLoad = true;
+    private boolean isLoadDone = false;
     private TreeManager treeManager= new TreeManager();
     private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
     private MutableLiveData<List<Tree>> treeLD = new MutableLiveData<>();
@@ -22,7 +24,6 @@ public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
         treeManager.loadDataFromStorage(this);
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadTreeData: net is not connected");
-            showProgressLD.postValue(false);
             return;
         }
         if (isFirstLoad) {
@@ -46,18 +47,20 @@ public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
     @Override
     public void onLoad(List<Tree> treeList, boolean fromNet) {
         if (fromNet) {
+            if (!isLoadDone) {
+                isLoadDone = true;
+            }
             if (!CollectionUtil.isEmpty(treeList)) {
                 treeLD.postValue(treeList);
-                isFirstLoad = false;
             } else {
                 List<Tree> lastTreeList = treeLD.getValue();
                 if (CollectionUtil.isEmpty(lastTreeList)) {
-                    treeLD.postValue(null);
+                    treeLD.postValue(new ArrayList<Tree>());
                 }
             }
             showProgressLD.postValue(false);
         } else {
-            if (!CollectionUtil.isEmpty(treeList)) {
+            if (!isLoadDone && !CollectionUtil.isEmpty(treeList)) {
                 treeLD.postValue(treeList);
             }
         }
