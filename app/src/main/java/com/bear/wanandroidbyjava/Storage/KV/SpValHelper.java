@@ -10,6 +10,7 @@ public class SpValHelper {
     private static long UID;
 
     // sp_global_config
+    public static final KV<Boolean> hasHomeStorageData = SpHelper.create("hasHomeStorageData", false);
 
     // sp_user_config
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Manager.HomeManager;
+import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
@@ -39,7 +40,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         SLog.d(TAG, "refresh: includeStorage = " + includeStorage + ", isLoadingNetData = " + isLoadingNetData);
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is not connected");
-            if (CollectionUtil.isEmpty(getTotalDataList())) {
+            if (!SpValHelper.hasHomeStorageData.get()) {
                 postRefreshState(REFRESH_NET_ERROR);
             }
             return;
@@ -48,7 +49,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             return;
         }
         isLoadingNetData = true;
-        if (!includeStorage && CollectionUtil.isEmpty(getTotalDataList())) {
+        if (!SpValHelper.hasHomeStorageData.get()) {
             postRefreshState(REFRESH_PROGRESS_SHOW);
         }
         homeManager.loadDataFromNet(this);
@@ -136,7 +137,9 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             if (!isRefreshDone) {
                 isRefreshDone = true;
             }
+            postRefreshState(REFRESH_PROGRESS_HIDE);
             if (!CollectionUtil.isEmpty(dataList)) {
+                SpValHelper.hasHomeStorageData.set(true);
                 refreshDataListLD.postValue(dataList);
             } else {
                 List lastDataList = refreshDataListLD.getValue();
@@ -144,16 +147,9 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
                     postRefreshState(REFRESH_NO_DATA);
                 }
             }
-            postRefreshState(REFRESH_PROGRESS_HIDE);
         } else {
-            if (!isRefreshDone) {
-                if (!NetWorkUtil.isConnected() && CollectionUtil.isEmpty(dataList)) {
-                    postRefreshState(REFRESH_NET_ERROR);
-                } else if (!CollectionUtil.isEmpty(dataList)) {
-                    refreshDataListLD.postValue(dataList);
-                } else {
-                    postRefreshState(REFRESH_PROGRESS_SHOW);
-                }
+            if (!isRefreshDone && !CollectionUtil.isEmpty(dataList)) {
+                refreshDataListLD.postValue(dataList);
             }
         }
     }
