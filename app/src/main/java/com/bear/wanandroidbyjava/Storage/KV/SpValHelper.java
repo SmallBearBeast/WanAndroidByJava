@@ -10,8 +10,6 @@ public class SpValHelper {
     private static long UID;
 
     // sp_global_config
-    public static final KV<String> kvBannerImageUrlList = SpHelper.create("kvBannerImageUrlList", "");
-    public static final KV<String> kvBannerClickUrlList = SpHelper.create("kvBannerClickUrlList", "");
 
     // sp_user_config
 
