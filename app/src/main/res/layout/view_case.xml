@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/case_top_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/case_title_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/case_cover_iv"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_120"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:tint="@color/color_5c5c5c"
+            tools:src="@drawable/ic_net_error"
+            tools:text="Net error" />
+
+        <ProgressBar
+            android:id="@+id/case_progress_bar"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_gravity="bottom|center_horizontal" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/case_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/case_description_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/case_top_view"
+        app:layout_constraintWidth_max="200dp"
+        tools:text="Net error" />
+
+    <TextView
+        android:id="@+id/case_description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:gravity="center"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@+id/case_click_bt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/case_title_tv"
+        app:layout_constraintWidth_max="250dp"
+        tools:text="You can check the network on setting page.You can check the network on setting page.You can check the network on setting page" />
+
+    <Button
+        android:id="@+id/case_click_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/case_description_tv"
+        app:layout_constraintWidth_max="200dp"
+        tools:text="Click Click Click Click " />
+</androidx.constraintlayout.widget.ConstraintLayout>

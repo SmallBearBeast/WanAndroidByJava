@@ -24,4 +24,9 @@
     <string name="str_please_input">请输入搜索内容</string>
 
     <string name="str_feature_not_open">功能尚未开放</string>
+    <string name="str_no_data">数据为空</string>
+    <string name="str_refresh_again">请刷新重试</string>
+    <string name="str_net_error">网络异常</string>
+    <string name="str_check_net_refresh_again">请检查网络连接刷新重试</string>
+    <string name="str_data_loading">数据加载中</string>
 </resources>

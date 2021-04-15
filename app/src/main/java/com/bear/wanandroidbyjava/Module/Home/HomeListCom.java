@@ -20,6 +20,8 @@ import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
+import com.bear.wanandroidbyjava.Tool.Case.CaseView;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libframework.Bus.Bus;
@@ -30,14 +32,14 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings({"rawtypes"})
-public class HomeListCom extends ViewComponent<ComponentFrag> {
+public class HomeListCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
     private static final int BRIDGE_LOAD_FAIL = 3;
     private RecyclerView recyclerView;
-    private ProgressBar pbLoading;
+    private CaseView caseView;
     private VHAdapter vhAdapter;
     private DataManager dataManager;
     private HomeListVM homeListVM;
@@ -97,15 +99,17 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
                     return;
                 }
                 switch (refreshState) {
-                    case HomeListVM.REFRESH_NO_NET:
+                    case HomeListVM.REFRESH_NET_ERROR:
+                        CaseHelper.showNetError(caseView);
                         break;
                     case HomeListVM.REFRESH_NO_DATA:
+                        CaseHelper.showNoData(caseView);
                         break;
                     case HomeListVM.REFRESH_PROGRESS_SHOW:
-                        pbLoading.setVisibility(View.VISIBLE);
+                        CaseHelper.showLoading(caseView);
                         break;
                     case HomeListVM.REFRESH_PROGRESS_HIDE:
-                        pbLoading.setVisibility(View.GONE);
+                        CaseHelper.hide(caseView);
                         break;
                 }
             }
@@ -118,7 +122,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
                     return;
                 }
                 switch (loadMoreState) {
-                    case HomeListVM.LOAD_MORE_NO_NET:
+                    case HomeListVM.LOAD_MORE_NET_ERROR:
                         updateLastBridgeItem(BRIDGE_LOAD_FAIL);
                         break;
                     case HomeListVM.LOAD_MORE_NO_DATA:
@@ -145,7 +149,8 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onCreateView() {
-        pbLoading = findViewById(R.id.pb_loading);
+        caseView = findViewById(R.id.case_view);
+        caseView.setOnClickListener(this);
         recyclerView = findViewById(R.id.rv_home_container);
         recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
@@ -182,10 +187,17 @@ public class HomeListCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, pbLoading, vhAdapter, dataManager);
+        clear(recyclerView, caseView, vhAdapter, dataManager);
     }
 
     public void loadMore() {
         homeListVM.loadMore();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == caseView) {
+            homeListVM.refresh(false);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Tool.Help;
+package com.bear.wanandroidbyjava.Tool.Helper;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
