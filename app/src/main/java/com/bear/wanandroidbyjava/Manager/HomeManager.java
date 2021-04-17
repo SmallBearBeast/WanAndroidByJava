@@ -13,6 +13,7 @@ import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Tool.Helper.DataHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.ExecutorUtil;
+import com.example.libbase.Util.MainHandlerUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkHelper;
@@ -52,7 +53,7 @@ public class HomeManager {
                     totalDataList.addAll(normalArticleList);
                 }
                 SLog.d(TAG, "loadDataFromStorage: totalDataList = " + totalDataList);
-                callHomeDataListener(listener, false);
+                callHomeDataRefreshListener(listener, false);
             }
         });
     }
@@ -179,9 +180,7 @@ public class HomeManager {
                         if (!CollectionUtil.isEmpty(articleList)) {
                             totalDataList.addAll(articleList);
                         }
-                        if (listener != null) {
-                            listener.onLoadMore(articleList);
-                        }
+                        callHomeDataLoadMoreListener(listener, articleList);
                         nextPageIndex++;
                     }
                 }
@@ -206,7 +205,7 @@ public class HomeManager {
                 totalDataList.clear();
                 totalDataList.addAll(tempTotalDataList);
             }
-            callHomeDataListener(listener, true);
+            callHomeDataRefreshListener(listener, true);
         }
     }
 
@@ -215,10 +214,26 @@ public class HomeManager {
         countDownLatch.countDown();
     }
 
-    private synchronized void callHomeDataListener(HomeDataListener listener, boolean fromNet) {
-        if (listener != null) {
-            listener.onRefresh(totalDataList, fromNet);
-        }
+    private void callHomeDataRefreshListener(final HomeDataListener listener, final boolean fromNet) {
+        MainHandlerUtil.post(new Runnable() {
+            @Override
+            public void run() {
+                if (listener != null) {
+                    listener.onRefresh(totalDataList, fromNet);
+                }
+            }
+        });
+    }
+
+    private void callHomeDataLoadMoreListener(final HomeDataListener listener, final List<Article> articleList) {
+        MainHandlerUtil.post(new Runnable() {
+            @Override
+            public void run() {
+                if (listener != null) {
+                    listener.onLoadMore(articleList);
+                }
+            }
+        });
     }
 
     public List getTotalDataList() {

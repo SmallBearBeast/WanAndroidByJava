@@ -23,6 +23,8 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     public static final byte REFRESH_NO_DATA = 5;
     public static final byte REFRESH_PROGRESS_SHOW = 6;
     public static final byte REFRESH_PROGRESS_HIDE = 7;
+    public static final byte REFRESH_LAYOUT_SHOW = 8;
+    public static final byte REFRESH_LAYOUT_HIDE = 9;
     private boolean isRefreshDone = false;
     private boolean canLoadMore = true;
     private boolean isLoadingNetData = false;
@@ -41,7 +43,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "refresh: net is not connected");
             if (!SpValHelper.hasHomeStorageData.get()) {
-                postRefreshState(REFRESH_NET_ERROR);
+                setRefreshState(REFRESH_NET_ERROR);
             }
             return;
         }
@@ -49,9 +51,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             return;
         }
         isLoadingNetData = true;
-        if (!SpValHelper.hasHomeStorageData.get()) {
-            postRefreshState(REFRESH_PROGRESS_SHOW);
-        }
+        setRefreshState(SpValHelper.hasHomeStorageData.get() ? REFRESH_LAYOUT_SHOW : REFRESH_PROGRESS_SHOW);
         homeManager.loadDataFromNet(this);
     }
 
@@ -61,48 +61,50 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             return;
         }
         if (!canLoadMore) {
-            postLoadMoreState(LOAD_MORE_NO_DATA);
+            setLoadMoreState(LOAD_MORE_NO_DATA);
             return;
         }
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadMore: net is unConnected");
-            postLoadMoreState(LOAD_MORE_NET_ERROR);
+            setLoadMoreState(LOAD_MORE_NET_ERROR);
             return;
         }
-        postLoadMoreState(LOAD_MORE_PROGRESS);
+        setLoadMoreState(LOAD_MORE_PROGRESS);
         isLoadingNetData = true;
         homeManager.loadMoreNormalArticle(this);
     }
 
-    private void postRefreshState(byte curRefreshState) {
+    private void setRefreshState(byte curRefreshState) {
         Byte lastRefreshState = refreshStateLD.getValue();
         if (lastRefreshState == null || lastRefreshState != curRefreshState) {
-            refreshStateLD.postValue(curRefreshState);
+            refreshStateLD.setValue(curRefreshState);
         }
     }
 
-    private void postLoadMoreState(byte curLoadMoreState) {
+    private void setLoadMoreState(byte curLoadMoreState) {
         Byte lastLoadMoreState = loadMoreStateLD.getValue();
         if (lastLoadMoreState == null || lastLoadMoreState != curLoadMoreState) {
-            loadMoreStateLD.postValue(curLoadMoreState);
+            loadMoreStateLD.setValue(curLoadMoreState);
         }
     }
 
     public void refreshViewModel() {
         if (!CollectionUtil.isEmpty(getTotalDataList())) {
-            refreshDataListLD.postValue(getTotalDataList());
+            refreshDataListLD.setValue(getTotalDataList());
         }
-        postSelfValue(refreshStateLD);
-        postSelfValue(loadMoreStateLD);
+        setSelfValue(refreshStateLD);
+        setSelfValue(loadMoreStateLD);
     }
 
     private List getTotalDataList() {
         return homeManager.getTotalDataList();
     }
 
-    private void postSelfValue(MutableLiveData liveData) {
+    private void setSelfValue(MutableLiveData liveData) {
         Object value = liveData.getValue();
-        liveData.postValue(value);
+        if (value != null) {
+            liveData.setValue(value);
+        }
     }
 
     public boolean canLoadMore() {
@@ -137,19 +139,17 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             if (!isRefreshDone) {
                 isRefreshDone = true;
             }
-            postRefreshState(REFRESH_PROGRESS_HIDE);
             if (!CollectionUtil.isEmpty(dataList)) {
                 SpValHelper.hasHomeStorageData.set(true);
-                refreshDataListLD.postValue(dataList);
+                refreshDataListLD.setValue(dataList);
+                setRefreshState(REFRESH_LAYOUT_HIDE);
             } else {
                 List lastDataList = refreshDataListLD.getValue();
-                if (CollectionUtil.isEmpty(lastDataList)) {
-                    postRefreshState(REFRESH_NO_DATA);
-                }
+                setRefreshState(CollectionUtil.isEmpty(lastDataList) ? REFRESH_NO_DATA : REFRESH_PROGRESS_HIDE);
             }
         } else {
             if (!isRefreshDone && !CollectionUtil.isEmpty(dataList)) {
-                refreshDataListLD.postValue(dataList);
+                refreshDataListLD.setValue(dataList);
             }
         }
     }
@@ -158,7 +158,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     public void onLoadMore(List<Article> articleList) {
         isLoadingNetData = false;
         canLoadMore = !CollectionUtil.isEmpty(articleList);
-        loadMoreDataListLD.postValue(articleList);
-        postSelfValue(loadMoreStateLD);
+        loadMoreDataListLD.setValue(articleList);
+        setSelfValue(loadMoreStateLD);
     }
 }

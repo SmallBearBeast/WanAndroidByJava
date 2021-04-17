@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,15 +39,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home_container"
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never" />
+            app:srlHeaderMaxDragRate="2"
+            app:srlHeaderTriggerRate="1"
+            app:srlDisableContentWhenRefresh="false"
+            app:srlEnableHeaderTranslationContent="true"
+            app:srlEnableLoadMore="false">
+
+            <com.scwang.smart.refresh.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                app:srlDrawableSize="@dimen/dp_15"
+                app:srlEnableLastTime="false"
+                app:srlTextFailed="@string/str_data_loading_fail"
+                app:srlTextFinish="@string/str_data_loading_success"
+                app:srlTextPulling="@string/str_refresh_pulling"
+                app:srlTextRefreshing="@string/str_data_loading"
+                app:srlTextRelease="@string/str_refresh_release" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
         <com.bear.wanandroidbyjava.Tool.Case.CaseView
             android:id="@+id/case_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </FrameLayout>
 </LinearLayout>

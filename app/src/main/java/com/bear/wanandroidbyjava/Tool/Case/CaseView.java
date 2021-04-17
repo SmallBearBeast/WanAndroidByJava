@@ -30,6 +30,7 @@ public class CaseView extends FrameLayout {
 
     public CaseView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setVisibility(GONE);
     }
 
     private void initView(@NonNull CaseInfo caseInfo) {

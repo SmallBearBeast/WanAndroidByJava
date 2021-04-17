@@ -2,7 +2,6 @@ package com.bear.wanandroidbyjava.Module.Home;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -27,6 +26,8 @@ import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
     private static final int BRIDGE_LOAD_FAIL = 3;
+    private RefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private CaseView caseView;
     private VHAdapter vhAdapter;
@@ -65,12 +67,6 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
         super.onCreate();
         initViewModel();
         initBus();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Bus.get().unRegister(mEventCallback);
     }
 
     private void initViewModel() {
@@ -111,6 +107,13 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
                     case HomeListVM.REFRESH_PROGRESS_HIDE:
                         CaseHelper.hide(caseView);
                         break;
+                    case HomeListVM.REFRESH_LAYOUT_SHOW:
+                        refreshLayout.autoRefresh();
+                        break;
+                    case HomeListVM.REFRESH_LAYOUT_HIDE:
+                        // Need to delay otherwise the loading icon can not hide.
+                        refreshLayout.finishRefresh(500);
+                        break;
                 }
             }
         });
@@ -149,8 +152,28 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
 
     @Override
     protected void onCreateView() {
+        initRefreshLayout();
+        initCaseView();
+        initRecyclerView();
+        homeListVM.refreshViewModel();
+    }
+
+    private void initRefreshLayout() {
+        refreshLayout = findViewById(R.id.refresh_layout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                homeListVM.refresh(false);
+            }
+        });
+    }
+
+    private void initCaseView() {
         caseView = findViewById(R.id.case_view);
         caseView.setOnClickListener(this);
+    }
+
+    private void initRecyclerView() {
         recyclerView = findViewById(R.id.rv_home_container);
         recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
@@ -173,7 +196,6 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
                 }
             }
         });
-        homeListVM.refreshViewModel();
     }
 
     public void scrollToTop() {
@@ -187,7 +209,13 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, caseView, vhAdapter, dataManager);
+        clear(recyclerView, caseView, vhAdapter, dataManager, refreshLayout);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Bus.get().unRegister(mEventCallback);
     }
 
     public void loadMore() {

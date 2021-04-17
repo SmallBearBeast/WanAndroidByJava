@@ -29,4 +29,11 @@
     <string name="str_net_error">网络异常</string>
     <string name="str_check_net_refresh_again">请检查网络连接刷新重试</string>
     <string name="str_data_loading">数据加载中</string>
+
+    <string name="str_refresh_pulling">下拉刷新</string>
+    <string name="str_refresh_release">释放刷新</string>
+    <string name="str_data_loading_success">数据加载成功</string>
+    <string name="str_data_loading_fail">数据加载失败</string>
+
+
 </resources>
