@@ -25,6 +25,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     public static final byte REFRESH_PROGRESS_HIDE = 7;
     public static final byte REFRESH_LAYOUT_SHOW = 8;
     public static final byte REFRESH_LAYOUT_HIDE = 9;
+    public static final byte REFRESH_LAYOUT_FAIL = 10;
     private boolean isRefreshDone = false;
     private boolean canLoadMore = true;
     private boolean isLoadingNetData = false;
@@ -44,6 +45,8 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             SLog.d(TAG, "refresh: net is not connected");
             if (!SpValHelper.hasHomeStorageData.get()) {
                 setRefreshState(REFRESH_NET_ERROR);
+            } else if (!includeStorage) {
+                setRefreshState(REFRESH_LAYOUT_FAIL);
             }
             return;
         }
@@ -75,10 +78,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     }
 
     private void setRefreshState(byte curRefreshState) {
-        Byte lastRefreshState = refreshStateLD.getValue();
-        if (lastRefreshState == null || lastRefreshState != curRefreshState) {
-            refreshStateLD.setValue(curRefreshState);
-        }
+        refreshStateLD.setValue(curRefreshState);
     }
 
     private void setLoadMoreState(byte curLoadMoreState) {
@@ -139,13 +139,16 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
             if (!isRefreshDone) {
                 isRefreshDone = true;
             }
+            setRefreshState(REFRESH_PROGRESS_HIDE);
+            setRefreshState(REFRESH_LAYOUT_HIDE);
             if (!CollectionUtil.isEmpty(dataList)) {
                 SpValHelper.hasHomeStorageData.set(true);
                 refreshDataListLD.setValue(dataList);
-                setRefreshState(REFRESH_LAYOUT_HIDE);
             } else {
                 List lastDataList = refreshDataListLD.getValue();
-                setRefreshState(CollectionUtil.isEmpty(lastDataList) ? REFRESH_NO_DATA : REFRESH_PROGRESS_HIDE);
+                if (CollectionUtil.isEmpty(lastDataList)) {
+                    setRefreshState(REFRESH_NO_DATA);
+                }
             }
         } else {
             if (!isRefreshDone && !CollectionUtil.isEmpty(dataList)) {

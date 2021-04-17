@@ -108,11 +108,15 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
                         CaseHelper.hide(caseView);
                         break;
                     case HomeListVM.REFRESH_LAYOUT_SHOW:
-                        refreshLayout.autoRefresh();
+                        refreshLayout.autoRefresh(300, 300, 1.2f, true);
                         break;
                     case HomeListVM.REFRESH_LAYOUT_HIDE:
                         // Need to delay otherwise the loading icon can not hide.
                         refreshLayout.finishRefresh(500);
+                        break;
+                    case HomeListVM.REFRESH_LAYOUT_FAIL:
+                        // Need to delay otherwise the loading icon can not hide.
+                        refreshLayout.finishRefresh(500, false, false);
                         break;
                 }
             }
@@ -199,7 +203,11 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
     }
 
     public void scrollToTop() {
-        RvUtil.scrollToTop(recyclerView, 3, 0);
+        if (RvUtil.isTop(recyclerView)) {
+            refreshLayout.autoRefresh(0, 300, 1.2f, false);
+        } else {
+            RvUtil.scrollToTop(recyclerView, 3, 0);
+        }
     }
 
     @Override
