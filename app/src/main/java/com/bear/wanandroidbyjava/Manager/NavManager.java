@@ -10,10 +10,12 @@ import com.bear.wanandroidbyjava.Storage.SysStorage;
 import com.bear.wanandroidbyjava.Tool.Helper.DataHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.ExecutorUtil;
+import com.example.libbase.Util.MainHandlerUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NavManager {
@@ -24,9 +26,7 @@ public class NavManager {
             public void run() {
                 List<Nav> navList = SysStorage.getNavList();
                 SLog.d(TAG, "loadDataFromStorage: navList = " + navList);
-                if (listener != null) {
-                    listener.onLoad(navList, false);
-                }
+                callNavDataListener(listener, navList, false);
             }
         });
     }
@@ -42,15 +42,26 @@ public class NavManager {
                     if (!CollectionUtil.isEmpty(navList)) {
                         SysStorage.saveNavList(navList);
                     }
-                    if (listener != null) {
-                        listener.onLoad(navList, true);
-                    }
+                    callNavDataListener(listener, navList, true);
                 }
             }
 
             @Override
             protected void onFail() {
                 SLog.d(TAG, "loadNavData: onFail");
+                callNavDataListener(listener, new ArrayList<Nav>(), true);
+            }
+        });
+    }
+
+    private void callNavDataListener(final NavDataListener listener, final List<Nav> navList, final boolean fromNet) {
+        if (listener == null) {
+            return;
+        }
+        MainHandlerUtil.post(new Runnable() {
+            @Override
+            public void run() {
+                listener.onLoad(navList, fromNet);
             }
         });
     }

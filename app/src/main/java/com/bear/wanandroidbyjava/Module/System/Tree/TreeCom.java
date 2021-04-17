@@ -1,7 +1,7 @@
 package com.bear.wanandroidbyjava.Module.System.Tree;
 
+import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +16,8 @@ import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
+import com.bear.wanandroidbyjava.Tool.Case.CaseView;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libframework.Bus.Bus;
@@ -25,9 +27,10 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class TreeCom extends ViewComponent<ComponentFrag> {
+public class TreeCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
+    private static final String TAG = "TreeCom";
     private RecyclerView recyclerView;
-    private ProgressBar pbTreeLoading;
+    private CaseView caseView;
     private VHAdapter vhAdapter;
     private DataManager dataManager;
     private TreeVM treeVM;
@@ -37,8 +40,8 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
         protected void onEvent(Event event) {
             switch (event.eventKey) {
                 case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && treeVM.isFirstLoad()) {
-                        treeVM.loadTreeData();
+                    if (event.data instanceof Boolean && (Boolean) event.data && !treeVM.isFirstLoadComplete()) {
+                        treeVM.loadTreeData(false);
                     }
                     break;
             }
@@ -60,7 +63,8 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
     @Override
     protected void onCreateView() {
         recyclerView = findViewById(R.id.rv_tree_container);
-        pbTreeLoading = findViewById(R.id.pb_tree_loading);
+        caseView = findViewById(R.id.case_view);
+        caseView.setOnClickListener(this);
         vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
         dataManager = vhAdapter.getDataManager();
         recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
@@ -83,11 +87,26 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
                 dataManager.setData(trees);
             }
         });
-        treeVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        treeVM.getLoadStateLD().observe(getDependence(), new Observer<Byte>() {
             @Override
-            public void onChanged(Boolean show) {
-                if (show != null) {
-                    pbTreeLoading.setVisibility(show ? View.VISIBLE : View.GONE);
+            public void onChanged(Byte loadState) {
+                Log.d(TAG, "onChanged: loadState = " + loadState);
+                if (loadState == null) {
+                    return;
+                }
+                switch (loadState) {
+                    case TreeVM.LOAD_NET_ERROR:
+                        CaseHelper.showNetError(caseView);
+                        break;
+                    case TreeVM.LOAD_NO_DATA:
+                        CaseHelper.showNoData(caseView);
+                        break;
+                    case TreeVM.LOAD_PROGRESS_SHOW:
+                        CaseHelper.showLoading(caseView);
+                        break;
+                    case TreeVM.LOAD_PROGRESS_HIDE:
+                        CaseHelper.hide(caseView);
+                        break;
                 }
             }
         });
@@ -99,11 +118,7 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onFirstVisible() {
-        doNetWork();
-    }
-
-    private void doNetWork() {
-        treeVM.loadTreeData();
+        treeVM.loadTreeData(true);
     }
 
     public void scrollToTop() {
@@ -112,6 +127,13 @@ public class TreeCom extends ViewComponent<ComponentFrag> {
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, pbTreeLoading, vhAdapter, dataManager);
+        clear(recyclerView, caseView, vhAdapter, dataManager);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (caseView == view) {
+            treeVM.loadTreeData(false);
+        }
     }
 }

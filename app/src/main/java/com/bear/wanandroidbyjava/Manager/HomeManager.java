@@ -215,23 +215,25 @@ public class HomeManager {
     }
 
     private void callHomeDataRefreshListener(final HomeDataListener listener, final boolean fromNet) {
+        if (listener == null) {
+            return;
+        }
         MainHandlerUtil.post(new Runnable() {
             @Override
             public void run() {
-                if (listener != null) {
-                    listener.onRefresh(totalDataList, fromNet);
-                }
+                listener.onRefresh(totalDataList, fromNet);
             }
         });
     }
 
     private void callHomeDataLoadMoreListener(final HomeDataListener listener, final List<Article> articleList) {
+        if (listener == null) {
+            return;
+        }
         MainHandlerUtil.post(new Runnable() {
             @Override
             public void run() {
-                if (listener != null) {
-                    listener.onLoadMore(articleList);
-                }
+                listener.onLoadMore(articleList);
             }
         });
     }

@@ -5,39 +5,46 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
 import com.bear.wanandroidbyjava.Manager.NavManager;
+import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NavVM extends ViewModel implements NavManager.NavDataListener{
     private static final String TAG = "NavVM";
-    private boolean isFirstLoad = true;
+    public static final byte LOAD_NET_ERROR = 1;
+    public static final byte LOAD_NO_DATA = 2;
+    public static final byte LOAD_PROGRESS_SHOW = 3;
+    public static final byte LOAD_PROGRESS_HIDE = 4;
+    private boolean isFirstLoadComplete = false;
     private boolean isLoadDone = false;
     private NavManager navManager = new NavManager();
-    private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
+    private MutableLiveData<Byte> loadStateLD = new MutableLiveData<>();
     private MutableLiveData<List<Nav>> navLD = new MutableLiveData<>();
 
-    public void loadNavData() {
-        navManager.loadDataFromStorage(this);
+    public void loadNavData(boolean includeStorage) {
+        if (includeStorage) {
+            navManager.loadDataFromStorage(this);
+        }
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadNavData: net is not connected");
+            loadStateLD.setValue(LOAD_NET_ERROR);
             return;
         }
-        if (isFirstLoad) {
-            showProgressLD.postValue(true);
+        if (!SpValHelper.hasNavStorageData.get()) {
+            loadStateLD.setValue(LOAD_PROGRESS_SHOW);
         }
         navManager.loadDataFromNet(this);
     }
 
-    public boolean isFirstLoad() {
-        return isFirstLoad;
+    public boolean isFirstLoadComplete() {
+        return isFirstLoadComplete;
     }
 
-    public MutableLiveData<Boolean> getShowProgressLD() {
-        return showProgressLD;
+    public MutableLiveData<Byte> getLoadStateLD() {
+        return loadStateLD;
     }
 
     public MutableLiveData<List<Nav>> getNavLD() {
@@ -50,15 +57,17 @@ public class NavVM extends ViewModel implements NavManager.NavDataListener{
             if (!isLoadDone) {
                 isLoadDone = true;
             }
+            isFirstLoadComplete = true;
+            loadStateLD.setValue(LOAD_PROGRESS_HIDE);
             if (!CollectionUtil.isEmpty(navList)) {
+                SpValHelper.hasNavStorageData.set(true);
                 navLD.postValue(navList);
             } else {
                 List<Nav> lastNavList = navLD.getValue();
                 if (CollectionUtil.isEmpty(lastNavList)) {
-                    navLD.postValue(new ArrayList<Nav>());
+                    loadStateLD.setValue(LOAD_NO_DATA);
                 }
             }
-            showProgressLD.postValue(false);
         } else {
             if (!isLoadDone && !CollectionUtil.isEmpty(navList)) {
                 navLD.postValue(navList);

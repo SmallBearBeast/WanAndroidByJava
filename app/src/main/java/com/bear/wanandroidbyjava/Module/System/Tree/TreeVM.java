@@ -5,29 +5,36 @@ import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.Manager.TreeManager;
+import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
     private static final String TAG = "TreeVM";
-    private boolean isFirstLoad = true;
+    public static final byte LOAD_NET_ERROR = 1;
+    public static final byte LOAD_NO_DATA = 2;
+    public static final byte LOAD_PROGRESS_SHOW = 3;
+    public static final byte LOAD_PROGRESS_HIDE = 4;
+    private boolean isFirstLoadComplete = false;
     private boolean isLoadDone = false;
     private TreeManager treeManager= new TreeManager();
-    private MutableLiveData<Boolean> showProgressLD = new MutableLiveData<>();
+    private MutableLiveData<Byte> loadStateLD = new MutableLiveData<>();
     private MutableLiveData<List<Tree>> treeLD = new MutableLiveData<>();
 
-    public void loadTreeData() {
-        treeManager.loadDataFromStorage(this);
+    public void loadTreeData(boolean includeStorage) {
+        if (includeStorage) {
+            treeManager.loadDataFromStorage(this);
+        }
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadTreeData: net is not connected");
+            loadStateLD.setValue(LOAD_NET_ERROR);
             return;
         }
-        if (isFirstLoad) {
-            showProgressLD.postValue(true);
+        if (!SpValHelper.hasTreeStorageData.get()) {
+            loadStateLD.setValue(LOAD_PROGRESS_SHOW);
         }
         treeManager.loadDataFromNet(this);
     }
@@ -36,12 +43,12 @@ public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
         return treeLD;
     }
 
-    public MutableLiveData<Boolean> getShowProgressLD() {
-        return showProgressLD;
+    public MutableLiveData<Byte> getLoadStateLD() {
+        return loadStateLD;
     }
 
-    public boolean isFirstLoad() {
-        return isFirstLoad;
+    public boolean isFirstLoadComplete() {
+        return isFirstLoadComplete;
     }
 
     @Override
@@ -50,18 +57,20 @@ public class TreeVM extends ViewModel implements TreeManager.TreeDataListener{
             if (!isLoadDone) {
                 isLoadDone = true;
             }
+            isFirstLoadComplete = true;
+            loadStateLD.setValue(LOAD_PROGRESS_HIDE);
             if (!CollectionUtil.isEmpty(treeList)) {
-                treeLD.postValue(treeList);
+                SpValHelper.hasTreeStorageData.set(true);
+                treeLD.setValue(treeList);
             } else {
                 List<Tree> lastTreeList = treeLD.getValue();
                 if (CollectionUtil.isEmpty(lastTreeList)) {
-                    treeLD.postValue(new ArrayList<Tree>());
+                    loadStateLD.setValue(LOAD_NO_DATA);
                 }
             }
-            showProgressLD.postValue(false);
         } else {
             if (!isLoadDone && !CollectionUtil.isEmpty(treeList)) {
-                treeLD.postValue(treeList);
+                treeLD.setValue(treeList);
             }
         }
     }

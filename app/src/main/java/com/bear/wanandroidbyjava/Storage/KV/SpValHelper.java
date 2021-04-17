@@ -11,6 +11,8 @@ public class SpValHelper {
 
     // sp_global_config
     public static final KV<Boolean> hasHomeStorageData = SpHelper.create("hasHomeStorageData", false);
+    public static final KV<Boolean> hasTreeStorageData = SpHelper.create("hasTreeStorageData", false);
+    public static final KV<Boolean> hasNavStorageData = SpHelper.create("hasNavStorageData", false);
 
     // sp_user_config
 
