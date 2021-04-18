@@ -2,9 +2,13 @@ package com.bear.wanandroidbyjava.Module.Main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.core.content.ContextCompat;
 
 import com.bear.libcomponent.ComponentAct;
 import com.bear.wanandroidbyjava.R;
+import com.example.libbase.Util.ScreenUtil;
 import com.example.liblog.SLog;
 
 public class MainAct extends ComponentAct {
@@ -13,7 +17,15 @@ public class MainAct extends ComponentAct {
         super.onCreate(savedInstanceState);
         regComponent(new MainContentCom());
         regComponent(new MainBottomCom());
+        normalScreen();
     }
+
+    private void normalScreen() {
+        int color = ContextCompat.getColor(this, R.color.color_ffffff);
+        View homeRootView = findViewById(R.id.mainRootView);
+        ScreenUtil.normalScreen(getWindow(), color, color, homeRootView);
+    }
+
 
     @Override
     protected int layoutId() {
