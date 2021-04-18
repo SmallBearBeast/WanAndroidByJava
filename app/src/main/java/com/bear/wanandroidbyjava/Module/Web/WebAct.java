@@ -57,9 +57,8 @@ public class WebAct extends ComponentAct {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (!getComponent(WebContentCom.class).goBack()) {
-            finish();
+            super.onBackPressed();
         }
     }
 }
