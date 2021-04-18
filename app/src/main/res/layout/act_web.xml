@@ -47,7 +47,8 @@
             app:layout_constraintLeft_toRightOf="@+id/iv_collect"
             app:layout_constraintRight_toLeftOf="@+id/fl_icon_container"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="https://www.google.com.hk" />
+            tools:text="https://www.google.com.hk"
+            tools:ignore="SpUsage" />
 
         <FrameLayout
             android:id="@+id/fl_icon_container"
