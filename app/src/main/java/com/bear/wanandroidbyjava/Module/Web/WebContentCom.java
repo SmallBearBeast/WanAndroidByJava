@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
@@ -23,6 +24,7 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
     protected void onCreate() {
         FrameLayout flWebContainer = findViewById(R.id.fl_web_container);
         mWvContent = new ComWebView(getDependence().getApplicationContext());
+        mWvContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
         flWebContainer.addView(mWvContent, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         initWebCallback();
         String link = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
