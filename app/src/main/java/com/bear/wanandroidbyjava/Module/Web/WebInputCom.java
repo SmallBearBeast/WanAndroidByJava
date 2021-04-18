@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.IntDef;
-
 import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
@@ -28,79 +26,58 @@ import java.util.regex.Pattern;
 
 public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
     private static final String TAG = WebAct.TAG + "-WebInputCom";
+    private static final int LOADING_PROGRESS_DONE = 100;
+    private int webProgress;
 
-    public static final int BROWSER_TYPE_BAIDU = 1;
-    public static final int BROWSER_TYPE_BING = 2;
-    public static final int BROWSER_TYPE_SOGOU = 3;
-    public static final int BROWSER_TYPE_GOOGLE = 4;
-
-    private static final String BROWSER_URL_BAIDU = "https://www.baidu.com/s?wd=";
-    private static final String BROWSER_URL_BING = "https://cn.bing.com/search?q=";
-    private static final String BROWSER_URL_SOGOU = "https://www.sogou.com/web?query=";
-    private static final String BROWSER_URL_GOOGLE = "https://www.google.com.hk/search?q=";
-
-    private ImageView mIvCollect;
-    private ImageView mIvWebIcon;
-    private EditText mEtSearchInput;
-    private ImageView mIvClearInput;
-    private TextView mTvSearch;
-    private ProgressBar mPbWebLoading;
-    private String mWebSearchText;
-    private String mWebTitle;
-
-    private boolean mIsLoading = false;
-    private @BrowserType
-    int mSearchType = BROWSER_TYPE_BAIDU;
+    private ImageView webIconIv;
+    private EditText searchInputEt;
+    private ImageView clearInputIv;
+    private ProgressBar webLoadingPb;
+    private String webLink;
+    private String webTitle;
 
     @Override
     protected void onCreate() {
-        mWebSearchText = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
-        mWebTitle = ShareVM.get(getDependence(), WebAct.KEY_WEB_TITLE);
-        mIvCollect = findViewById(R.id.iv_collect);
-        mEtSearchInput = findViewById(R.id.et_search_input);
-        mIvClearInput = findViewById(R.id.iv_clear_input);
-        mIvClearInput.setVisibility(View.INVISIBLE);
-        mTvSearch = findViewById(R.id.tv_search);
-        mPbWebLoading = findViewById(R.id.pb_web_loading);
-        mIvWebIcon = findViewById(R.id.iv_web_icon);
+        webLink = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
+        webTitle = ShareVM.get(getDependence(), WebAct.KEY_WEB_TITLE);
+        searchInputEt = findViewById(R.id.et_search_input);
+        clearInputIv = findViewById(R.id.iv_clear_input);
+        webLoadingPb = findViewById(R.id.pb_web_loading);
+        webIconIv = findViewById(R.id.iv_web_icon);
         setUpEditText();
         clickListener(this, R.id.iv_collect, R.id.iv_clear_input, R.id.tv_search);
     }
 
     private void setUpEditText() {
-        mEtSearchInput.setText(mWebSearchText);
         setEditTextEnable(false);
-        mEtSearchInput.addTextChangedListener(new TextWatcherWrapper() {
+        searchInputEt.setText(webLink);
+        searchInputEt.addTextChangedListener(new TextWatcherWrapper() {
             @Override
             public void afterTextChanged(Editable s) {
-                boolean focus = mEtSearchInput.hasFocus();
-                mIvClearInput.setVisibility(focus && s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
-                if (!s.toString().equals(mWebTitle)) {
-                    mWebSearchText = s.toString();
-                }
+                boolean focus = searchInputEt.hasFocus();
+                clearInputIv.setVisibility(focus && s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
             }
         });
-        mEtSearchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        searchInputEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 SLog.d(TAG, "hasFocus = " + hasFocus);
-                if (hasFocus && mWebSearchText.length() > 0) {
-                    mIvClearInput.setVisibility(View.VISIBLE);
-                    mIvWebIcon.setVisibility(View.INVISIBLE);
-                    mEtSearchInput.setText(mWebSearchText);
+                if (hasFocus) {
+                    clearInputIv.setVisibility(View.VISIBLE);
+                    webIconIv.setVisibility(View.INVISIBLE);
+                    searchInputEt.setText(webLink);
                 } else {
-                    mIvClearInput.setVisibility(View.INVISIBLE);
-                    mIvWebIcon.setVisibility(View.VISIBLE);
-                    mEtSearchInput.setText(mWebTitle);
+                    clearInputIv.setVisibility(View.INVISIBLE);
+                    webIconIv.setVisibility(View.VISIBLE);
+                    searchInputEt.setText(webTitle);
                 }
             }
         });
-        mEtSearchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchInputEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search();
-                    KeyBoardUtil.hideSoftInput(getDependence(), mEtSearchInput);
                     return true;
                 }
                 return false;
@@ -109,71 +86,67 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
     }
 
     private void setEditTextEnable(boolean enable) {
-        mEtSearchInput.setClickable(enable);
-        mEtSearchInput.setFocusable(enable);
-        mEtSearchInput.setFocusableInTouchMode(enable);
+        searchInputEt.setClickable(enable);
+        searchInputEt.setFocusable(enable);
+        searchInputEt.setFocusableInTouchMode(enable);
     }
 
     public void setWebProgress(int progress) {
-        progress = (int) (progress / 80f * 100);
-        if (mPbWebLoading.getVisibility() == View.VISIBLE) {
-            if (progress >= 0 && progress <= 100) {
-                mPbWebLoading.setProgress(progress);
+        webProgress = progress;
+        if (webLoadingPb.getVisibility() == View.VISIBLE) {
+            if (progress >= 0 && progress < LOADING_PROGRESS_DONE) {
+                webLoadingPb.setProgress(progress);
             } else {
-                mPbWebLoading.setVisibility(View.GONE);
-                mEtSearchInput.setText(mWebTitle);
+                onPageFinished();
             }
         }
     }
 
     public void onPageStarted(String url) {
-        mWebSearchText = url;
-        mEtSearchInput.setText(url);
-        mPbWebLoading.setVisibility(View.VISIBLE);
+        webLink = url;
+        webLoadingPb.setVisibility(View.VISIBLE);
+        setSearchInputTextWhenNoFocus(url);
         setEditTextEnable(false);
     }
 
     public void onPageFinished() {
-        mPbWebLoading.setVisibility(View.GONE);
-        mEtSearchInput.setText(mWebTitle);
-        setEditTextEnable(true);
-        mIsLoading = false;
+        if (webProgress >= LOADING_PROGRESS_DONE) {
+            webProgress = 0;
+            webLoadingPb.setVisibility(View.GONE);
+            setSearchInputTextWhenNoFocus(webTitle);
+            setEditTextEnable(true);
+        }
     }
 
     public void setWebTitle(String title) {
         if (isValidUrl(title)) {
             return;
         }
-        mWebTitle = title;
-        mEtSearchInput.setText(mWebTitle);
+        webTitle = title;
+        setSearchInputTextWhenNoFocus(webTitle);
     }
 
     public void setWebIcon(Bitmap bitmap) {
-        mIvWebIcon.setImageBitmap(bitmap);
-        mIvWebIcon.setVisibility(View.VISIBLE);
-    }
-
-    public void setSearchType(@BrowserType int searchType) {
-        mSearchType = searchType;
-        if (mIsLoading) {
-            search();
+        if (!searchInputEt.hasFocus()) {
+            webIconIv.setImageBitmap(bitmap);
+            webIconIv.setVisibility(View.VISIBLE);
         }
     }
 
     private void search() {
-        if (StringUtil.isEmpty(mWebSearchText)) {
-            ToastUtil.showToast(R.string.str_please_input);
+        String inputUrl = String.valueOf(searchInputEt.getText());
+        if (StringUtil.isEmpty(inputUrl)) {
+            ToastUtil.showToast(R.string.str_input_net_address);
             return;
         }
-        mIsLoading = true;
-        mIvWebIcon.setVisibility(View.INVISIBLE);
-        if (isValidUrl(mWebSearchText)) {
-            SLog.d(TAG, "search: loadUrl = " + mWebSearchText);
-            ComponentService.get().getComponent(WebContentCom.class).loadUrl(mWebSearchText);
-        } else {
-            String searchUrl = getSearchUrlByType();
-            SLog.d(TAG, "search: searchUrl = " + searchUrl);
-            ComponentService.get().getComponent(WebContentCom.class).loadUrl(searchUrl);
+        if (isValidUrl(inputUrl)) {
+            SLog.d(TAG, "search: inputUrl = " + inputUrl);
+            webLink = inputUrl;
+            webIconIv.setVisibility(View.INVISIBLE);
+            KeyBoardUtil.hideSoftInput(getDependence(), searchInputEt);
+            setEditTextEnable(false);
+            searchInputEt.setText(inputUrl);
+            ComponentService.get().getComponent(WebContentCom.class).loadUrl(inputUrl);
         }
     }
 
@@ -183,26 +156,11 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         return mat.matches();
     }
 
-    private String getSearchUrlByType() {
-        String url = null;
-        switch (mSearchType) {
-            case BROWSER_TYPE_BAIDU:
-                url = BROWSER_URL_BAIDU + mWebSearchText;
-                break;
-            case BROWSER_TYPE_BING:
-                url = BROWSER_URL_BING + mWebSearchText;
-                break;
-            case BROWSER_TYPE_SOGOU:
-                url = BROWSER_URL_SOGOU + mWebSearchText;
-                break;
-            case BROWSER_TYPE_GOOGLE:
-                url = BROWSER_URL_GOOGLE + mWebSearchText;
-                break;
+    private void setSearchInputTextWhenNoFocus(String text) {
+        String searchText = String.valueOf(searchInputEt.getText());
+        if (!searchInputEt.hasFocus() && !text.equals(searchText)) {
+            searchInputEt.setText(text);
         }
-        if (url == null) {
-            url = BROWSER_URL_BAIDU + mWebSearchText;
-        }
-        return url;
     }
 
     @Override
@@ -211,17 +169,12 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
             case R.id.iv_collect:
                 break;
             case R.id.iv_clear_input:
-                mEtSearchInput.setText("");
-                mIvClearInput.setVisibility(View.INVISIBLE);
+                clearInputIv.setVisibility(View.INVISIBLE);
+                searchInputEt.setText("");
                 break;
             case R.id.tv_search:
                 search();
                 break;
         }
-    }
-
-    @IntDef({BROWSER_TYPE_BAIDU, BROWSER_TYPE_BING, BROWSER_TYPE_SOGOU, BROWSER_TYPE_GOOGLE})
-    public @interface BrowserType {
-
     }
 }
