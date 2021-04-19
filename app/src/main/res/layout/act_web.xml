@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/webRootView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/webRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_ffffff"
@@ -47,8 +47,8 @@
             app:layout_constraintLeft_toRightOf="@+id/iv_collect"
             app:layout_constraintRight_toLeftOf="@+id/fl_icon_container"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="https://www.google.com.hk"
-            tools:ignore="SpUsage" />
+            tools:ignore="SpUsage"
+            tools:text="https://www.google.com.hk" />
 
         <FrameLayout
             android:id="@+id/fl_icon_container"
@@ -111,17 +111,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45">
 
-        <ImageView
-            android:id="@+id/iv_cancel"
+        <FrameLayout
+            android:id="@+id/left_action_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="@dimen/dp_12"
-            android:src="@drawable/ic_cancel"
-            android:tint="@color/color_5c5c5c"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_more"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp_12"
+                android:src="@drawable/ic_cancel"
+                android:tint="@color/color_5c5c5c" />
+
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp_12"
+                android:rotation="180"
+                android:src="@drawable/ic_forward"
+                android:tint="@color/color_5c5c5c"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/iv_more"
@@ -131,8 +147,8 @@
             android:src="@drawable/ic_more"
             android:tint="@color/color_5c5c5c"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_cancel"
             app:layout_constraintEnd_toStartOf="@+id/iv_forward"
+            app:layout_constraintStart_toEndOf="@+id/left_action_view"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -141,7 +157,7 @@
             android:layout_height="match_parent"
             android:padding="@dimen/dp_12"
             android:src="@drawable/ic_forward"
-            android:tint="@color/color_5c5c5c"
+            android:tint="@color/color_aaaaaa"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_more"

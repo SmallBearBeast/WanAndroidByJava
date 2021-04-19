@@ -67,6 +67,7 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 ComponentService.get().getComponent(WebInputCom.class).onPageStarted(url);
+                updateBackAndForwardAction();
             }
 
             @Override
@@ -99,10 +100,20 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
 
     public void goForward() {
         mWvContent.forward();
+        updateBackAndForwardAction();
     }
 
     public boolean goBack() {
-        return mWvContent.back();
+        boolean goBackSuccess = mWvContent.back();
+        updateBackAndForwardAction();
+        return goBackSuccess;
+    }
+
+    private void updateBackAndForwardAction() {
+        boolean canGoForward = mWvContent.canGoForward();
+        ComponentService.get().getComponent(WebActionCom.class).setForwardEnable(canGoForward);
+        boolean canGoBack = mWvContent.canGoBack();
+        ComponentService.get().getComponent(WebActionCom.class).setBackEnable(canGoBack);
     }
 
     public void loadUrl(String url) {
