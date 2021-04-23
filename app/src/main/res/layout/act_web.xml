@@ -5,7 +5,7 @@
     android:id="@+id/webRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_ffffff"
+    android:background="@color/color_FFFFFF"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,13 +23,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="@dimen/dp_10"
-            android:layout_height="@dimen/dp_10"
-            android:src="@drawable/ic_baidu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
 
         <EditText
             android:id="@+id/et_search_input"
@@ -157,7 +150,7 @@
             android:layout_height="match_parent"
             android:padding="@dimen/dp_12"
             android:src="@drawable/ic_forward"
-            android:tint="@color/color_aaaaaa"
+            android:tint="@color/color_AAAAAA"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_more"

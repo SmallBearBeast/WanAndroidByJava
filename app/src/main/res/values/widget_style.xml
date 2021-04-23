@@ -4,4 +4,16 @@
         <attr name="fl_vertical_space" format="dimension"/>
         <attr name="fl_horizontal_space" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="ItemView">
+        <attr name="iv_icon_res" format="reference"/>
+        <attr name="iv_icon_bg_res" format="reference"/>
+        <attr name="iv_icon_size" format="dimension"/>
+        <attr name="iv_icon_padding" format="dimension"/>
+        <attr name="iv_icon_tint" format="color"/>
+        <attr name="iv_offset" format="dimension"/>
+        <attr name="iv_text_str" format="string"/>
+        <attr name="iv_text_size" format="dimension"/>
+        <attr name="iv_text_color" format="color"/>
+    </declare-styleable>
 </resources>

@@ -100,13 +100,10 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
 
     public void goForward() {
         mWvContent.forward();
-        updateBackAndForwardAction();
     }
 
     public boolean goBack() {
-        boolean goBackSuccess = mWvContent.back();
-        updateBackAndForwardAction();
-        return goBackSuccess;
+        return mWvContent.back();
     }
 
     private void updateBackAndForwardAction() {
@@ -119,4 +116,17 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
     public void loadUrl(String url) {
         mWvContent.loadUrl(url);
     }
+
+    public void goBackHome() {
+        int steps = -1;
+        while (mWvContent.canGoBackOrForward(steps)) {
+            steps --;
+        }
+        mWvContent.goBackOrForward(steps + 1);
+    }
+
+    public void reload() {
+        mWvContent.reload();
+    }
+
 }

@@ -29,7 +29,7 @@ public class WebAct extends ComponentAct {
     }
 
     private void normalScreen() {
-        int color = ContextCompat.getColor(this, R.color.color_ffffff);
+        int color = ContextCompat.getColor(this, R.color.color_FFFFFF);
         View homeRootView = findViewById(R.id.webRootView);
         ScreenUtil.normalScreen(getWindow(), color, color, homeRootView);
     }

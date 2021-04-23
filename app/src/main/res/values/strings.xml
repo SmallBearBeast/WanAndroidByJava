@@ -34,6 +34,13 @@
     <string name="str_refresh_release">释放刷新</string>
     <string name="str_data_loading_success">数据加载成功</string>
     <string name="str_data_loading_fail">数据加载失败</string>
+    <string name="str_wan_android_provide">网页由 wanandroid.com 提供</string>
+    <string name="str_return_home_page">回到首页</string>
+    <string name="str_collect">收藏</string>
+    <string name="str_bookmark">书签</string>
+    <string name="str_refresh">刷新</string>
+    <string name="str_share">分享</string>
+    <string name="str_quit">退出</string>
 
 
 </resources>

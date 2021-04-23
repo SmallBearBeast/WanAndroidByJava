@@ -36,7 +36,7 @@ public class WebActionCom extends ViewComponent<ComponentAct> implements View.On
                 break;
 
             case R.id.iv_more:
-                // TODO: 2020-03-19 show bottom dialog
+                new ActionBottomView(getDependence()).show();
                 break;
 
             case R.id.iv_forward:
@@ -50,7 +50,7 @@ public class WebActionCom extends ViewComponent<ComponentAct> implements View.On
     }
 
     public void setForwardEnable(boolean enable) {
-        int color = ResourceUtil.getColor(enable ? R.color.color_5c5c5c : R.color.color_aaaaaa);
+        int color = ResourceUtil.getColor(enable ? R.color.color_5c5c5c : R.color.color_AAAAAA);
         forWardIv.setEnabled(enable);
         forWardIv.setImageTintList(ColorStateList.valueOf(color));
     }

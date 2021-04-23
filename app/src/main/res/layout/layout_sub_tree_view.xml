@@ -23,7 +23,7 @@
         android:id="@+id/tv_sub_tree_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_ffffff"
+        android:textColor="@color/color_FFFFFF"
         tools:text="Android Studio" />
 
 </LinearLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_action_bottom_view"
+    android:paddingHorizontal="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_15"
+    android:paddingBottom="@dimen/dp_20">
+
+    <TextView
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_wan_android_provide"
+        android:textColor="@color/color_AAAAAA"
+        android:textSize="@dimen/dp_13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpUsage" />
+
+    <Space
+        android:id="@+id/topSpaceLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        app:layout_constraintTop_toBottomOf="@+id/titleTv" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/homeWebItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_home_web"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_return_home_page"
+        app:layout_constraintEnd_toStartOf="@+id/collectItemView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topSpaceLine" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/collectItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_un_collect"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_collect"
+        app:layout_constraintEnd_toStartOf="@+id/bookmarkItemView"
+        app:layout_constraintStart_toEndOf="@+id/homeWebItemView"
+        app:layout_constraintTop_toTopOf="@id/topSpaceLine" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/bookmarkItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_bookmark"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_bookmark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/collectItemView"
+        app:layout_constraintTop_toTopOf="@id/topSpaceLine" />
+
+    <Space
+        android:id="@+id/bottomSpaceLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        app:layout_constraintTop_toBottomOf="@+id/collectItemView" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/refreshItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_refresh"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_refresh"
+        app:layout_constraintEnd_toEndOf="@+id/homeWebItemView"
+        app:layout_constraintStart_toStartOf="@+id/homeWebItemView"
+        app:layout_constraintTop_toTopOf="@id/bottomSpaceLine" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/shareItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_share"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_share"
+        app:layout_constraintEnd_toEndOf="@+id/collectItemView"
+        app:layout_constraintStart_toStartOf="@+id/collectItemView"
+        app:layout_constraintTop_toTopOf="@id/bottomSpaceLine" />
+
+    <com.bear.wanandroidbyjava.Widget.ItemView
+        app:iv_icon_bg_res="@drawable/bg_action_bottom_item_image_view"
+        android:id="@+id/quitItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iv_icon_padding="@dimen/dp_12"
+        app:iv_icon_res="@drawable/ic_quit"
+        app:iv_icon_size="@dimen/dp_45"
+        app:iv_icon_tint="@color/color_5c5c5c"
+        app:iv_offset="@dimen/dp_8"
+        app:iv_text_color="@color/color_5c5c5c"
+        app:iv_text_size="@dimen/dp_13"
+        app:iv_text_str="@string/str_quit"
+        app:layout_constraintEnd_toEndOf="@+id/bookmarkItemView"
+        app:layout_constraintStart_toStartOf="@+id/bookmarkItemView"
+        app:layout_constraintTop_toTopOf="@id/bottomSpaceLine" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

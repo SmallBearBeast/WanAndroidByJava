@@ -39,7 +39,7 @@ public class PublicTabVHBridge extends VHBridge<PublicTabVHBridge.TabVHolder> {
         @Override
         public void bindFull(int pos, PublicTab publicTab) {
             super.bindFull(pos, publicTab);
-            itemView.setBackgroundColor(mSelectTabPos == pos ? ResourceUtil.getColor(R.color.color_aaaaaa) : Color.TRANSPARENT);
+            itemView.setBackgroundColor(mSelectTabPos == pos ? ResourceUtil.getColor(R.color.color_AAAAAA) : Color.TRANSPARENT);
             mTvPublicName.setText(publicTab.name);
         }
 
