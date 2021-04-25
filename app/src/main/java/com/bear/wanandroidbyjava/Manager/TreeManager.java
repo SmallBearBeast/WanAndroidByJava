@@ -10,9 +10,9 @@ import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
 import com.bear.wanandroidbyjava.Storage.SysStorage;
 import com.bear.wanandroidbyjava.Tool.Helper.DataHelper;
+import com.example.libbase.Executor.BgThreadExecutor;
+import com.example.libbase.Executor.MainThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.ExecutorUtil;
-import com.example.libbase.Util.MainHandlerUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkHelper;
@@ -48,7 +48,7 @@ public class TreeManager {
     }
 
     public void loadDataFromStorage(final TreeDataListener listener) {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 List<Tree> treeList = SysStorage.getTreeList();
@@ -62,7 +62,7 @@ public class TreeManager {
         if (listener == null) {
             return;
         }
-        MainHandlerUtil.post(new Runnable() {
+        MainThreadExecutor.post(new Runnable() {
             @Override
             public void run() {
                 listener.onLoad(treeList, fromNet);

@@ -12,8 +12,8 @@ import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
 import com.bear.wanandroidbyjava.Net.NetUrl;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
+import com.example.libbase.Executor.BgThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
@@ -81,7 +81,7 @@ public class PublicTabVM extends ViewModel {
     }
 
     public void savePublicTabList(final List<PublicTab> publicTabList) {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -96,7 +96,7 @@ public class PublicTabVM extends ViewModel {
     }
 
     private void fetchTabFromDb() {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {

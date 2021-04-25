@@ -13,8 +13,8 @@ import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
 import com.bear.wanandroidbyjava.Net.NetUrl;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
+import com.example.libbase.Executor.BgThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.ExecutorUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
@@ -35,7 +35,7 @@ public class ProjectListVM extends ViewModel {
     private MutableLiveData<List<Article>> mLoadMoreArticleLD = new MutableLiveData<>();
 
     private void refreshFromDb(final int cid) {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -131,7 +131,7 @@ public class ProjectListVM extends ViewModel {
     }
 
     public void saveTabArticleList(final int publicTabId, final List<Article> publicArticleList) {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {

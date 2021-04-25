@@ -11,9 +11,9 @@ import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
 import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Tool.Helper.DataHelper;
+import com.example.libbase.Executor.BgThreadExecutor;
+import com.example.libbase.Executor.MainThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
-import com.example.libbase.Util.ExecutorUtil;
-import com.example.libbase.Util.MainHandlerUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkHelper;
@@ -37,7 +37,7 @@ public class HomeManager {
 
     public void loadDataFromStorage(final HomeDataListener listener) {
         SLog.d(TAG, "loadDataFromStorage: ");
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 BannerSet bannerSet = HomeStorage.getBannerSet();
@@ -59,7 +59,7 @@ public class HomeManager {
     }
 
     public void loadDataFromNet(final HomeDataListener listener) {
-        ExecutorUtil.execute(new Runnable() {
+        BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 tempTotalDataList.clear();
@@ -218,7 +218,7 @@ public class HomeManager {
         if (listener == null) {
             return;
         }
-        MainHandlerUtil.post(new Runnable() {
+        MainThreadExecutor.post(new Runnable() {
             @Override
             public void run() {
                 listener.onRefresh(totalDataList, fromNet);
@@ -230,7 +230,7 @@ public class HomeManager {
         if (listener == null) {
             return;
         }
-        MainHandlerUtil.post(new Runnable() {
+        MainThreadExecutor.post(new Runnable() {
             @Override
             public void run() {
                 listener.onLoadMore(articleList);
