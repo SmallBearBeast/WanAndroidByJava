@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
-import com.example.libbase.Util.KeyBoardUtil;
+import com.example.libbase.Manager.KeyBoardManager;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 import com.example.libframework.Wrapper.TextWatcherWrapper;
@@ -66,10 +68,12 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
                     clearInputIv.setVisibility(View.VISIBLE);
                     webIconIv.setVisibility(View.INVISIBLE);
                     searchInputEt.setText(webLink);
+                    ComponentService.get().getComponent(WebLinkCom.class).showLinkView();
                 } else {
                     clearInputIv.setVisibility(View.INVISIBLE);
                     webIconIv.setVisibility(View.VISIBLE);
                     searchInputEt.setText(webTitle);
+                    ComponentService.get().getComponent(WebLinkCom.class).hideLinkView();
                 }
             }
         });
@@ -143,7 +147,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
             SLog.d(TAG, "search: inputUrl = " + inputUrl);
             webLink = inputUrl;
             webIconIv.setVisibility(View.INVISIBLE);
-            KeyBoardUtil.hideSoftInput(getDependence(), searchInputEt);
+            KeyBoardManager.get().hideKeyBoard(getDependence(), searchInputEt);
             setEditTextEnable(false);
             searchInputEt.setText(inputUrl);
             ComponentService.get().getComponent(WebContentCom.class).loadUrl(inputUrl);
@@ -176,5 +180,9 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
                 search();
                 break;
         }
+    }
+
+    public @Nullable String getWebLink() {
+        return webLink;
     }
 }

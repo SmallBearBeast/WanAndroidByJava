@@ -25,6 +25,7 @@ public class WebAct extends ComponentAct {
         regComponent(new WebInputCom());
         regComponent(new WebActionCom());
         regComponent(new WebContentCom());
+        regComponent(new WebLinkCom());
         normalScreen();
     }
 

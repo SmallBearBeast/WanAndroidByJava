@@ -93,67 +93,120 @@
             tools:progress="50" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/fl_web_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_action_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45">
+        android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/left_action_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_more"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/fl_web_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/cl_action_container"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_action_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <FrameLayout
+                android:id="@+id/left_action_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_more"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/dp_12"
+                    android:src="@drawable/ic_cancel"
+                    android:tint="@color/color_5c5c5c" />
+
+                <ImageView
+                    android:id="@+id/back_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/dp_12"
+                    android:rotation="180"
+                    android:src="@drawable/ic_forward"
+                    android:tint="@color/color_5c5c5c"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <ImageView
-                android:id="@+id/iv_cancel"
-                android:layout_width="match_parent"
+                android:id="@+id/iv_more"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:padding="@dimen/dp_12"
-                android:src="@drawable/ic_cancel"
-                android:tint="@color/color_5c5c5c" />
-
-            <ImageView
-                android:id="@+id/back_iv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/dp_12"
-                android:rotation="180"
-                android:src="@drawable/ic_forward"
+                android:src="@drawable/ic_more"
                 android:tint="@color/color_5c5c5c"
-                android:visibility="gone" />
-        </FrameLayout>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_forward"
+                app:layout_constraintStart_toEndOf="@+id/left_action_view"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_more"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="@dimen/dp_12"
-            android:src="@drawable/ic_more"
-            android:tint="@color/color_5c5c5c"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_forward"
-            app:layout_constraintStart_toEndOf="@+id/left_action_view"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/iv_forward"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp_12"
+                android:src="@drawable/ic_forward"
+                android:tint="@color/color_AAAAAA"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_more"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/iv_forward"
-            android:layout_width="0dp"
+        <View
+            android:id="@+id/maskView"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/dp_12"
-            android:src="@drawable/ic_forward"
-            android:tint="@color/color_AAAAAA"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_more"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:alpha="0.5"
+            android:background="@color/color_000000"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/topLinkView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:background="@color/color_FFFFFF"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/copyLinkTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_link_text_view"
+                android:gravity="center"
+                android:text="@string/str_copy_link"
+                android:textColor="@color/color_5c5c5c" />
+
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/dp_8"
+                android:background="@color/color_5c5c5c" />
+
+            <TextView
+                android:id="@+id/openWithBrowserTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_link_text_view"
+                android:gravity="center"
+                android:text="@string/str_open_with_browser"
+                android:textColor="@color/color_5c5c5c" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
