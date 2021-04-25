@@ -8,10 +8,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Module.Home.HomeListCom;
-import com.bear.wanandroidbyjava.Module.Project.ProjectCom;
-import com.bear.wanandroidbyjava.Module.Public.PublicCom;
-import com.bear.wanandroidbyjava.Module.System.SystemCom;
+import com.bear.wanandroidbyjava.Module.Home.IHomeListCom;
+import com.bear.wanandroidbyjava.Module.Project.IProjectCom;
+import com.bear.wanandroidbyjava.Module.Public.IPublicCom;
+import com.bear.wanandroidbyjava.Module.System.ISystemCom;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
@@ -51,34 +51,34 @@ public class MainBottomCom extends ViewComponent<ComponentAct> implements View.O
         if (mLastClickViewId != v.getId() || curTs - mLastClickTs > CLICK_INTERVAL) {
             switch (v.getId()) {
                 case R.id.ll_home_tab:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_HOME);
+                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_HOME);
                     break;
                 case R.id.ll_system_tab:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_SYSTEM);
+                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_SYSTEM);
                     break;
                 case R.id.ll_public_tab:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PUBLIC);
+                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PUBLIC);
                     break;
                 case R.id.ll_project_tab:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PROJECT);
+                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PROJECT);
                     break;
                 case R.id.ll_personal_tab:
-                    ComponentService.get().getComponent(MainContentCom.class).switchTab(MainContentCom.TAB_PERSONAL);
+                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PERSONAL);
                     break;
             }
         } else {
             switch (v.getId()) {
                 case R.id.ll_home_tab:
-                    ComponentService.get().getComponent(HomeListCom.class).scrollToTop();
+                    ComponentService.get().getComponent(IHomeListCom.class).scrollToTop();
                     break;
                 case R.id.ll_system_tab:
-                    ComponentService.get().getComponent(SystemCom.class).scrollToTop();
+                    ComponentService.get().getComponent(ISystemCom.class).scrollToTop();
                     break;
                 case R.id.ll_public_tab:
-                    ComponentService.get().getComponent(PublicCom.class).scrollToTop();
+                    ComponentService.get().getComponent(IPublicCom.class).scrollToTop();
                     break;
                 case R.id.ll_project_tab:
-                    ComponentService.get().getComponent(ProjectCom.class).scrollToTop();
+                    ComponentService.get().getComponent(IProjectCom.class).scrollToTop();
                     break;
             }
         }

@@ -27,7 +27,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class TreeCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
+public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, View.OnClickListener {
     private static final String TAG = "TreeCom";
     private RecyclerView recyclerView;
     private CaseView caseView;
@@ -121,6 +121,7 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements View.OnClic
         treeVM.loadTreeData(true);
     }
 
+    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(recyclerView, true);
     }

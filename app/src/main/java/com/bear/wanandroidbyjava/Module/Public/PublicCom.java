@@ -25,7 +25,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class PublicCom extends ViewComponent<ComponentFrag> {
+public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCom{
     private RecyclerView mRvTabContainer;
     private ProgressBar mPbPublicTabLoading;
     private VHAdapter mTabListAdapter;
@@ -112,6 +112,7 @@ public class PublicCom extends ViewComponent<ComponentFrag> {
         mPublicTabVM.fetchTab();
     }
 
+    @Override
     public void switchTabArticle(int tabId) {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int index = 0;
@@ -124,15 +125,12 @@ public class PublicCom extends ViewComponent<ComponentFrag> {
         mNoSwitchViewPager.setCurrentItem(index, false);
     }
 
-
+    @Override
     public void scrollToTop() {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
-        PublicListCom publicListCom = ComponentService.get().getComponent(PublicListCom.class, curPublicTab.publicTabId);
-        if (publicListCom != null) {
-            publicListCom.scrollToTop();
-        }
+        ComponentService.get().getComponent(IPublicListCom.class, curPublicTab.publicTabId).scrollToTop();
     }
 
     @Override

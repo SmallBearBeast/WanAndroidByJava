@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings({"rawtypes"})
-public class HomeListCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
+public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeListCom, View.OnClickListener {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
@@ -202,6 +202,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
         });
     }
 
+    @Override
     public void scrollToTop() {
         if (RvUtil.isTop(recyclerView)) {
             refreshLayout.autoRefresh(0, 300, 1.2f, false);
@@ -226,6 +227,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements View.On
         Bus.get().unRegister(mEventCallback);
     }
 
+    @Override
     public void loadMore() {
         homeListVM.loadMore();
     }

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ScreenUtil;
@@ -58,7 +59,7 @@ public class WebAct extends ComponentAct {
 
     @Override
     public void onBackPressed() {
-        if (!getComponent(WebContentCom.class).goBack()) {
+        if (!ComponentService.get().getComponent(IWebContentCom.class).goBack()) {
             super.onBackPressed();
         }
     }

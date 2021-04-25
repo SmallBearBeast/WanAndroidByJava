@@ -16,7 +16,7 @@ import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
 
-public class WebContentCom extends ViewComponent<ComponentAct> {
+public class WebContentCom extends ViewComponent<ComponentAct> implements IWebContentCom {
     private static final String TAG = WebAct.TAG + "-WebContentCom";
     private ComWebView mWvContent;
 
@@ -66,13 +66,13 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                ComponentService.get().getComponent(WebInputCom.class).onPageStarted(url);
+                ComponentService.get().getComponent(IWebInputCom.class).onPageStarted(url);
                 updateBackAndForwardAction();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                ComponentService.get().getComponent(WebInputCom.class).onPageFinished();
+                ComponentService.get().getComponent(IWebInputCom.class).onPageFinished();
             }
 
             @Override
@@ -82,41 +82,45 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebProgress(newProgress);
+                ComponentService.get().getComponent(IWebInputCom.class).setWebProgress(newProgress);
             }
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebIcon(icon);
+                ComponentService.get().getComponent(IWebInputCom.class).setWebIcon(icon);
             }
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebTitle(title);
+                ComponentService.get().getComponent(IWebInputCom.class).setWebTitle(title);
             }
         });
         mWvContent.addWebCallback(new WebTimeCallback());
     }
 
+    @Override
     public void goForward() {
         mWvContent.forward();
     }
 
+    @Override
     public boolean goBack() {
         return mWvContent.back();
     }
 
     private void updateBackAndForwardAction() {
         boolean canGoForward = mWvContent.canGoForward();
-        ComponentService.get().getComponent(WebActionCom.class).setForwardEnable(canGoForward);
+        ComponentService.get().getComponent(IWebActionCom.class).setForwardEnable(canGoForward);
         boolean canGoBack = mWvContent.canGoBack();
-        ComponentService.get().getComponent(WebActionCom.class).setBackEnable(canGoBack);
+        ComponentService.get().getComponent(IWebActionCom.class).setBackEnable(canGoBack);
     }
 
+    @Override
     public void loadUrl(String url) {
         mWvContent.loadUrl(url);
     }
 
+    @Override
     public void goBackHome() {
         int steps = -1;
         while (mWvContent.canGoBackOrForward(steps)) {
@@ -125,8 +129,8 @@ public class WebContentCom extends ViewComponent<ComponentAct> {
         mWvContent.goBackOrForward(steps + 1);
     }
 
+    @Override
     public void reload() {
         mWvContent.reload();
     }
-
 }

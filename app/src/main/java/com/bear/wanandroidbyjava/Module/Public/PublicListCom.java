@@ -31,7 +31,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class PublicListCom extends ViewComponent<ComponentFrag> {
+public class PublicListCom extends ViewComponent<ComponentFrag> implements IPublicListCom {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
@@ -152,6 +152,7 @@ public class PublicListCom extends ViewComponent<ComponentFrag> {
         mPublicListVM.refresh(mTabId);
     }
 
+    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(mRecyclerView, 3, 0);
     }

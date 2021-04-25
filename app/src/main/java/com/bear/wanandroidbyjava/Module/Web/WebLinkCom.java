@@ -12,7 +12,7 @@ import com.example.libbase.Util.ClipboardUtil;
 import com.example.libbase.Util.DensityUtil;
 import com.example.libbase.Util.ToastUtil;
 
-public class WebLinkCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
+public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkCom, View.OnClickListener {
     private View maskView;
     private View topLinkView;
 
@@ -31,7 +31,7 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.copyLinkTv:
-                String copyText = ComponentService.get().getComponent(WebInputCom.class).getWebLink();
+                String copyText = ComponentService.get().getComponent(IWebInputCom.class).getWebLink();
                 if (ClipboardUtil.copyToClipboard(copyText)) {
                     ToastUtil.showToast(R.string.str_link_already_copy);
                 } else {
@@ -46,6 +46,7 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements View.OnCl
         hideLinkView();
     }
 
+    @Override
     public void showLinkView() {
         maskView.setVisibility(View.VISIBLE);
         topLinkView.setVisibility(View.VISIBLE);
@@ -53,6 +54,7 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements View.OnCl
         Animator.make(topLinkView, Animator.TRANSLATION_Y, -DensityUtil.dp2Px(40), 0f).start();
     }
 
+    @Override
     public void hideLinkView() {
         maskView.requestFocus();
         KeyBoardManager.get().hideKeyBoard(getDependence(), topLinkView);

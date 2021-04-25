@@ -26,7 +26,7 @@ import com.example.liblog.SLog;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
+public class WebInputCom extends ViewComponent<ComponentAct> implements IWebInputCom, View.OnClickListener {
     private static final String TAG = WebAct.TAG + "-WebInputCom";
     private static final int LOADING_PROGRESS_DONE = 100;
     private int webProgress;
@@ -68,12 +68,12 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
                     clearInputIv.setVisibility(View.VISIBLE);
                     webIconIv.setVisibility(View.INVISIBLE);
                     searchInputEt.setText(webLink);
-                    ComponentService.get().getComponent(WebLinkCom.class).showLinkView();
+                    ComponentService.get().getComponent(IWebLinkCom.class).showLinkView();
                 } else {
                     clearInputIv.setVisibility(View.INVISIBLE);
                     webIconIv.setVisibility(View.VISIBLE);
                     searchInputEt.setText(webTitle);
-                    ComponentService.get().getComponent(WebLinkCom.class).hideLinkView();
+                    ComponentService.get().getComponent(IWebLinkCom.class).hideLinkView();
                 }
             }
         });
@@ -95,6 +95,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         searchInputEt.setFocusableInTouchMode(enable);
     }
 
+    @Override
     public void setWebProgress(int progress) {
         webProgress = progress;
         if (webLoadingPb.getVisibility() == View.VISIBLE) {
@@ -106,6 +107,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         }
     }
 
+    @Override
     public void onPageStarted(String url) {
         webLink = url;
         webLoadingPb.setVisibility(View.VISIBLE);
@@ -113,6 +115,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         setEditTextEnable(false);
     }
 
+    @Override
     public void onPageFinished() {
         if (webProgress >= LOADING_PROGRESS_DONE) {
             webProgress = 0;
@@ -122,6 +125,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         }
     }
 
+    @Override
     public void setWebTitle(String title) {
         if (isValidUrl(title)) {
             return;
@@ -130,6 +134,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         setSearchInputTextWhenNoFocus(webTitle);
     }
 
+    @Override
     public void setWebIcon(Bitmap bitmap) {
         if (!searchInputEt.hasFocus()) {
             webIconIv.setImageBitmap(bitmap);
@@ -150,7 +155,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
             KeyBoardManager.get().hideKeyBoard(getDependence(), searchInputEt);
             setEditTextEnable(false);
             searchInputEt.setText(inputUrl);
-            ComponentService.get().getComponent(WebContentCom.class).loadUrl(inputUrl);
+            ComponentService.get().getComponent(IWebContentCom.class).loadUrl(inputUrl);
         }
     }
 
@@ -182,6 +187,7 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements View.OnC
         }
     }
 
+    @Override
     public @Nullable String getWebLink() {
         return webLink;
     }

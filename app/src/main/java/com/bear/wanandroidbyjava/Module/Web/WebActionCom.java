@@ -11,7 +11,7 @@ import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libbase.Util.ViewUtil;
 
-public class WebActionCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
+public class WebActionCom extends ViewComponent<ComponentAct> implements IWebActionCom, View.OnClickListener {
     private static final String TAG = WebAct.TAG + "-WebActionCom";
 
     private ImageView forWardIv;
@@ -40,21 +40,23 @@ public class WebActionCom extends ViewComponent<ComponentAct> implements View.On
                 break;
 
             case R.id.iv_forward:
-                ComponentService.get().getComponent(WebContentCom.class).goForward();
+                ComponentService.get().getComponent(IWebContentCom.class).goForward();
                 break;
 
             case R.id.back_iv:
-                ComponentService.get().getComponent(WebContentCom.class).goBack();
+                ComponentService.get().getComponent(IWebContentCom.class).goBack();
                 break;
         }
     }
 
+    @Override
     public void setForwardEnable(boolean enable) {
         int color = ResourceUtil.getColor(enable ? R.color.color_5c5c5c : R.color.color_AAAAAA);
         forWardIv.setEnabled(enable);
         forWardIv.setImageTintList(ColorStateList.valueOf(color));
     }
 
+    @Override
     public void setBackEnable(boolean enable) {
         ViewUtil.gone(backIv, cancelIv);
         ViewUtil.visible(enable ? backIv : cancelIv);

@@ -25,6 +25,6 @@ public class LoadFailVHBridge extends VHBridge implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        ComponentService.get().getComponent(HomeListCom.class).loadMore();
+        ComponentService.get().getComponent(IHomeListCom.class).loadMore();
     }
 }

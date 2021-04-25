@@ -24,7 +24,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 import java.util.Set;
 
-public class ProjectCom extends ViewComponent<ComponentFrag> {
+public class ProjectCom extends ViewComponent<ComponentFrag> implements IProjectCom {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private ProgressBar mPbProjectLoading;
@@ -72,14 +72,12 @@ public class ProjectCom extends ViewComponent<ComponentFrag> {
         Bus.get().unRegister(mEventCallback);
     }
 
+    @Override
     public void scrollToTop() {
         int curIndex = mViewPager.getCurrentItem();
         List<ProjectTab> projectTabList = mProjectVM.getProjectTabList();
         int cid = projectTabList.get(curIndex).projectTabId;
-        ProjectListCom projectListCom = ComponentService.get().getComponent(ProjectListCom.class, cid);
-        if (projectListCom != null) {
-            projectListCom.scrollToTop();
-        }
+        ComponentService.get().getComponent(IProjectListCom.class, cid).scrollToTop();
     }
 
     private void initData() {

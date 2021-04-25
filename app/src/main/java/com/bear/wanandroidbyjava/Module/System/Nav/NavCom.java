@@ -27,7 +27,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class NavCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
+public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, View.OnClickListener {
     private static final String TAG = "NavCom";
     private RecyclerView recyclerView;
     private CaseView caseView;
@@ -121,6 +121,7 @@ public class NavCom extends ViewComponent<ComponentFrag> implements View.OnClick
         navVM.loadNavData(true);
     }
 
+    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(recyclerView, true);
     }

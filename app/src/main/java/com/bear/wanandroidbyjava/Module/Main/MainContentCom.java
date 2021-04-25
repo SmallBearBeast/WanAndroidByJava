@@ -6,7 +6,7 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.wanandroidbyjava.R;
 
-public class MainContentCom extends ViewComponent<ComponentAct> {
+public class MainContentCom extends ViewComponent<ComponentAct> implements IMainContentCom {
     public static final int TAB_HOME = 0;
     public static final int TAB_SYSTEM = TAB_HOME + 1;
     public static final int TAB_PUBLIC = TAB_SYSTEM + 1;
@@ -21,6 +21,7 @@ public class MainContentCom extends ViewComponent<ComponentAct> {
         mViewPager.setAdapter(new MainAdapter(getDependence().getSupportFragmentManager()));
     }
 
+    @Override
     public void switchTab(@Tab int tabIndex) {
         mViewPager.setCurrentItem(tabIndex, false);
     }

@@ -36,14 +36,14 @@ public class ActionBottomView extends BottomView implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.homeWebItemView:
-                ComponentService.get().getComponent(WebContentCom.class).goBackHome();
+                ComponentService.get().getComponent(IWebContentCom.class).goBackHome();
                 break;
             case R.id.collectItemView:
                 break;
             case R.id.bookmarkItemView:
                 break;
             case R.id.refreshItemView:
-                ComponentService.get().getComponent(WebContentCom.class).reload();
+                ComponentService.get().getComponent(IWebContentCom.class).reload();
                 break;
             case R.id.shareItemView:
                 break;

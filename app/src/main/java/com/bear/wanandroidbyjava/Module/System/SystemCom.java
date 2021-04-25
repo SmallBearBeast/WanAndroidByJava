@@ -10,16 +10,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Module.System.Nav.NavCom;
+import com.bear.wanandroidbyjava.Module.System.Nav.INavCom;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavFrag;
-import com.bear.wanandroidbyjava.Module.System.Tree.TreeCom;
+import com.bear.wanandroidbyjava.Module.System.Tree.ITreeCom;
 import com.bear.wanandroidbyjava.Module.System.Tree.TreeFrag;
 import com.bear.wanandroidbyjava.R;
 
 import com.example.libbase.Util.ResourceUtil;
 import com.google.android.material.tabs.TabLayout;
 
-public class SystemCom extends ViewComponent<ComponentFrag> {
+public class SystemCom extends ViewComponent<ComponentFrag> implements ISystemCom {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -31,12 +31,13 @@ public class SystemCom extends ViewComponent<ComponentFrag> {
         mViewPager.setAdapter(new SystemFragAdapter(getDependence().getChildFragmentManager()));
     }
 
+    @Override
     public void scrollToTop() {
         int index = mViewPager.getCurrentItem();
         if (index == 0) {
-            ComponentService.get().getComponent(TreeCom.class).scrollToTop();
+            ComponentService.get().getComponent(ITreeCom.class).scrollToTop();
         } else if (index == 1) {
-            ComponentService.get().getComponent(NavCom.class).scrollToTop();
+            ComponentService.get().getComponent(INavCom.class).scrollToTop();
         }
     }
 
