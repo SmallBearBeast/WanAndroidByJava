@@ -107,7 +107,7 @@
             android:id="@+id/tv_integral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_03a9f4"
+            android:textColor="@color/color_03A9F4"
             tools:text="1930" />
 
         <ImageView

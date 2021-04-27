@@ -19,7 +19,7 @@
             android:layout_marginStart="@dimen/dp_15"
             android:padding="@dimen/dp_6"
             android:src="@drawable/ic_un_collect"
-            android:tint="@color/color_5c5c5c"
+            android:tint="@color/color_5C5C5C"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +58,7 @@
                 android:layout_height="@dimen/dp_30"
                 android:padding="@dimen/dp_6"
                 android:src="@drawable/ic_clear_input"
-                android:tint="@color/color_5c5c5c"
+                android:tint="@color/color_5C5C5C"
                 android:visibility="invisible"
                 tools:visibility="visible" />
 
@@ -88,7 +88,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:progressTint="@color/color_5c5c5c"
+            android:progressTint="@color/color_5C5C5C"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:progress="50" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -125,7 +125,7 @@
                     android:layout_height="match_parent"
                     android:padding="@dimen/dp_12"
                     android:src="@drawable/ic_cancel"
-                    android:tint="@color/color_5c5c5c" />
+                    android:tint="@color/color_5C5C5C" />
 
                 <ImageView
                     android:id="@+id/back_iv"
@@ -134,7 +134,7 @@
                     android:padding="@dimen/dp_12"
                     android:rotation="180"
                     android:src="@drawable/ic_forward"
-                    android:tint="@color/color_5c5c5c"
+                    android:tint="@color/color_5C5C5C"
                     android:visibility="gone" />
             </FrameLayout>
 
@@ -144,7 +144,7 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/dp_12"
                 android:src="@drawable/ic_more"
-                android:tint="@color/color_5c5c5c"
+                android:tint="@color/color_5C5C5C"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/iv_forward"
                 app:layout_constraintStart_toEndOf="@+id/left_action_view"
@@ -190,13 +190,13 @@
                 android:background="@drawable/bg_link_text_view"
                 android:gravity="center"
                 android:text="@string/str_copy_link"
-                android:textColor="@color/color_5c5c5c" />
+                android:textColor="@color/color_5C5C5C" />
 
             <View
                 android:layout_width="@dimen/dp_1"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="@dimen/dp_8"
-                android:background="@color/color_5c5c5c" />
+                android:background="@color/color_5C5C5C" />
 
             <TextView
                 android:id="@+id/openWithBrowserTv"
@@ -206,7 +206,7 @@
                 android:background="@drawable/bg_link_text_view"
                 android:gravity="center"
                 android:text="@string/str_open_with_browser"
-                android:textColor="@color/color_5c5c5c" />
+                android:textColor="@color/color_5C5C5C" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

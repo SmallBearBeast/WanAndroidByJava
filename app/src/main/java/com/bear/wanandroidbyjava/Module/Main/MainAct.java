@@ -26,7 +26,6 @@ public class MainAct extends ComponentAct {
         ScreenUtil.normalScreen(getWindow(), color, color, homeRootView);
     }
 
-
     @Override
     protected int layoutId() {
         return R.layout.activity_main;

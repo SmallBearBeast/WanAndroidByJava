@@ -51,7 +51,7 @@ public class WebActionCom extends ViewComponent<ComponentAct> implements IWebAct
 
     @Override
     public void setForwardEnable(boolean enable) {
-        int color = ResourceUtil.getColor(enable ? R.color.color_5c5c5c : R.color.color_AAAAAA);
+        int color = ResourceUtil.getColor(enable ? R.color.color_5C5C5C : R.color.color_AAAAAA);
         forWardIv.setEnabled(enable);
         forWardIv.setImageTintList(ColorStateList.valueOf(color));
     }

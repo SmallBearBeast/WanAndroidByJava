@@ -63,7 +63,7 @@ public class NavVHBridge extends VHBridge<NavVHBridge.NavVHolder> {
 
         private View createFlowView(Article article) {
             View flowView = LayoutInflater.from(getContext()).inflate(R.layout.layout_sub_tree_view, null);
-            XmlDrawableUtil.slRect(true, R.color.color_AAAAAA, R.color.color_5c5c5c, 100f).setView(flowView);
+            XmlDrawableUtil.slRect(true, R.color.color_AAAAAA, R.color.color_5C5C5C, 100f).setView(flowView);
             TextView tv = flowView.findViewById(R.id.tv_sub_tree_name);
             tv.setText(article.title);
             flowView.setTag(article);

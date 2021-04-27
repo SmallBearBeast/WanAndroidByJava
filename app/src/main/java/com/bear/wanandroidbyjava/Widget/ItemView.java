@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bear.wanandroidbyjava.R;
@@ -69,30 +71,21 @@ public class ItemView extends ConstraintLayout {
 
     private void initIconIv() {
         iconIv = findViewById(R.id.iconIv);
-        LayoutParams lp = (LayoutParams) iconIv.getLayoutParams();
-        lp.width = iconSize;
-        lp.height = iconSize;
-        iconIv.setLayoutParams(lp);
-        if (iconRes != INVALID_ID) {
-            iconIv.setImageResource(iconRes);
-        }
-        if (iconBgRes != INVALID_ID) {
-            iconIv.setBackgroundResource(iconBgRes);
-        }
-        iconIv.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
+        setIconSize(iconSize);
+        setIconRes(iconRes);
+        setIconBgRes(iconBgRes);
+        setIconPadding(iconPadding);
         if (iconTintEnable) {
-            iconIv.setImageTintList(ColorStateList.valueOf(iconTint));
+            setIconTint(iconTint);
         }
     }
 
     private void initTextTv() {
         textTv = findViewById(R.id.textTv);
-        LayoutParams lp = (LayoutParams) textTv.getLayoutParams();
-        lp.topMargin = offset;
-        textTv.setLayoutParams(lp);
-        textTv.setText(text);
-        textTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        textTv.setTextColor(textColor);
+        setOffset(offset);
+        setText(text);
+        setTextSize(textSize);
+        setTextColor(textColor);
     }
 
     private int dp2px(float dpValue) {
@@ -106,5 +99,66 @@ public class ItemView extends ConstraintLayout {
 
     public TextView getTextTv() {
         return textTv;
+    }
+
+    public void setIconRes(int iconRes) {
+        if (iconRes != INVALID_ID) {
+            this.iconRes = iconRes;
+            iconIv.setImageResource(iconRes);
+        }
+    }
+
+    public void setIconBgRes(int iconBgRes) {
+        if (iconBgRes != INVALID_ID) {
+            this.iconBgRes = iconBgRes;
+            iconIv.setBackgroundResource(iconBgRes);
+        }
+    }
+
+    public void setIconSize(int iconSize) {
+        if (iconSize >= 0 || iconSize == ViewGroup.LayoutParams.MATCH_PARENT
+                || iconSize == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            this.iconSize = iconSize;
+            LayoutParams lp = (LayoutParams) iconIv.getLayoutParams();
+            lp.width = iconSize;
+            lp.height = iconSize;
+            iconIv.setLayoutParams(lp);
+        }
+    }
+
+    public void setIconPadding(int iconPadding) {
+        this.iconPadding = iconPadding;
+        iconIv.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
+    }
+
+    public void setIconTint(@ColorInt int iconTint) {
+        this.iconTint = iconTint;
+        iconIv.setImageTintList(ColorStateList.valueOf(iconTint));
+    }
+
+    public void setOffset(int offset) {
+        if (offset >= 0) {
+            this.offset = offset;
+            LayoutParams lp = (LayoutParams) textTv.getLayoutParams();
+            lp.topMargin = offset;
+            textTv.setLayoutParams(lp);
+        }
+    }
+
+    public void setTextSize(int textSize) {
+        if (textSize >= 0) {
+            this.textSize = textSize;
+            textTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        }
+    }
+
+    public void setTextColor(@ColorInt int textColor) {
+        this.textColor = textColor;
+        textTv.setTextColor(textColor);
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        textTv.setText(text);
     }
 }

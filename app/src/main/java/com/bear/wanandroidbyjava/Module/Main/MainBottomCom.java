@@ -1,7 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Main;
 
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.viewpager.widget.ViewPager;
 
@@ -13,76 +12,66 @@ import com.bear.wanandroidbyjava.Module.Project.IProjectCom;
 import com.bear.wanandroidbyjava.Module.Public.IPublicCom;
 import com.bear.wanandroidbyjava.Module.System.ISystemCom;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Widget.ItemView;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libframework.Wrapper.OnPageChangeListenerWrapper;
 
 public class MainBottomCom extends ViewComponent<ComponentAct> implements View.OnClickListener {
     private static final long CLICK_INTERVAL = 500;
-    private int mLastClickViewId;
-    private long mLastClickTs;
-    private ImageView[] mTabIconIvs = new ImageView[5];
+    private int lastClickViewId;
+    private long lastClickTs;
+    private final ItemView[] itemViews = new ItemView[5];
 
     @Override
     protected void onCreate() {
         super.onCreate();
         ViewPager mViewPager = findViewById(R.id.mainViewPager);
         int[] viewIds = new int[]{
-                R.id.iv_home_tab_icon, R.id.iv_system_tab_icon, R.id.iv_public_tab_icon, R.id.iv_project_tab_icon, R.id.iv_personal_tab_icon
+                R.id.homeTabItemView, R.id.systemTabItemView, R.id.publicTabItemView, R.id.projectTabItemView, R.id.personalTabItemView
         };
         for (int i = 0; i < viewIds.length; i++) {
-            mTabIconIvs[i] = findViewById(viewIds[i]);
+            itemViews[i] = clickListenerAndView(this, viewIds[i]);
         }
-        mTabIconIvs[0].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
+        itemViews[0].setIconTint(ResourceUtil.getColor(R.color.color_03A9F4));
         mViewPager.addOnPageChangeListener(new OnPageChangeListenerWrapper() {
             @Override
             public void onPageSelected(int position) {
-                for (ImageView imageView : mTabIconIvs) {
-                    imageView.setColorFilter(ResourceUtil.getColor(R.color.color_5c5c5c));
+                for (ItemView itemView : itemViews) {
+                    itemView.setIconTint(ResourceUtil.getColor(R.color.color_5C5C5C));
                 }
-                mTabIconIvs[position].setColorFilter(ResourceUtil.getColor(R.color.color_03a9f4));
+                itemViews[position].setIconTint(ResourceUtil.getColor(R.color.color_03A9F4));
             }
         });
-        clickListener(this, R.id.ll_home_tab, R.id.ll_system_tab, R.id.ll_public_tab, R.id.ll_project_tab, R.id.ll_personal_tab);
     }
 
     @Override
     public void onClick(View v) {
         long curTs = System.currentTimeMillis();
-        if (mLastClickViewId != v.getId() || curTs - mLastClickTs > CLICK_INTERVAL) {
-            switch (v.getId()) {
-                case R.id.ll_home_tab:
-                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_HOME);
-                    break;
-                case R.id.ll_system_tab:
-                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_SYSTEM);
-                    break;
-                case R.id.ll_public_tab:
-                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PUBLIC);
-                    break;
-                case R.id.ll_project_tab:
-                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PROJECT);
-                    break;
-                case R.id.ll_personal_tab:
-                    ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PERSONAL);
-                    break;
+        int viewId = v.getId();
+        if (lastClickViewId != v.getId() || curTs - lastClickTs > CLICK_INTERVAL) {
+            if (viewId == R.id.homeTabItemView) {
+                ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_HOME);
+            } else if (viewId == R.id.systemTabItemView) {
+                ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_SYSTEM);
+            } else if (viewId == R.id.publicTabItemView) {
+                ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PUBLIC);
+            } else if (viewId == R.id.projectTabItemView) {
+                ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PROJECT);
+            } else if (viewId == R.id.personalTabItemView) {
+                ComponentService.get().getComponent(IMainContentCom.class).switchTab(MainContentCom.TAB_PERSONAL);
             }
         } else {
-            switch (v.getId()) {
-                case R.id.ll_home_tab:
-                    ComponentService.get().getComponent(IHomeListCom.class).scrollToTop();
-                    break;
-                case R.id.ll_system_tab:
-                    ComponentService.get().getComponent(ISystemCom.class).scrollToTop();
-                    break;
-                case R.id.ll_public_tab:
-                    ComponentService.get().getComponent(IPublicCom.class).scrollToTop();
-                    break;
-                case R.id.ll_project_tab:
-                    ComponentService.get().getComponent(IProjectCom.class).scrollToTop();
-                    break;
+            if (viewId == R.id.homeTabItemView) {
+                ComponentService.get().getComponent(IHomeListCom.class).scrollToTop();
+            } else if (viewId == R.id.systemTabItemView) {
+                ComponentService.get().getComponent(ISystemCom.class).scrollToTop();
+            } else if (viewId == R.id.publicTabItemView) {
+                ComponentService.get().getComponent(IPublicCom.class).scrollToTop();
+            } else if (viewId == R.id.projectTabItemView) {
+                ComponentService.get().getComponent(IProjectCom.class).scrollToTop();
             }
         }
-        mLastClickViewId = v.getId();
-        mLastClickTs = curTs;
+        lastClickViewId = v.getId();
+        lastClickTs = curTs;
     }
 }

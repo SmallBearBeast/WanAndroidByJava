@@ -9,7 +9,7 @@
     android:paddingBottom="@dimen/dp_5"
     android:paddingLeft="@dimen/dp_8"
     android:paddingRight="@dimen/dp_8"
-    tools:background="@color/color_5c5c5c">
+    tools:background="@color/color_5C5C5C">
 
     <ImageView
         android:id="@+id/tv_sub_tree_icon"

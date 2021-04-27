@@ -1,141 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainRootView"
-    android:background="@color/color_FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_FFFFFF"
     android:orientation="vertical">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/mainViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:overScrollMode="never" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/ll_home_tab"
+        <com.bear.wanandroidbyjava.Widget.ItemView
+            android:id="@+id/homeTabItemView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:iv_icon_res="@drawable/ic_home"
+            app:iv_icon_size="@dimen/dp_22"
+            app:iv_icon_tint="@color/color_03A9F4"
+            app:iv_offset="@dimen/dp_3"
+            app:iv_text_size="@dimen/dp_13"
+            app:iv_text_str="@string/str_home" />
 
-            <ImageView
-                android:id="@+id/iv_home_tab_icon"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
-                android:src="@drawable/ic_home"
-                android:tint="@color/color_03a9f4" />
-
-            <TextView
-                android:id="@+id/tv_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
-                android:text="@string/str_home"
-                android:textSize="@dimen/dp_13" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_system_tab"
+        <com.bear.wanandroidbyjava.Widget.ItemView
+            android:id="@+id/systemTabItemView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:iv_icon_res="@drawable/ic_system"
+            app:iv_icon_size="@dimen/dp_22"
+            app:iv_icon_tint="@color/color_5C5C5C"
+            app:iv_offset="@dimen/dp_3"
+            app:iv_text_size="@dimen/dp_13"
+            app:iv_text_str="@string/str_system" />
 
-            <ImageView
-                android:id="@+id/iv_system_tab_icon"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
-                android:src="@drawable/ic_system"
-                android:tint="@color/color_5c5c5c" />
-
-            <TextView
-                android:id="@+id/tv_system"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
-                android:text="@string/str_system"
-                android:textSize="@dimen/dp_13" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_public_tab"
+        <com.bear.wanandroidbyjava.Widget.ItemView
+            android:id="@+id/publicTabItemView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:iv_icon_res="@drawable/ic_public"
+            app:iv_icon_size="@dimen/dp_22"
+            app:iv_icon_tint="@color/color_5C5C5C"
+            app:iv_offset="@dimen/dp_3"
+            app:iv_text_size="@dimen/dp_13"
+            app:iv_text_str="@string/str_public" />
 
-            <ImageView
-                android:id="@+id/iv_public_tab_icon"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
-                android:src="@drawable/ic_public"
-                android:tint="@color/color_5c5c5c" />
-
-            <TextView
-                android:id="@+id/tv_public"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
-                android:text="@string/str_public"
-                android:textSize="@dimen/dp_13" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_project_tab"
+        <com.bear.wanandroidbyjava.Widget.ItemView
+            android:id="@+id/projectTabItemView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:iv_icon_res="@drawable/ic_project"
+            app:iv_icon_size="@dimen/dp_22"
+            app:iv_icon_tint="@color/color_5C5C5C"
+            app:iv_offset="@dimen/dp_3"
+            app:iv_text_size="@dimen/dp_13"
+            app:iv_text_str="@string/str_project" />
 
-            <ImageView
-                android:id="@+id/iv_project_tab_icon"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
-                android:src="@drawable/ic_project"
-                android:tint="@color/color_5c5c5c" />
-
-            <TextView
-                android:id="@+id/tv_project"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
-                android:text="@string/str_project"
-                android:textSize="@dimen/dp_13" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_personal_tab"
+        <com.bear.wanandroidbyjava.Widget.ItemView
+            android:id="@+id/personalTabItemView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_personal_tab_icon"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
-                android:src="@drawable/ic_personal"
-                android:tint="@color/color_5c5c5c" />
-
-            <TextView
-                android:id="@+id/tv_personal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
-                android:text="@string/str_personal"
-                android:textSize="@dimen/dp_13" />
-        </LinearLayout>
+            app:iv_icon_res="@drawable/ic_personal"
+            app:iv_icon_size="@dimen/dp_22"
+            app:iv_icon_tint="@color/color_5C5C5C"
+            app:iv_offset="@dimen/dp_3"
+            app:iv_text_size="@dimen/dp_13"
+            app:iv_text_str="@string/str_personal" />
     </LinearLayout>
 </LinearLayout>

@@ -19,7 +19,7 @@
             app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/color_222222"
-            app:tabTextColor="@color/color_5c5c5c" />
+            app:tabTextColor="@color/color_5C5C5C" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_project_container"

@@ -14,8 +14,8 @@
     </style>
 
     <style name="MyEditText">
-        <item name="colorControlNormal">@color/color_5c5c5c</item>
-        <item name="colorControlActivated">@color/color_5c5c5c</item>
+        <item name="colorControlNormal">@color/color_5C5C5C</item>
+        <item name="colorControlActivated">@color/color_5C5C5C</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

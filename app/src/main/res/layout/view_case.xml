@@ -21,7 +21,7 @@
             android:layout_height="@dimen/dp_120"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:tint="@color/color_5c5c5c"
+            android:tint="@color/color_5C5C5C"
             tools:src="@drawable/ic_net_error"
             tools:text="Net error" />
 
