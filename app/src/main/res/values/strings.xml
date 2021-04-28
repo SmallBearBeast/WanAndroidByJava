@@ -45,6 +45,7 @@
     <string name="str_open_with_browser">浏览器打开</string>
     <string name="str_link_already_copy">链接已复制</string>
     <string name="str_link_copy_fail">链接复制失败，请重试</string>
+    <string name="str_welcome_to_wan_android">欢迎来到WanAndroid的世界</string>
 
 
 </resources>

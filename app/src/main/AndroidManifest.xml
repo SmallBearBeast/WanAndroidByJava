@@ -13,11 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/WanTheme">
         <activity
-            android:name=".Module.Main.MainAct"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".Module.Welcome.WelcomeAct"
+            android:theme="@style/WanTheme.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,14 +24,17 @@
         </activity>
 
         <activity
+            android:name=".Module.Main.MainAct"
+            android:theme="@style/WanTheme" />
+        <activity
             android:name=".Module.Web.WebAct"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/WanTheme" />
         <activity
             android:name=".Module.Search.SearchAct"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/WanTheme" />
         <activity
             android:name=".Module.Square.SquareAct"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/WanTheme" />
     </application>
 
 </manifest>

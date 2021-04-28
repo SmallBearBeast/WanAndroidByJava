@@ -1,5 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -42,5 +43,9 @@ public class MainAct extends ComponentAct {
             SLog.d(TAG, "" + e);
             super.onBackPressed();
         }
+    }
+
+    public static void go(Context context) {
+        context.startActivity(new Intent(context, MainAct.class));
     }
 }
