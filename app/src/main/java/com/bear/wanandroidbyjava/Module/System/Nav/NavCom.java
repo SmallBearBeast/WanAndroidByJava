@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.librv.DataManager;
+import com.bear.librv.RvDivider;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
@@ -20,6 +21,7 @@ import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
 import com.example.libbase.Util.CollectionUtil;
 
+import com.example.libbase.Util.DensityUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -35,15 +37,13 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
     private DataManager dataManager;
     private NavVM navVM;
 
-    private EventCallback eventCallback = new EventCallback() {
+    private final EventCallback eventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
-            switch (event.eventKey) {
-                case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && !navVM.isFirstLoadComplete()) {
-                        navVM.loadNavData(false);
-                    }
-                    break;
+            if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
+                if (event.data instanceof Boolean && (Boolean) event.data && !navVM.isFirstLoadComplete()) {
+                    navVM.loadNavData(false);
+                }
             }
         }
 
@@ -64,11 +64,13 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
     protected void onCreateView() {
         caseView = findViewById(R.id.case_view);
         caseView.setOnClickListener(this);
-        recyclerView = findViewById(R.id.rv_nav_container);
         vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
-        dataManager = vhAdapter.getDataManager();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         vhAdapter.register(new NavVHBridge(), Nav.class);
+        dataManager = vhAdapter.getDataManager();
+        recyclerView = findViewById(R.id.rv_nav_container);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getComActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new RvDivider(layoutManager, DensityUtil.dp2Px(20)));
         recyclerView.setAdapter(vhAdapter);
         dataManager.setData(navVM.getNavLD().getValue());
     }
@@ -106,6 +108,8 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
                         break;
                     case NavVM.LOAD_PROGRESS_HIDE:
                         CaseHelper.hide(caseView);
+                        break;
+                    default:
                         break;
                 }
             }

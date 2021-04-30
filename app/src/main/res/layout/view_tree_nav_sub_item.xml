@@ -3,27 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_tree_nav_item_view"
     android:gravity="center"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/dp_5"
-    android:paddingBottom="@dimen/dp_5"
-    android:paddingLeft="@dimen/dp_8"
-    android:paddingRight="@dimen/dp_8"
-    tools:background="@color/color_5C5C5C">
+    android:paddingHorizontal="@dimen/dp_8"
+    android:paddingVertical="@dimen/dp_6">
 
     <ImageView
-        android:id="@+id/tv_sub_tree_icon"
+        android:id="@+id/subTreeNavIconIv"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15"
         android:layout_marginEnd="@dimen/dp_5"
         android:src="@drawable/ic_system" />
 
     <TextView
-        android:textSize="@dimen/dp_13"
-        android:id="@+id/tv_sub_tree_name"
+        android:id="@+id/subTreeNavTextTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_FFFFFF"
+        android:textSize="@dimen/sp_13"
         tools:text="Android Studio" />
 
 </LinearLayout>

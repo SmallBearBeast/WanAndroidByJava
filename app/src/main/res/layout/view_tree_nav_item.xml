@@ -4,22 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/dp_15">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_nav_name"
+        android:id="@+id/treeNavTitleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_5C5C5C"
-        android:textSize="@dimen/dp_15"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
         tools:text="开发环境" />
 
     <com.bear.wanandroidbyjava.Widget.FlowLayout
-        android:id="@+id/fl_sub_nav_container"
+        android:id="@+id/treeNavLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_5"
-        app:fl_horizontal_space="@dimen/dp_10"
-        app:fl_vertical_space="@dimen/dp_10" />
+        android:layout_marginTop="@dimen/dp_8"
+        app:fl_horizontal_space="@dimen/dp_12"
+        app:fl_vertical_space="@dimen/dp_12" />
 </LinearLayout>

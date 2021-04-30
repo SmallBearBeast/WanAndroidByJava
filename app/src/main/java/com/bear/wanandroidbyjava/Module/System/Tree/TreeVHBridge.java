@@ -13,7 +13,6 @@ import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.FlowLayout;
 import com.example.libbase.Util.ToastUtil;
-import com.example.libbase.Util.XmlDrawableUtil;
 
 public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
     @NonNull
@@ -24,18 +23,18 @@ public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
 
     @Override
     protected int layoutId() {
-        return R.layout.item_tree;
+        return R.layout.view_tree_nav_item;
     }
 
     static class TreeVHolder extends VHolder<Tree> {
-        private TextView mTvTreeTitle;
-        private FlowLayout mFlSubTreeContainer;
+        private final TextView treeNavTitleTv;
+        private final FlowLayout treeNavLayout;
 
         public TreeVHolder(View itemView) {
             super(itemView);
-            mTvTreeTitle = findViewById(R.id.tv_tree_name);
-            mFlSubTreeContainer = findViewById(R.id.fl_sub_tree_container);
-            mFlSubTreeContainer.setFlowClickListener(new FlowLayout.OnFlowClickListener() {
+            treeNavTitleTv = findViewById(R.id.treeNavTitleTv);
+            treeNavLayout = findViewById(R.id.treeNavLayout);
+            treeNavLayout.setFlowClickListener(new FlowLayout.OnFlowClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (view.getTag() instanceof SubTree) {
@@ -49,22 +48,21 @@ public class TreeVHBridge extends VHBridge<TreeVHBridge.TreeVHolder> {
         @Override
         public void bindFull(int pos, Tree tree) {
             super.bindFull(pos, tree);
-            mTvTreeTitle.setText(tree.name);
-            Object tag = mFlSubTreeContainer.getTag();
+            treeNavTitleTv.setText(tree.name);
+            Object tag = treeNavLayout.getTag();
             if (tag == null || !tag.equals(pos)) {
-                mFlSubTreeContainer.removeAllViews();
+                treeNavLayout.removeAllViews();
                 for (SubTree subTree : tree.subTreeList) {
-                    mFlSubTreeContainer.addView(createFlowView(subTree));
+                    treeNavLayout.addView(createFlowView(subTree, treeNavLayout));
                 }
             }
-            mFlSubTreeContainer.setTag(pos);
+            treeNavLayout.setTag(pos);
 
         }
 
-        private View createFlowView(SubTree subTree) {
-            View flowView = LayoutInflater.from(getContext()).inflate(R.layout.layout_sub_tree_view, null);
-            XmlDrawableUtil.slRect(true, R.color.color_AAAAAA, R.color.color_5C5C5C, 100f).setView(flowView);
-            TextView tv = flowView.findViewById(R.id.tv_sub_tree_name);
+        private View createFlowView(SubTree subTree, FlowLayout flowLayout) {
+            View flowView = LayoutInflater.from(getContext()).inflate(R.layout.view_tree_nav_sub_item, flowLayout, false);
+            TextView tv = flowView.findViewById(R.id.subTreeNavTextTv);
             tv.setText(subTree.name);
             flowView.setTag(subTree);
             return flowView;

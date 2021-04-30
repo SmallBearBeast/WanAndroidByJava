@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bear.libcomponent.ComponentFrag;
 import com.bear.libcomponent.ViewComponent;
 import com.bear.librv.DataManager;
+import com.bear.librv.RvDivider;
 import com.bear.librv.RvUtil;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
@@ -20,6 +21,7 @@ import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
 import com.example.libbase.Util.CollectionUtil;
 
+import com.example.libbase.Util.DensityUtil;
 import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 import com.example.libframework.Bus.EventCallback;
@@ -35,15 +37,13 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, V
     private DataManager dataManager;
     private TreeVM treeVM;
 
-    private EventCallback eventCallback = new EventCallback() {
+    private final EventCallback eventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
-            switch (event.eventKey) {
-                case EventKey.KEY_NET_CHANGE:
-                    if (event.data instanceof Boolean && (Boolean) event.data && !treeVM.isFirstLoadComplete()) {
-                        treeVM.loadTreeData(false);
-                    }
-                    break;
+            if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
+                if (event.data instanceof Boolean && (Boolean) event.data && !treeVM.isFirstLoadComplete()) {
+                    treeVM.loadTreeData(false);
+                }
             }
         }
 
@@ -62,13 +62,15 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, V
 
     @Override
     protected void onCreateView() {
-        recyclerView = findViewById(R.id.rv_tree_container);
         caseView = findViewById(R.id.case_view);
         caseView.setOnClickListener(this);
         vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
-        dataManager = vhAdapter.getDataManager();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
         vhAdapter.register(new TreeVHBridge(), Tree.class);
+        dataManager = vhAdapter.getDataManager();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getComActivity());
+        recyclerView = findViewById(R.id.rv_tree_container);
+        recyclerView.addItemDecoration(new RvDivider(layoutManager, DensityUtil.dp2Px(20)));
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(vhAdapter);
         dataManager.setData(treeVM.getTreeLD().getValue());
     }
