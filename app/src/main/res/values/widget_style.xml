@@ -16,4 +16,25 @@
         <attr name="iv_text_size" format="dimension"/>
         <attr name="iv_text_color" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="InputView">
+        <attr name="iv_left_icon_res" format="reference" />
+        <attr name="iv_left_icon_size" format="dimension" />
+        <attr name="iv_input_margin_start" format="dimension" />
+        <attr name="iv_input_hint" format="string" />
+        <attr name="iv_input_text_size" format="dimension" />
+        <attr name="iv_input_text_color" format="color" />
+        <attr name="iv_input_margin_end" format="dimension" />
+        <attr name="iv_action_icon_size" format="dimension" />
+        <attr name="iv_action_offset" format="dimension" />
+        <attr name="iv_action_type">
+            <flag name="none" value="0x01" />
+            <flag name="clear" value="0x02" />
+            <flag name="password" value="0x04" />
+            <flag name="copy" value="0x08" />
+            <flag name="paste" value="0x10" />
+        </attr>
+        <attr name="iv_normal_color" format="color" />
+        <attr name="iv_focus_color" format="color" />
+    </declare-styleable>
 </resources>
