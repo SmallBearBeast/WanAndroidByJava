@@ -3,6 +3,7 @@ package com.bear.wanandroidbyjava.Net;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.Data.NetBean.BannerBean;
+import com.bear.wanandroidbyjava.Data.NetBean.LoginBean;
 import com.bear.wanandroidbyjava.Data.NetBean.NavBean;
 import com.bear.wanandroidbyjava.Data.NetBean.ProjectTabBean;
 import com.bear.wanandroidbyjava.Data.NetBean.PublicTabBean;
@@ -20,4 +21,7 @@ public class WanTypeToken {
     public static final TypeToken<WanResponce<List<PublicTabBean>>> PUBLIC_TAB_TOKEN = new TypeToken<WanResponce<List<PublicTabBean>>>(){};
     public static final TypeToken<WanResponce<List<NavBean>>> NAV_TOKEN = new TypeToken<WanResponce<List<NavBean>>>(){};
     public static final TypeToken<WanResponce<List<TreeBean>>> TREE_TOKEN = new TypeToken<WanResponce<List<TreeBean>>>(){};
+
+    public static final TypeToken<WanResponce<LoginBean>> LOGIN_TOKEN = new TypeToken<WanResponce<LoginBean>>(){};
+    public static final TypeToken<WanResponce<String>> LOGOUT_TOKEN = new TypeToken<WanResponce<String>>(){};
 }

@@ -35,6 +35,9 @@
         <activity
             android:name=".Module.Square.SquareAct"
             android:theme="@style/WanTheme" />
+        <activity
+            android:name=".Module.Login.LoginRegisterAct"
+            android:theme="@style/WanTheme" />
     </application>
 
 </manifest>

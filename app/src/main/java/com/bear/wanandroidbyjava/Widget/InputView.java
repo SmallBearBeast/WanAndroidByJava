@@ -48,7 +48,7 @@ public class InputView extends ConstraintLayout implements View.OnFocusChangeLis
     private View underlineView;
 
     private int leftIconRes = INVALID_ID;
-    private int leftIconSize = dp2px(25);
+    private int leftIconSize = dp2px(15);
     private int inputMarginStart = dp2px(5);
     private String inputHint = "";
     private int inputTextSize = sp2px(14);

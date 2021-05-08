@@ -32,8 +32,8 @@ public class HomeManager {
     private int nextPageIndex = FIRST_PAGE_INDEX;
     private int refreshCompleteCount = 3;
     private CountDownLatch countDownLatch;
-    private List totalDataList = new CopyOnWriteArrayList();
-    private List tempTotalDataList = new CopyOnWriteArrayList();
+    private final List totalDataList = new CopyOnWriteArrayList();
+    private final List tempTotalDataList = new CopyOnWriteArrayList();
 
     public void loadDataFromStorage(final HomeDataListener listener) {
         SLog.d(TAG, "loadDataFromStorage: ");

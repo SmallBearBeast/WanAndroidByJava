@@ -46,6 +46,22 @@
     <string name="str_link_already_copy">链接已复制</string>
     <string name="str_link_copy_fail">链接复制失败，请重试</string>
     <string name="str_welcome_to_wan_android">欢迎来到WanAndroid的世界</string>
-
-
+    <string name="str_wan_android">WanAndroid</string>
+    <string name="str_sign_in">登录</string>
+    <string name="str_register">注册</string>
+    <string name="str_please_input_user_name">请输入用户名</string>
+    <string name="str_please_input_user_password">请输入密码</string>
+    <string name="str_please_confirm_user_password">请确认密码</string>
+    <string name="str_independent_develop">本APP由Bear独立开发</string>
+    <string name="str_go_to_login">去登陆</string>
+    <string name="str_go_to_register">去注册</string>
+    <string name="str_login_success">登录成功</string>
+    <string name="str_register_success">注册成功</string>
+    <string name="str_login_fail">登录失败</string>
+    <string name="str_register_fail">注册失败</string>
+    <string name="str_user_name_not_empty">用户名不能为空</string>
+    <string name="str_password_not_empty">密码不能为空</string>
+    <string name="str_re_password_not_empty">确认密码不能为空</string>
+    <string name="str_net_error_to_try_again">网络异常，请检查重试</string>
+    <string name="str_password_not_same_to_try_again">密码输入不一致，请重新输入</string>
 </resources>

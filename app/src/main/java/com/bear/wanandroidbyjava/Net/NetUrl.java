@@ -2,6 +2,9 @@ package com.bear.wanandroidbyjava.Net;
 
 public class NetUrl {
 
+    public static final int SUCCESS_ERROR_CODE = 0;
+    public static final int FAIL_ERROR_CODE = -1;
+
     private static final String HTTPS = "https://";
     private static final String HOST = "www.wanandroid.com";
 
@@ -52,4 +55,18 @@ public class NetUrl {
         return HTTPS + HOST + "/project/list/" + pageIndex + "/json?cid=" + cid;
     }
 
+    // 登录
+    public static String LOGIN = HTTPS + HOST + "/user/login";
+
+    // 注册
+    public static String REGISTER = HTTPS + HOST + "/user/register";
+
+    // 退出
+    public static String LOGOUT = HTTPS + HOST + "/user/logout/json";
+
+    // 我的收藏
+    // https://www.wanandroid.com/lg/collect/list/0/json
+    public static String getCollectArticleListUrl(int pageIndex) {
+        return HTTPS + HOST + "/lg/collect/list/" + pageIndex + "/json";
+    }
 }

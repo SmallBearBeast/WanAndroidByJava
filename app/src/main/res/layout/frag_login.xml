@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.bear.wanandroidbyjava.Widget.InputView
+        android:id="@+id/userInputView"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_40"
+        android:theme="@style/MyEditText"
+        app:iv_action_type="clear"
+        app:iv_focus_color="@color/color_5C5C5C"
+        app:iv_input_hint="@string/str_please_input_user_name"
+        app:iv_input_text_color="@color/color_5C5C5C"
+        app:iv_left_icon_res="@drawable/ic_user"
+        app:iv_normal_color="@color/color_5C5C5C"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.65" />
+
+    <com.bear.wanandroidbyjava.Widget.InputView
+        android:id="@+id/passwordInputView"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_10"
+        android:theme="@style/MyEditText"
+        app:iv_action_type="clear|password"
+        app:iv_focus_color="@color/color_5C5C5C"
+        app:iv_input_hint="@string/str_please_input_user_password"
+        app:iv_input_text_color="@color/color_5C5C5C"
+        app:iv_left_icon_res="@drawable/ic_password"
+        app:iv_normal_color="@color/color_5C5C5C"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userInputView"
+        app:layout_constraintWidth_percent="0.65" />
+
+    <Button
+        android:id="@+id/loginBt"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_50"
+        android:background="@drawable/bg_login_bt"
+        android:text="@string/str_sign_in"
+        android:textColor="@color/color_FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordInputView"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <LinearLayout
+        android:id="@+id/goToRegisterView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBt">
+
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/ic_login_forward"
+            android:tint="@color/color_5C5C5C" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:text="@string/str_go_to_register"
+            android:textColor="@color/color_5C5C5C"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
