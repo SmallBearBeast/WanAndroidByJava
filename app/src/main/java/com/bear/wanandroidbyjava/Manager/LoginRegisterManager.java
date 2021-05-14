@@ -1,7 +1,7 @@
 package com.bear.wanandroidbyjava.Manager;
 
 import com.bear.wanandroidbyjava.Data.NetBean.LoginBean;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
@@ -20,11 +20,11 @@ public class LoginRegisterManager {
         Map<String, String> map = new HashMap<>();
         map.put(USERNAME, userName);
         map.put(PASSWORD, password);
-        OkHelper.getInstance().postMethod(NetUrl.LOGIN, map, new WanOkCallback<LoginBean>(WanTypeToken.LOGIN_TOKEN) {
+        OkHelper.getInstance().postMethod(WanUrl.LOGIN_URL, map, new WanOkCallback<LoginBean>(WanTypeToken.LOGIN_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<LoginBean> data) {
                 if (data != null) {
-                    if (data.errorCode == NetUrl.SUCCESS_ERROR_CODE) {
+                    if (data.errorCode == WanUrl.SUCCESS_ERROR_CODE) {
                         callOnLoginSuccess();
                     } else {
                         callOnLoginFail(data.errorMsg);
@@ -66,11 +66,11 @@ public class LoginRegisterManager {
         map.put(USERNAME, userName);
         map.put(PASSWORD, password);
         map.put(REPASSWORD, rePassword);
-        OkHelper.getInstance().postMethod(NetUrl.REGISTER, map, new WanOkCallback<LoginBean>(WanTypeToken.LOGIN_TOKEN) {
+        OkHelper.getInstance().postMethod(WanUrl.REGISTER_URL, map, new WanOkCallback<LoginBean>(WanTypeToken.LOGIN_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<LoginBean> data) {
                 if (data != null) {
-                    if (data.errorCode == NetUrl.SUCCESS_ERROR_CODE) {
+                    if (data.errorCode == WanUrl.SUCCESS_ERROR_CODE) {
                         callOnRegisterSuccess();
                     } else {
                         callOnRegisterFail(data.errorMsg);
@@ -108,11 +108,11 @@ public class LoginRegisterManager {
     }
 
     public void logout(final ILogoutListener listener) {
-        OkHelper.getInstance().getMethod(NetUrl.LOGOUT, new WanOkCallback<String>(WanTypeToken.LOGOUT_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.LOGOUT_URL, new WanOkCallback<String>(WanTypeToken.LOGOUT_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<String> data) {
                 if (data != null) {
-                    if (data.errorCode == NetUrl.SUCCESS_ERROR_CODE) {
+                    if (data.errorCode == WanUrl.SUCCESS_ERROR_CODE) {
                         callOnLogoutSuccess();
                     } else {
                         callOnLogoutFail();

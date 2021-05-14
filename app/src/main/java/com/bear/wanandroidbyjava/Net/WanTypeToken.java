@@ -24,4 +24,5 @@ public class WanTypeToken {
 
     public static final TypeToken<WanResponce<LoginBean>> LOGIN_TOKEN = new TypeToken<WanResponce<LoginBean>>(){};
     public static final TypeToken<WanResponce<String>> LOGOUT_TOKEN = new TypeToken<WanResponce<String>>(){};
+    public static final TypeToken<WanResponce<String>> STRING_TOKEN = new TypeToken<WanResponce<String>>(){};
 }

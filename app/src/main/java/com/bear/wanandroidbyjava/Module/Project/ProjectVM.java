@@ -10,7 +10,7 @@ import com.bear.wanandroidbyjava.Data.NetBean.ProjectTabBean;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
 import com.example.libbase.Executor.BgThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
@@ -64,7 +64,7 @@ public class ProjectVM extends ViewModel {
         SLog.d(TAG, "fetchProjectTab: start");
         mShowProgressLD.postValue(true);
         fetchProjectTabFromDb();
-        OkHelper.getInstance().getMethod(NetUrl.PROJECT_TAB, new WanOkCallback<List<ProjectTabBean>>(WanTypeToken.PROJECT_TAB_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.PROJECT_TAB_URL, new WanOkCallback<List<ProjectTabBean>>(WanTypeToken.PROJECT_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ProjectTabBean>> data) {
                 if (data != null) {

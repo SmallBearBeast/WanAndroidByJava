@@ -5,7 +5,7 @@ import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.Data.NetBean.BannerBean;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
@@ -76,7 +76,7 @@ public class HomeManager {
 
     private void loadBannerSet() {
         SLog.d(TAG, "loadBannerSet: start");
-        OkHelper.getInstance().getMethod(NetUrl.BANNER, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.BANNER_URL, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<BannerBean>> data) {
                 if (data != null) {
@@ -102,7 +102,7 @@ public class HomeManager {
 
     private void loadTopArticle() {
         SLog.d(TAG, "loadTopArticle: start");
-        OkHelper.getInstance().getMethod(NetUrl.TOP_ARTICLE, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.TOP_ARTICLE_URL, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ArticleBean>> data) {
                 if (data != null) {
@@ -137,7 +137,7 @@ public class HomeManager {
 
     private void loadFirstNormalArticle() {
         SLog.d(TAG, "loadFirstNormalArticle: pageIndex = " + FIRST_PAGE_INDEX);
-        OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(FIRST_PAGE_INDEX), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.getHomeArticleListUrl(FIRST_PAGE_INDEX), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {
@@ -167,7 +167,7 @@ public class HomeManager {
 
     public void loadMoreNormalArticle(final HomeDataListener listener) {
         SLog.d(TAG, "loadMoreNormalArticle: nextPageIndex = " + nextPageIndex);
-        OkHelper.getInstance().getMethod(NetUrl.getHomeArticleList(nextPageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.getHomeArticleListUrl(nextPageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {

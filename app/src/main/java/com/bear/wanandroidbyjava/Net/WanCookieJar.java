@@ -13,9 +13,9 @@ import okhttp3.HttpUrl;
 public class WanCookieJar implements CookieJar {
     @Override
     public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
-        if (NetUrl.REGISTER.equals(url.toString()) || NetUrl.LOGIN.equals(url.toString())) {
+        if (WanUrl.REGISTER_URL.equals(url.toString()) || WanUrl.LOGIN_URL.equals(url.toString())) {
             CookieStorage.saveCookies(url.host(), cookies);
-        } else if (NetUrl.LOGOUT.equals(url.toString())) {
+        } else if (WanUrl.LOGOUT_URL.equals(url.toString())) {
             CookieStorage.clearCookies();
         }
     }

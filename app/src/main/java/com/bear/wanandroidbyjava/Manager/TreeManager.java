@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
 import com.bear.wanandroidbyjava.Data.NetBean.TreeBean;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
@@ -24,7 +24,7 @@ public class TreeManager {
     private static final String TAG = "TreeManager";
     public void loadDataFromNet(final TreeDataListener listener) {
         SLog.d(TAG, "loadTreeDataFromNet: start");
-        OkHelper.getInstance().getMethod(NetUrl.TREE, new WanOkCallback<List<TreeBean>>(WanTypeToken.TREE_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.TREE_URL, new WanOkCallback<List<TreeBean>>(WanTypeToken.TREE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<TreeBean>> data) {
                 Log.d(TAG, "onSuccess: data = " + data);

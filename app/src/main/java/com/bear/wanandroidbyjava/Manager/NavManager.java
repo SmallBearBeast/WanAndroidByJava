@@ -2,7 +2,7 @@ package com.bear.wanandroidbyjava.Manager;
 
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
 import com.bear.wanandroidbyjava.Data.NetBean.NavBean;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
@@ -32,7 +32,7 @@ public class NavManager {
     }
 
     public void loadDataFromNet(final NavDataListener listener) {
-        OkHelper.getInstance().getMethod(NetUrl.NAV, new WanOkCallback<List<NavBean>>(WanTypeToken.NAV_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.NAV_URL, new WanOkCallback<List<NavBean>>(WanTypeToken.NAV_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<NavBean>> data) {
                 if (data != null) {

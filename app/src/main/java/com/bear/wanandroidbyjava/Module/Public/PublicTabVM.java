@@ -10,7 +10,7 @@ import com.bear.wanandroidbyjava.Data.NetBean.PublicTabBean;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
 import com.example.libbase.Executor.BgThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
@@ -51,7 +51,7 @@ public class PublicTabVM extends ViewModel {
             mShowProgressLD.postValue(false);
             return;
         }
-        OkHelper.getInstance().getMethod(NetUrl.PUBLIC_TAB, new WanOkCallback<List<PublicTabBean>>(WanTypeToken.PUBLIC_TAB_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.PUBLIC_TAB_URL, new WanOkCallback<List<PublicTabBean>>(WanTypeToken.PUBLIC_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<PublicTabBean>> data) {
                 if (data != null) {

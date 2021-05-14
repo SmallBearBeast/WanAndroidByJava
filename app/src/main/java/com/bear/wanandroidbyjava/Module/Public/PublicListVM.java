@@ -11,7 +11,7 @@ import com.bear.wanandroidbyjava.Data.NetBean.ArticleListBean;
 import com.bear.wanandroidbyjava.Net.WanOkCallback;
 import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.bear.wanandroidbyjava.Net.WanTypeToken;
-import com.bear.wanandroidbyjava.Net.NetUrl;
+import com.bear.wanandroidbyjava.Net.WanUrl;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
 import com.example.libbase.Executor.BgThreadExecutor;
 import com.example.libbase.Util.CollectionUtil;
@@ -86,7 +86,7 @@ public class PublicListVM extends ViewModel {
 
     private void fetchTabArticle(int id, final int pageIndex) {
         SLog.d(TAG, "fetchTabArticle: articleId = " + id + ", pageIndex = " + pageIndex);
-        OkHelper.getInstance().getMethod(NetUrl.getPublicArticleList(id, pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.getPublicArticleListUrl(id, pageIndex), new WanOkCallback<ArticleListBean>(WanTypeToken.ARTICLE_LIST_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<ArticleListBean> data) {
                 if (data != null) {
