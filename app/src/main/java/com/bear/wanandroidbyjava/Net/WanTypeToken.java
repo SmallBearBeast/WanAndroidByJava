@@ -8,7 +8,6 @@ import com.bear.wanandroidbyjava.Data.NetBean.NavBean;
 import com.bear.wanandroidbyjava.Data.NetBean.ProjectTabBean;
 import com.bear.wanandroidbyjava.Data.NetBean.PublicTabBean;
 import com.bear.wanandroidbyjava.Data.NetBean.TreeBean;
-import com.bear.wanandroidbyjava.Net.WanResponce;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
