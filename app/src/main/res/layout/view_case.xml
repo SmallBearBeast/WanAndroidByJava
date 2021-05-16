@@ -29,7 +29,9 @@
             android:id="@+id/case_progress_bar"
             android:layout_width="@dimen/dp_80"
             android:layout_height="@dimen/dp_80"
-            android:layout_gravity="bottom|center_horizontal" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:indeterminateTint="@color/color_5C5C5C"
+            android:indeterminateTintMode="src_in" />
     </FrameLayout>
 
     <TextView
