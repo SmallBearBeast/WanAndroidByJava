@@ -12,13 +12,15 @@ import androidx.core.content.ContextCompat;
 import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
+import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.wanandroidbyjava.Data.Bean.Banner;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ScreenUtil;
 
 public class WebAct extends ComponentAct {
     public static final String TAG = "web_tag";
-    public static final String KEY_WEB_LINK = "key_web_link";
-    public static final String KEY_WEB_TITLE = "key_web_title";
+    public static final String KEY_WEB_ARTICLE = "key_web_article";
+    public static final String KEY_WEB_BANNER = "key_web_banner";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,10 +40,10 @@ public class WebAct extends ComponentAct {
 
     @Override
     protected void handleIntent(Intent intent) {
-        String title = intent.getStringExtra(KEY_WEB_TITLE);
-        String link = intent.getStringExtra(KEY_WEB_LINK);
-        ShareVM.put(this, KEY_WEB_TITLE, title);
-        ShareVM.put(this, KEY_WEB_LINK, link);
+        Article article = intent.getParcelableExtra(KEY_WEB_ARTICLE);
+        ShareVM.put(this, KEY_WEB_ARTICLE, article);
+        Banner banner = intent.getParcelableExtra(KEY_WEB_BANNER);
+        ShareVM.put(this, KEY_WEB_BANNER, banner);
     }
 
     @Override
@@ -50,10 +52,15 @@ public class WebAct extends ComponentAct {
     }
 
     // TODO: 2020-04-19 WebAct is set to an independent process when version is less than 7.
-    public static void go(Context context, String title, @NonNull String link) {
+    public static void go(Context context, @NonNull Article article) {
         Intent intent = new Intent(context, WebAct.class);
-        intent.putExtra(KEY_WEB_TITLE, title);
-        intent.putExtra(KEY_WEB_LINK, link);
+        intent.putExtra(KEY_WEB_ARTICLE, article);
+        ContextCompat.startActivity(context, intent, null);
+    }
+
+    public static void go(Context context, @NonNull Banner banner) {
+        Intent intent = new Intent(context, WebAct.class);
+        intent.putExtra(KEY_WEB_BANNER, banner);
         ContextCompat.startActivity(context, intent, null);
     }
 

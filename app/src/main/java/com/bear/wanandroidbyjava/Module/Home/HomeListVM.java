@@ -5,12 +5,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.wanandroidbyjava.Data.Bean.Banner;
+import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Manager.HomeManager;
+import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
@@ -30,11 +34,12 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     private boolean canLoadMore = true;
     private boolean isLoadingNetData = false;
     private boolean isFinishFirstNetRefresh = false;
-    private HomeManager homeManager = new HomeManager();
-    private MutableLiveData<List> refreshDataListLD = new MutableLiveData<>();
-    private MutableLiveData<List<Article>> loadMoreDataListLD = new MutableLiveData<>();
-    private MutableLiveData<Byte> refreshStateLD = new MutableLiveData<>();
-    private MutableLiveData<Byte> loadMoreStateLD = new MutableLiveData<>();
+    private final HomeManager homeManager = new HomeManager();
+    private final MutableLiveData<List> refreshDataListLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Article>> loadMoreDataListLD = new MutableLiveData<>();
+    private final MutableLiveData<Byte> refreshStateLD = new MutableLiveData<>();
+    private final MutableLiveData<Byte> loadMoreStateLD = new MutableLiveData<>();
+    private final MutableLiveData<Integer> updateDataLD = new MutableLiveData<>();
 
     public void refresh(boolean includeStorage) {
         if (includeStorage) {
@@ -107,6 +112,37 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         }
     }
 
+    public void updateAndSaveArticle(Article updateArticle) {
+        List dataList = getFirstPageDataList();
+        for (int index = 0, size = dataList.size(); index < size; index++) {
+            if (dataList.get(index) instanceof Article) {
+                Article article = (Article) dataList.get(index);
+                if (article.articleId == updateArticle.articleId) {
+                    article.update(updateArticle);
+                    updateDataLD.setValue(index);
+                    break;
+                }
+            }
+        }
+        if (updateArticle.top) {
+            homeManager.saveTopArticleList();
+        } else {
+            homeManager.saveNormalArticleList();
+        }
+    }
+
+    private List<Article> getTopArticleList() {
+        return homeManager.getTopArticleList();
+    }
+
+    private List<Article> getNormalArticleList() {
+        return homeManager.getNormalArticleList();
+    }
+
+    private List getFirstPageDataList() {
+        return homeManager.getFirstPageDataList();
+    }
+
     public boolean canLoadMore() {
         return canLoadMore && !isLoadingNetData;
     }
@@ -122,13 +158,17 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     public LiveData<List> getRefreshDataListLD() {
         return refreshDataListLD;
     }
-    
+
     public LiveData<Byte> getLoadMoreStateLD() {
         return loadMoreStateLD;
     }
 
     public LiveData<Byte> getRefreshStateLD() {
         return refreshStateLD;
+    }
+
+    public LiveData<Integer> getUpdateDataLD() {
+        return updateDataLD;
     }
 
     @Override

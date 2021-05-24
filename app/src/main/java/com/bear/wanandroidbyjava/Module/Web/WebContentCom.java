@@ -14,6 +14,7 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
+import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.R;
 
 public class WebContentCom extends ViewComponent<ComponentAct> implements IWebContentCom {
@@ -27,7 +28,8 @@ public class WebContentCom extends ViewComponent<ComponentAct> implements IWebCo
         mWvContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
         flWebContainer.addView(mWvContent, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         initWebCallback();
-        String link = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
+        Article article = ShareVM.get(getDependence(), WebAct.KEY_WEB_ARTICLE);
+        String link = article.link;
         mWvContent.loadUrl(link);
     }
 

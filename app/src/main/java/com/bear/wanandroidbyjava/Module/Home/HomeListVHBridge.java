@@ -35,6 +35,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
         private TextView mTvArticleDesc;
         private TextView mTvTopMark;
         private TextView mTvChapterName;
+        private CollectArticleView collectArticleView;
 
         public HomeVHolder(View itemView) {
             super(itemView);
@@ -46,8 +47,8 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
             mTvArticleDesc = findViewById(R.id.tv_article_desc);
             mTvTopMark = findViewById(R.id.tv_top_mark);
             mTvChapterName = findViewById(R.id.tv_chapter_name);
-            ImageView mIvCollect = findViewById(R.id.iv_collect);
-            setOnClickListener(itemView, mIvCollect);
+            collectArticleView = findViewById(R.id.collectArticleView);
+            setOnClickListener(itemView);
         }
 
         @Override
@@ -65,18 +66,15 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
             }
             mTvTopMark.setVisibility(article.top ? View.VISIBLE : View.GONE);
             mTvChapterName.setText(article.superChapterName + "." + article.chapterName);
+            collectArticleView.setArticle(article);
         }
 
         @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.cl_item_container:
-                    Article article = getData();
-                    WebAct.go(getContext(), article.title, article.link);
-                    break;
-
-                case R.id.iv_collect:
-                    break;
+        public void onClick(View view) {
+            int viewId = view.getId();
+            if (viewId == R.id.cl_item_container) {
+                Article article = getData();
+                WebAct.go(getContext(), article);
             }
         }
     }

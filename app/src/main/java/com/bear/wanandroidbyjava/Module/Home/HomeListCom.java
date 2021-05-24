@@ -46,19 +46,35 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
     private DataManager dataManager;
     private HomeListVM homeListVM;
 
-    private EventCallback mEventCallback = new EventCallback() {
+    private final EventCallback eventCallback = new EventCallback() {
         @Override
         protected void onEvent(Event event) {
-            if (EventKey.KEY_NET_CHANGE.equals(event.eventKey)) {
-                if (event.data instanceof Boolean && (Boolean) event.data && !homeListVM.isFinishFirstNetRefresh()) {
-                    homeListVM.refresh(false);
-                }
+            switch (event.eventKey) {
+                case EventKey.KEY_NET_CHANGE:
+                    if (event.data instanceof Boolean && (Boolean) event.data && !homeListVM.isFinishFirstNetRefresh()) {
+                        homeListVM.refresh(false);
+                    }
+                    break;
+                case EventKey.KEY_COLLECT_ARTICLE:
+                case EventKey.KEY_UN_COLLECT_ARTICLE:
+                    if (event.data instanceof Article) {
+                        Article article = (Article) event.data;
+                        homeListVM.updateAndSaveArticle(article);
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
 
         @Override
         protected Set<String> eventKeySet() {
-            return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
+            return CollectionUtil.asSet(
+                    EventKey.KEY_NET_CHANGE,
+                    EventKey.KEY_COLLECT_ARTICLE,
+                    EventKey.KEY_UN_COLLECT_ARTICLE
+            );
         }
     };
 
@@ -141,6 +157,14 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                 }
             }
         });
+        homeListVM.getUpdateDataLD().observe(getDependence(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer index) {
+                if (index != null) {
+                    dataManager.update((int)index);
+                }
+            }
+        });
     }
 
     private void updateLastBridgeItem(int bridgeType) {
@@ -151,7 +175,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
     }
 
     private void initBus() {
-        Bus.get().register(mEventCallback);
+        Bus.get().register(eventCallback);
     }
 
     @Override
@@ -224,7 +248,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Bus.get().unRegister(mEventCallback);
+        Bus.get().unRegister(eventCallback);
     }
 
     @Override

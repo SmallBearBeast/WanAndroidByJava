@@ -1,6 +1,7 @@
 package com.bear.wanandroidbyjava.Tool.Helper;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.wanandroidbyjava.Data.Bean.Banner;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
 import com.bear.wanandroidbyjava.Data.Bean.Tree;
@@ -35,15 +36,12 @@ public class DataHelper {
         if (CollectionUtil.isEmpty(bannerBeanList)) {
             return null;
         }
-        List<String> imageUrlList = new ArrayList<>();
-        List<String> clickUrlList = new ArrayList<>();
+        List<Banner> bannerList = new ArrayList<>();
         for (BannerBean bannerBean : bannerBeanList) {
-            imageUrlList.add(bannerBean.imagePath);
-            clickUrlList.add(bannerBean.url);
+            bannerList.add(bannerBean.toBanner());
         }
         BannerSet bannerSet = new BannerSet();
-        bannerSet.imageUrlList = imageUrlList;
-        bannerSet.clickUrlList = clickUrlList;
+        bannerSet.bannerList = bannerList;
         return bannerSet;
     }
 

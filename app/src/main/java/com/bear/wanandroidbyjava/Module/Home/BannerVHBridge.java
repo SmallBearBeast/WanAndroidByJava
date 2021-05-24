@@ -9,6 +9,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
+import com.bear.wanandroidbyjava.Data.Bean.Banner;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
@@ -35,40 +36,40 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
     }
 
     static class BannerVHolder extends VHolder<BannerSet> {
-        private LoopViewPager mLvpBanner;
+        private LoopViewPager loopViewPager;
 
         public BannerVHolder(View itemView) {
             super(itemView);
-            mLvpBanner = findViewById(R.id.lvp_banner);
+            loopViewPager = findViewById(R.id.lvp_banner);
         }
 
         @Override
         protected void onStart() {
-            mLvpBanner.startLoop();
+            loopViewPager.startLoop();
         }
 
         @Override
         protected void onStop() {
-            mLvpBanner.stopLoop();
+            loopViewPager.stopLoop();
         }
 
         @Override
         public void bindFull(int pos, BannerSet bannerSet) {
             super.bindFull(pos, bannerSet);
-            mLvpBanner.setAdapter(new BannerAdapter(bannerSet));
+            loopViewPager.setAdapter(new BannerAdapter(bannerSet));
         }
     }
 
     static class BannerAdapter extends PagerAdapter {
-        private BannerSet mBannerSet;
+        private final BannerSet bannerSet;
 
         public BannerAdapter(BannerSet bannerSet) {
-            mBannerSet = bannerSet;
+            this.bannerSet = bannerSet;
         }
 
         @Override
         public int getCount() {
-            return mBannerSet.imageUrlList.size();
+            return bannerSet.bannerList.size();
         }
 
         @Override
@@ -84,11 +85,12 @@ public class BannerVHBridge extends VHBridge<BannerVHBridge.BannerVHolder> {
             iv.setLayoutParams(lp);
             container.addView(iv);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(iv).load(mBannerSet.imageUrlList.get(position)).into(iv);
+            final Banner banner = bannerSet.bannerList.get(position);
+            Glide.with(iv).load(banner.imagePath).into(iv);
             iv.setOnClickListener(new OnProtectClickListener() {
                 @Override
                 public void onProtectClick(View view) {
-                    WebAct.go(view.getContext(), null, mBannerSet.clickUrlList.get(position));
+                    WebAct.go(view.getContext(), banner);
                 }
             });
             return iv;

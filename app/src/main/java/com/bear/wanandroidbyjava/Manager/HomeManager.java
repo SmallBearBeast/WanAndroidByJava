@@ -18,12 +18,13 @@ import com.example.libbase.Util.StringUtil;
 import com.example.liblog.SLog;
 import com.example.libokhttp.OkHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class HomeManager {
     private static final String TAG = "HomeManager";
     private static final int REQUEST_COUNT = 3;
@@ -33,27 +34,34 @@ public class HomeManager {
     private int refreshCompleteCount = 3;
     private CountDownLatch countDownLatch;
     private final List totalDataList = new CopyOnWriteArrayList();
-    private final List tempTotalDataList = new CopyOnWriteArrayList();
+    private final BannerSet topBannerSet = new BannerSet();
+    private final List<Article> topArticleList = new CopyOnWriteArrayList<>();
+    private final List<Article> normalArticleList = new CopyOnWriteArrayList<>();
+    private final List firstPageDataList = new CopyOnWriteArrayList();
 
     public void loadDataFromStorage(final HomeDataListener listener) {
         SLog.d(TAG, "loadDataFromStorage: ");
         BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                List dataList = new ArrayList();
                 BannerSet bannerSet = HomeStorage.getBannerSet();
-                if (bannerSet != null) {
-                    totalDataList.add(bannerSet);
+                if (bannerSet != null && !bannerSet.isEmpty()) {
+                    dataList.add(bannerSet);
                 }
-                List<Article> topArticleList = HomeStorage.getTopArticleList();
-                if (!CollectionUtil.isEmpty(topArticleList)) {
-                    totalDataList.addAll(topArticleList);
+                addBannerSet(bannerSet, false);
+                List<Article> articleList = HomeStorage.getTopArticleList();
+                if (!CollectionUtil.isEmpty(articleList)) {
+                    dataList.addAll(articleList);
                 }
-                List<Article> normalArticleList = HomeStorage.getNormalArticleList();
-                if (!CollectionUtil.isEmpty(normalArticleList)) {
-                    totalDataList.addAll(normalArticleList);
+                addTopArticleList(articleList, false);
+                articleList = HomeStorage.getNormalArticleList();
+                if (!CollectionUtil.isEmpty(articleList)) {
+                    dataList.addAll(articleList);
                 }
-                SLog.d(TAG, "loadDataFromStorage: totalDataList = " + totalDataList);
-                callHomeDataRefreshListener(listener, false);
+                SLog.d(TAG, "loadDataFromStorage: dataList = " + dataList);
+                addNormalArticleList(articleList, false);
+                addDataList(listener, dataList, false);
             }
         });
     }
@@ -62,7 +70,7 @@ public class HomeManager {
         BgThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                tempTotalDataList.clear();
+                firstPageDataList.clear();
                 countDownLatch = new CountDownLatch(REQUEST_COUNT);
                 refreshCompleteCount = REQUEST_COUNT;
                 nextPageIndex = FIRST_PAGE_INDEX;
@@ -84,8 +92,9 @@ public class HomeManager {
                             + (StringUtil.isEmpty(data.errorMsg) ? "" : ", errorMsg = " + data.errorMsg));
                     BannerSet bannerSet = DataHelper.bannerBeanToBannerSet(data.data);
                     SLog.d(TAG, "loadBannerSet: bannerSet = " + bannerSet);
-                    if (bannerSet != null) {
-                        tempTotalDataList.add(0, bannerSet);
+                    if (bannerSet != null && !bannerSet.isEmpty()) {
+                        firstPageDataList.add(0, bannerSet);
+                        addBannerSet(bannerSet, true);
                         HomeStorage.saveBannerSet(bannerSet);
                     }
                     completeOneLoadTask();
@@ -113,13 +122,14 @@ public class HomeManager {
                         SLog.d(TAG, "loadTopArticle: articleList.size = " + articleList.size() +
                                 ", articleList = " + articleList);
                         if (!CollectionUtil.isEmpty(articleList)) {
-                            if (!tempTotalDataList.isEmpty()) {
-                                if (tempTotalDataList.get(0) instanceof BannerSet) {
-                                    tempTotalDataList.addAll(1, articleList);
+                            if (!firstPageDataList.isEmpty()) {
+                                if (firstPageDataList.get(0) instanceof BannerSet) {
+                                    firstPageDataList.addAll(1, articleList);
                                 } else {
-                                    tempTotalDataList.addAll(0, articleList);
+                                    firstPageDataList.addAll(0, articleList);
                                 }
                             }
+                            addTopArticleList(articleList, true);
                             HomeStorage.saveTopArticleList(articleList);
                         }
                         completeOneLoadTask();
@@ -148,7 +158,8 @@ public class HomeManager {
                         SLog.d(TAG, "loadFirstNormalArticle: articleList.size = " + articleList.size()
                                 + ", articleList = " + articleList);
                         if (!CollectionUtil.isEmpty(articleList)) {
-                            tempTotalDataList.addAll(articleList);
+                            firstPageDataList.addAll(articleList);
+                            addNormalArticleList(articleList, true);
                             HomeStorage.saveNormalArticleList(articleList);
                         }
                         completeOneLoadTask();
@@ -200,12 +211,10 @@ public class HomeManager {
             e.printStackTrace();
         } finally {
             SLog.d(TAG, "checkRefreshFinish: refreshCompleteCount = " + refreshCompleteCount +
-                    ", tempTotalDataList.size = " + tempTotalDataList.size());
-            if (refreshCompleteCount == 0 && !CollectionUtil.isEmpty(tempTotalDataList)) {
-                totalDataList.clear();
-                totalDataList.addAll(tempTotalDataList);
+                    ", firstPageDataList.size = " + firstPageDataList.size());
+            if (refreshCompleteCount == 0) {
+                addDataList(listener, firstPageDataList, true);
             }
-            callHomeDataRefreshListener(listener, true);
         }
     }
 
@@ -221,7 +230,7 @@ public class HomeManager {
         MainThreadExecutor.post(new Runnable() {
             @Override
             public void run() {
-                listener.onRefresh(totalDataList, fromNet);
+                listener.onRefresh(new ArrayList(totalDataList), fromNet);
             }
         });
     }
@@ -238,8 +247,100 @@ public class HomeManager {
         });
     }
 
+    private synchronized void addBannerSet(BannerSet bannerSet, boolean fromNet) {
+        if (bannerSet == null || bannerSet.isEmpty()) {
+            return;
+        }
+        if (fromNet) {
+            topBannerSet.clear();
+            topBannerSet.add(bannerSet);
+        } else if (topBannerSet.isEmpty()) {
+            topBannerSet.add(bannerSet);
+        }
+    }
+
+    private synchronized void addTopArticleList(List<Article> articleList, boolean fromNet) {
+        if (CollectionUtil.isEmpty(articleList)) {
+            return;
+        }
+        if (fromNet) {
+            topArticleList.clear();
+            topArticleList.addAll(articleList);
+        } else if (topArticleList.isEmpty()) {
+            topArticleList.addAll(articleList);
+        }
+    }
+
+    private synchronized void addNormalArticleList(List<Article> articleList, boolean fromNet) {
+        if (CollectionUtil.isEmpty(articleList)) {
+            return;
+        }
+        if (fromNet) {
+            normalArticleList.clear();
+            normalArticleList.addAll(articleList);
+        } else if (normalArticleList.isEmpty()) {
+            normalArticleList.addAll(articleList);
+        }
+    }
+
+    private synchronized void addDataList(HomeDataListener listener, List dataList, boolean fromNet) {
+        if (CollectionUtil.isEmpty(dataList)) {
+            return;
+        }
+        if (fromNet) {
+            totalDataList.clear();
+            totalDataList.addAll(dataList);
+        } else if (totalDataList.isEmpty()) {
+            totalDataList.addAll(dataList);
+        }
+        callHomeDataRefreshListener(listener, fromNet);
+    }
+
+    public void saveBannerSet() {
+        BgThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                HomeStorage.saveBannerSet(topBannerSet);
+            }
+        });
+    }
+
+    public void saveTopArticleList() {
+        BgThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                HomeStorage.saveTopArticleList(topArticleList);
+            }
+        });
+    }
+
+    public void saveNormalArticleList() {
+        BgThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                HomeStorage.saveNormalArticleList(normalArticleList);
+            }
+        });
+    }
+
     public List getTotalDataList() {
         return totalDataList;
+    }
+
+    public List getFirstPageDataList() {
+        return firstPageDataList;
+    }
+
+    public BannerSet getTopBannerSet() {
+        return topBannerSet;
+    }
+
+    public List<Article> getTopArticleList() {
+        return topArticleList;
+    }
+
+    public List<Article> getNormalArticleList() {
+        return normalArticleList;
     }
 
     public interface HomeDataListener {

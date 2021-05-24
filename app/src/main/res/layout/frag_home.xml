@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Hello World" />
+            android:text="@string/str_welcome_to_wan_android" />
 
         <ImageView
             android:id="@+id/iv_search"

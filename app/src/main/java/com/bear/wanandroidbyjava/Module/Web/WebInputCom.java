@@ -16,6 +16,8 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
+import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.wanandroidbyjava.Module.Home.CollectArticleView;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Manager.KeyBoardManager;
 import com.example.libbase.Util.StringUtil;
@@ -40,14 +42,17 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements IWebInpu
 
     @Override
     protected void onCreate() {
-        webLink = ShareVM.get(getDependence(), WebAct.KEY_WEB_LINK);
-        webTitle = ShareVM.get(getDependence(), WebAct.KEY_WEB_TITLE);
+        Article article = ShareVM.get(getDependence(), WebAct.KEY_WEB_ARTICLE);
+        webLink = article.link;
+        webTitle = article.title;
         searchInputEt = findViewById(R.id.et_search_input);
         clearInputIv = findViewById(R.id.iv_clear_input);
         webLoadingPb = findViewById(R.id.pb_web_loading);
         webIconIv = findViewById(R.id.iv_web_icon);
+        CollectArticleView collectArticleView = findViewById(R.id.collectArticleView);
+        collectArticleView.setArticle(article);
         setUpEditText();
-        clickListener(this, R.id.iv_collect, R.id.iv_clear_input, R.id.tv_search);
+        clickListener(this, R.id.iv_clear_input, R.id.tv_search);
     }
 
     private void setUpEditText() {
@@ -175,8 +180,6 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements IWebInpu
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_collect:
-                break;
             case R.id.iv_clear_input:
                 clearInputIv.setVisibility(View.INVISIBLE);
                 searchInputEt.setText("");

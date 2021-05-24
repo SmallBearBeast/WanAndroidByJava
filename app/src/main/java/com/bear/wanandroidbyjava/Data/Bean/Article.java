@@ -99,4 +99,20 @@ public class Article extends ExtObj implements Parcelable {
         dest.writeByte((byte) (collect ? 1 : 0));
         dest.writeByte((byte) (top ? 1 : 0));
     }
+
+    public void update(Article article) {
+        if (articleId == article.articleId) {
+            title = article.title;
+            description = article.description;
+            author = article.author;
+            dateStr = article.dateStr;
+            chapterName = article.chapterName;
+            superChapterName = article.superChapterName;
+            link = article.link;
+            tag = article.tag;
+            fresh = article.fresh;
+            collect = article.collect;
+            top = article.top;
+        }
+    }
 }
