@@ -64,7 +64,7 @@ public class ProjectVM extends ViewModel {
         SLog.d(TAG, "fetchProjectTab: start");
         mShowProgressLD.postValue(true);
         fetchProjectTabFromDb();
-        OkHelper.getInstance().getMethod(WanUrl.PROJECT_TAB_URL, new WanOkCallback<List<ProjectTabBean>>(WanTypeToken.PROJECT_TAB_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.PROJECT_TAB_URL, new WanOkCallback<List<ProjectTabBean>>(WanTypeToken.LIST_PROJECT_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ProjectTabBean>> data) {
                 if (data != null) {

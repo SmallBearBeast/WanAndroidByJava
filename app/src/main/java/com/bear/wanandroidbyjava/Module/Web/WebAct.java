@@ -14,13 +14,13 @@ import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.Banner;
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ScreenUtil;
 
 public class WebAct extends ComponentAct {
     public static final String TAG = "web_tag";
-    public static final String KEY_WEB_ARTICLE = "key_web_article";
-    public static final String KEY_WEB_BANNER = "key_web_banner";
+    public static final String KEY_WEB_COLLECT_INFO = "key_web_collect_info";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,10 +40,8 @@ public class WebAct extends ComponentAct {
 
     @Override
     protected void handleIntent(Intent intent) {
-        Article article = intent.getParcelableExtra(KEY_WEB_ARTICLE);
-        ShareVM.put(this, KEY_WEB_ARTICLE, article);
-        Banner banner = intent.getParcelableExtra(KEY_WEB_BANNER);
-        ShareVM.put(this, KEY_WEB_BANNER, banner);
+        CollectInfo collectInfo = intent.getParcelableExtra(KEY_WEB_COLLECT_INFO);
+        ShareVM.put(this, KEY_WEB_COLLECT_INFO, collectInfo);
     }
 
     @Override
@@ -54,13 +52,13 @@ public class WebAct extends ComponentAct {
     // TODO: 2020-04-19 WebAct is set to an independent process when version is less than 7.
     public static void go(Context context, @NonNull Article article) {
         Intent intent = new Intent(context, WebAct.class);
-        intent.putExtra(KEY_WEB_ARTICLE, article);
+        intent.putExtra(KEY_WEB_COLLECT_INFO, article.toCollectInfo());
         ContextCompat.startActivity(context, intent, null);
     }
 
     public static void go(Context context, @NonNull Banner banner) {
         Intent intent = new Intent(context, WebAct.class);
-        intent.putExtra(KEY_WEB_BANNER, banner);
+        intent.putExtra(KEY_WEB_COLLECT_INFO, banner.toCollectInfo());
         ContextCompat.startActivity(context, intent, null);
     }
 

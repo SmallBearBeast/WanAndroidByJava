@@ -3,6 +3,9 @@ package com.bear.wanandroidbyjava.Data.Bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
+import com.bear.wanandroidbyjava.Storage.CollectInfoStorage;
+
 public class Banner implements Parcelable {
     public String desc;
     public int id;
@@ -55,5 +58,18 @@ public class Banner implements Parcelable {
         dest.writeString(title);
         dest.writeInt(type);
         dest.writeString(url);
+    }
+
+    public CollectInfo toCollectInfo() {
+        CollectInfo.Builder builder = new CollectInfo.Builder();
+        builder.collectId(id);
+        builder.title(title);
+        builder.link(url);
+        CollectInfo info = CollectInfoStorage.getCollectInfo(id);
+        if (info != null) {
+            builder.collect(info.isCollect());
+        }
+        builder.fromType(CollectInfo.TYPE_BANNER);
+        return builder.build();
     }
 }

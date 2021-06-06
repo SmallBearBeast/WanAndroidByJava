@@ -24,7 +24,7 @@ public class TreeManager {
     private static final String TAG = "TreeManager";
     public void loadDataFromNet(final TreeDataListener listener) {
         SLog.d(TAG, "loadTreeDataFromNet: start");
-        OkHelper.getInstance().getMethod(WanUrl.TREE_URL, new WanOkCallback<List<TreeBean>>(WanTypeToken.TREE_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.TREE_URL, new WanOkCallback<List<TreeBean>>(WanTypeToken.LIST_TREE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<TreeBean>> data) {
                 Log.d(TAG, "onSuccess: data = " + data);

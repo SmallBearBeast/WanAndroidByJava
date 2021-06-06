@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50">
 
-        <com.bear.wanandroidbyjava.Module.Home.CollectArticleView
+        <com.bear.wanandroidbyjava.Module.Collect.CollectArticleView
             android:id="@+id/collectArticleView"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"

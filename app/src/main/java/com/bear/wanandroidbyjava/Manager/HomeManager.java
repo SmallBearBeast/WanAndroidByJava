@@ -84,7 +84,7 @@ public class HomeManager {
 
     private void loadBannerSet() {
         SLog.d(TAG, "loadBannerSet: start");
-        OkHelper.getInstance().getMethod(WanUrl.BANNER_URL, new WanOkCallback<List<BannerBean>>(WanTypeToken.BANNER_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.BANNER_URL, new WanOkCallback<List<BannerBean>>(WanTypeToken.LIST_BANNER_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<BannerBean>> data) {
                 if (data != null) {
@@ -111,7 +111,7 @@ public class HomeManager {
 
     private void loadTopArticle() {
         SLog.d(TAG, "loadTopArticle: start");
-        OkHelper.getInstance().getMethod(WanUrl.TOP_ARTICLE_URL, new WanOkCallback<List<ArticleBean>>(WanTypeToken.ARTICLE_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.TOP_ARTICLE_URL, new WanOkCallback<List<ArticleBean>>(WanTypeToken.LIST_ARTICLE_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<ArticleBean>> data) {
                 if (data != null) {

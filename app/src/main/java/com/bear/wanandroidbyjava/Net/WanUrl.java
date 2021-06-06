@@ -88,7 +88,7 @@ public class WanUrl {
      * 收藏文章列表
      * https://www.wanandroid.com/lg/collect/list/0/json
      * 方法：GET
-     * 参数： 页码：拼接在链接中，从0开始。
+     * 参数：页码：拼接在链接中，从0开始。
      */
     public static String getCollectArticleListUrl(int pageIndex) {
         return HTTPS + HOST + "/lg/collect/list/" + pageIndex + "/json";
@@ -123,6 +123,17 @@ public class WanUrl {
      */
     public static String unCollectArticleUrl(int articleId) {
         return HTTPS + HOST + "/lg/uncollect_originId/" + articleId + "/json";
+    }
+
+    /**
+     * https://www.wanandroid.com/lg/uncollect/2805/json
+     * 方法：POST
+     * 参数：
+     * 	id:拼接在链接上
+     * 	originId:列表页下发，无则为-1
+     */
+    public static String unCollectOutArticleUrl(int articleId) {
+        return HTTPS + HOST + "/lg/uncollect/" + articleId + "/json";
     }
 
     /**

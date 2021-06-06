@@ -51,7 +51,7 @@ public class PublicTabVM extends ViewModel {
             mShowProgressLD.postValue(false);
             return;
         }
-        OkHelper.getInstance().getMethod(WanUrl.PUBLIC_TAB_URL, new WanOkCallback<List<PublicTabBean>>(WanTypeToken.PUBLIC_TAB_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.PUBLIC_TAB_URL, new WanOkCallback<List<PublicTabBean>>(WanTypeToken.LIST_PUBLIC_TAB_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<PublicTabBean>> data) {
                 if (data != null) {

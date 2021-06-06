@@ -1,7 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Home;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -9,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.wanandroidbyjava.Module.Collect.CollectArticleView;
 import com.bear.wanandroidbyjava.Module.Web.WebAct;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.StringUtil;
@@ -66,7 +66,7 @@ public class HomeListVHBridge extends VHBridge<HomeListVHBridge.HomeVHolder> {
             }
             mTvTopMark.setVisibility(article.top ? View.VISIBLE : View.GONE);
             mTvChapterName.setText(article.superChapterName + "." + article.chapterName);
-            collectArticleView.setArticle(article);
+            collectArticleView.setCollectInfo(article.toCollectInfo());
         }
 
         @Override

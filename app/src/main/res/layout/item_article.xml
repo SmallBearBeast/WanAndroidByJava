@@ -111,7 +111,7 @@
         app:layout_goneMarginStart="@dimen/dp_0"
         tools:text="广场Tab" />
 
-    <com.bear.wanandroidbyjava.Module.Home.CollectArticleView
+    <com.bear.wanandroidbyjava.Module.Collect.CollectArticleView
         android:id="@+id/collectArticleView"
         android:layout_width="@dimen/dp_25"
         android:layout_height="@dimen/dp_25"

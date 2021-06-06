@@ -32,7 +32,7 @@ public class NavManager {
     }
 
     public void loadDataFromNet(final NavDataListener listener) {
-        OkHelper.getInstance().getMethod(WanUrl.NAV_URL, new WanOkCallback<List<NavBean>>(WanTypeToken.NAV_TOKEN) {
+        OkHelper.getInstance().getMethod(WanUrl.NAV_URL, new WanOkCallback<List<NavBean>>(WanTypeToken.LIST_NAV_TOKEN) {
             @Override
             protected void onSuccess(WanResponce<List<NavBean>> data) {
                 if (data != null) {

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bear.wanandroidbyjava.Data.Entity.ArticleE;
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.example.libbase.ExtObj;
 
 public class Article extends ExtObj implements Parcelable {
@@ -114,5 +115,18 @@ public class Article extends ExtObj implements Parcelable {
             collect = article.collect;
             top = article.top;
         }
+    }
+
+    public CollectInfo toCollectInfo() {
+        CollectInfo.Builder builder = new CollectInfo.Builder();
+        builder.collectId(articleId);
+        builder.deleteId(articleId);
+        builder.collect(collect);
+        builder.author(author);
+        builder.link(link);
+        builder.title(title);
+        builder.fromType(CollectInfo.TYPE_ARTICLE);
+        return builder.build();
+
     }
 }

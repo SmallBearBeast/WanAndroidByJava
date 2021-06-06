@@ -18,6 +18,7 @@ import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.EventKey;
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
@@ -55,11 +56,11 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                         homeListVM.refresh(false);
                     }
                     break;
-                case EventKey.KEY_COLLECT_ARTICLE:
-                case EventKey.KEY_UN_COLLECT_ARTICLE:
-                    if (event.data instanceof Article) {
-                        Article article = (Article) event.data;
-                        homeListVM.updateAndSaveArticle(article);
+                case EventKey.KEY_COLLECT_OR_UN_COLLECT_OUT_EVENT:
+                case EventKey.KEY_COLLECT_OR_UN_COLLECT_EVENT:
+                    if (event.data instanceof CollectInfo) {
+                        CollectInfo collectInfo = (CollectInfo) event.data;
+                        homeListVM.updateCollectInfo(collectInfo);
                     }
                     break;
 
@@ -72,8 +73,8 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
         protected Set<String> eventKeySet() {
             return CollectionUtil.asSet(
                     EventKey.KEY_NET_CHANGE,
-                    EventKey.KEY_COLLECT_ARTICLE,
-                    EventKey.KEY_UN_COLLECT_ARTICLE
+                    EventKey.KEY_COLLECT_OR_UN_COLLECT_EVENT,
+                    EventKey.KEY_COLLECT_OR_UN_COLLECT_OUT_EVENT
             );
         }
     };

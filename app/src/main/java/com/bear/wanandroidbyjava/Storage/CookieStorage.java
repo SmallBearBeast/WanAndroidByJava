@@ -19,8 +19,7 @@ public class CookieStorage {
     private static final String COOKIE_STORAGE_DIR =
             WanApp.getAppContext().getCacheDir() + File.separator + "cookie";
     private static final String COOKIE_STORAGE_PATH = COOKIE_STORAGE_DIR + File.separator + "cookie.txt";
-
-    private static boolean hasLoadFromStorage = false;
+    private static volatile boolean hasLoadFromStorage = false;
     private static Map<String, List<Cookie>> cookieListMap = new HashMap<>();
 
     private CookieStorage() {
@@ -28,24 +27,26 @@ public class CookieStorage {
     }
 
     public static void init() {
-        BgThreadExecutor.execute(new InitCookieRunnable());
+        if (!hasLoadFromStorage) {
+            BgThreadExecutor.execute(new InitCookieRunnable());
+        }
     }
 
-    public static void saveCookies(@NonNull String host, @NonNull List<Cookie> cookieList) {
+    public static synchronized void saveCookies(@NonNull String host, @NonNull List<Cookie> cookieList) {
         cookieListMap.put(host, cookieList);
         FileStorage.writeObjToJson(COOKIE_STORAGE_PATH, cookieListMap);
     }
 
-    public static List<Cookie> getCookies(@NonNull String host) {
+    public static synchronized List<Cookie> getCookies(@NonNull String host) {
         if (!hasLoadFromStorage) {
-            new InitCookieRunnable().run();
+            throw new InitException();
         }
         List<Cookie> cookieList = cookieListMap.get(host);
         cookieList = cookieList != null ? cookieList : new ArrayList<Cookie>();
         return cookieList;
     }
 
-    public static void clearCookies() {
+    public static synchronized void clearCookies() {
         cookieListMap.clear();
         FileStorage.writeObjToJson(COOKIE_STORAGE_PATH, cookieListMap);
     }
@@ -63,6 +64,12 @@ public class CookieStorage {
                     }
                 }
             }
+        }
+    }
+
+    private static class InitException extends RuntimeException {
+        public InitException() {
+            super("Forget to init CookieStorage first");
         }
     }
 }

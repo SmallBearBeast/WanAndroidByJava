@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.bear.libkv.SpVal.SpHelper;
 import com.bear.wanandroidbyjava.Net.WanCookieJar;
+import com.bear.wanandroidbyjava.Storage.CollectInfoStorage;
 import com.bear.wanandroidbyjava.Storage.CookieStorage;
 import com.bear.wanandroidbyjava.Storage.DataBase.WanRoomDataBase;
 import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
@@ -38,6 +39,7 @@ public class WanApp extends Application {
         SpHelper.init(this);
         SpHelper.preload(SpValHelper.SP_GLOBAL_CONFIG);
         CookieStorage.init();
+        CollectInfoStorage.init();
     }
 
     public static Context getAppContext() {

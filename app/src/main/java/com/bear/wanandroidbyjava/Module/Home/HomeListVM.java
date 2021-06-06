@@ -8,6 +8,7 @@ import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.Banner;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
 import com.bear.wanandroidbyjava.Manager.HomeManager;
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
@@ -112,22 +113,32 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         }
     }
 
-    public void updateAndSaveArticle(Article updateArticle) {
+    public void updateCollectInfo(CollectInfo collectInfo) {
+        if (collectInfo.getFromType() == CollectInfo.TYPE_ARTICLE) {
+            updateAndSaveArticle(collectInfo);
+        } else if (collectInfo.getFromType() == CollectInfo.TYPE_BANNER) {
+
+        }
+    }
+
+    public void updateAndSaveArticle(CollectInfo collectInfo) {
         List dataList = getFirstPageDataList();
+        Article article;
         for (int index = 0, size = dataList.size(); index < size; index++) {
             if (dataList.get(index) instanceof Article) {
-                Article article = (Article) dataList.get(index);
-                if (article.articleId == updateArticle.articleId) {
-                    article.update(updateArticle);
+                article = (Article) dataList.get(index);
+                if (article.articleId == collectInfo.getCollectId()
+                        && article.collect != collectInfo.isCollect()) {
+                    article.collect = collectInfo.isCollect();
                     updateDataLD.setValue(index);
+                    if (article.top) {
+                        homeManager.saveTopArticleList();
+                    } else {
+                        homeManager.saveNormalArticleList();
+                    }
                     break;
                 }
             }
-        }
-        if (updateArticle.top) {
-            homeManager.saveTopArticleList();
-        } else {
-            homeManager.saveNormalArticleList();
         }
     }
 

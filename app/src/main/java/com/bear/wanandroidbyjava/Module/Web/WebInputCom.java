@@ -16,8 +16,8 @@ import com.bear.libcomponent.ComponentAct;
 import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Data.Bean.Article;
-import com.bear.wanandroidbyjava.Module.Home.CollectArticleView;
+import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
+import com.bear.wanandroidbyjava.Module.Collect.CollectArticleView;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Manager.KeyBoardManager;
 import com.example.libbase.Util.StringUtil;
@@ -42,15 +42,15 @@ public class WebInputCom extends ViewComponent<ComponentAct> implements IWebInpu
 
     @Override
     protected void onCreate() {
-        Article article = ShareVM.get(getDependence(), WebAct.KEY_WEB_ARTICLE);
-        webLink = article.link;
-        webTitle = article.title;
+        CollectInfo collectInfo = ShareVM.get(getDependence(), WebAct.KEY_WEB_COLLECT_INFO);
+        webLink = collectInfo.getLink();
+        webTitle = collectInfo.getTitle();
         searchInputEt = findViewById(R.id.et_search_input);
         clearInputIv = findViewById(R.id.iv_clear_input);
         webLoadingPb = findViewById(R.id.pb_web_loading);
         webIconIv = findViewById(R.id.iv_web_icon);
         CollectArticleView collectArticleView = findViewById(R.id.collectArticleView);
-        collectArticleView.setArticle(article);
+        collectArticleView.setCollectInfo(collectInfo);
         setUpEditText();
         clickListener(this, R.id.iv_clear_input, R.id.tv_search);
     }
