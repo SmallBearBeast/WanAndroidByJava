@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
-import com.bear.wanandroidbyjava.Manager.NavManager;
+import com.bear.wanandroidbyjava.Controller.NavController;
 import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
@@ -12,7 +12,7 @@ import com.example.liblog.SLog;
 
 import java.util.List;
 
-public class NavVM extends ViewModel implements NavManager.NavDataListener{
+public class NavVM extends ViewModel implements NavController.NavDataListener{
     private static final String TAG = "NavVM";
     public static final byte LOAD_NET_ERROR = 1;
     public static final byte LOAD_NO_DATA = 2;
@@ -20,13 +20,13 @@ public class NavVM extends ViewModel implements NavManager.NavDataListener{
     public static final byte LOAD_PROGRESS_HIDE = 4;
     private boolean isFirstLoadComplete = false;
     private boolean isLoadDone = false;
-    private NavManager navManager = new NavManager();
+    private NavController navController = new NavController();
     private MutableLiveData<Byte> loadStateLD = new MutableLiveData<>();
     private MutableLiveData<List<Nav>> navLD = new MutableLiveData<>();
 
     public void loadNavData(boolean includeStorage) {
         if (includeStorage) {
-            navManager.loadDataFromStorage(this);
+            navController.loadDataFromStorage(this);
         }
         if (!NetWorkUtil.isConnected()) {
             SLog.d(TAG, "loadNavData: net is not connected");
@@ -36,7 +36,7 @@ public class NavVM extends ViewModel implements NavManager.NavDataListener{
         if (!SpValHelper.hasNavStorageData.get()) {
             loadStateLD.setValue(LOAD_PROGRESS_SHOW);
         }
-        navManager.loadDataFromNet(this);
+        navController.loadDataFromNet(this);
     }
 
     public boolean isFirstLoadComplete() {

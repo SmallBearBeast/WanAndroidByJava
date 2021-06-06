@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Manager;
+package com.bear.wanandroidbyjava.Controller;
 
 import com.bear.wanandroidbyjava.Data.NetBean.LoginBean;
 import com.bear.wanandroidbyjava.Net.WanUrl;
@@ -11,7 +11,7 @@ import com.example.libokhttp.OkHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginRegisterManager {
+public class LoginRegisterController {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String REPASSWORD = "repassword";

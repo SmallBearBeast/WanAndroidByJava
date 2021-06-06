@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Manager;
+package com.bear.wanandroidbyjava.Controller;
 
 import android.util.Log;
 
@@ -20,7 +20,7 @@ import com.example.libokhttp.OkHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeManager {
+public class TreeController {
     private static final String TAG = "TreeManager";
     public void loadDataFromNet(final TreeDataListener listener) {
         SLog.d(TAG, "loadTreeDataFromNet: start");

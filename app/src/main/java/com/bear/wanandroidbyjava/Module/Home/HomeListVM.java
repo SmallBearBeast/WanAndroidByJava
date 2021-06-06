@@ -5,21 +5,17 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
-import com.bear.wanandroidbyjava.Data.Bean.Banner;
-import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
-import com.bear.wanandroidbyjava.Manager.HomeManager;
+import com.bear.wanandroidbyjava.Controller.HomeController;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
-import com.bear.wanandroidbyjava.Storage.HomeStorage;
 import com.bear.wanandroidbyjava.Storage.KV.SpValHelper;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.liblog.SLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "rawtypes", "BooleanMethodIsAlwaysInverted"})
-public class HomeListVM extends ViewModel implements HomeManager.HomeDataListener {
+public class HomeListVM extends ViewModel implements HomeController.HomeDataListener {
     private static final String TAG = "HomeListVM";
     public static final byte LOAD_MORE_NET_ERROR = 1;
     public static final byte LOAD_MORE_NO_DATA = 2;
@@ -35,7 +31,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     private boolean canLoadMore = true;
     private boolean isLoadingNetData = false;
     private boolean isFinishFirstNetRefresh = false;
-    private final HomeManager homeManager = new HomeManager();
+    private final HomeController homeController = new HomeController();
     private final MutableLiveData<List> refreshDataListLD = new MutableLiveData<>();
     private final MutableLiveData<List<Article>> loadMoreDataListLD = new MutableLiveData<>();
     private final MutableLiveData<Byte> refreshStateLD = new MutableLiveData<>();
@@ -44,7 +40,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
 
     public void refresh(boolean includeStorage) {
         if (includeStorage) {
-            homeManager.loadDataFromStorage(this);
+            homeController.loadDataFromStorage(this);
         }
         SLog.d(TAG, "refresh: includeStorage = " + includeStorage + ", isLoadingNetData = " + isLoadingNetData);
         if (!NetWorkUtil.isConnected()) {
@@ -61,7 +57,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         }
         isLoadingNetData = true;
         setRefreshState(SpValHelper.hasHomeStorageData.get() ? REFRESH_LAYOUT_SHOW : REFRESH_PROGRESS_SHOW);
-        homeManager.loadDataFromNet(this);
+        homeController.loadDataFromNet(this);
     }
 
     public void loadMore() {
@@ -80,7 +76,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
         }
         setLoadMoreState(LOAD_MORE_PROGRESS);
         isLoadingNetData = true;
-        homeManager.loadMoreNormalArticle(this);
+        homeController.loadMoreNormalArticle(this);
     }
 
     private void setRefreshState(byte curRefreshState) {
@@ -103,7 +99,7 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     }
 
     private List getTotalDataList() {
-        return homeManager.getTotalDataList();
+        return homeController.getTotalDataList();
     }
 
     private void setSelfValue(MutableLiveData liveData) {
@@ -132,9 +128,9 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
                     article.collect = collectInfo.isCollect();
                     updateDataLD.setValue(index);
                     if (article.top) {
-                        homeManager.saveTopArticleList();
+                        homeController.saveTopArticleList();
                     } else {
-                        homeManager.saveNormalArticleList();
+                        homeController.saveNormalArticleList();
                     }
                     break;
                 }
@@ -143,15 +139,15 @@ public class HomeListVM extends ViewModel implements HomeManager.HomeDataListene
     }
 
     private List<Article> getTopArticleList() {
-        return homeManager.getTopArticleList();
+        return homeController.getTopArticleList();
     }
 
     private List<Article> getNormalArticleList() {
-        return homeManager.getNormalArticleList();
+        return homeController.getNormalArticleList();
     }
 
     private List getFirstPageDataList() {
-        return homeManager.getFirstPageDataList();
+        return homeController.getFirstPageDataList();
     }
 
     public boolean canLoadMore() {

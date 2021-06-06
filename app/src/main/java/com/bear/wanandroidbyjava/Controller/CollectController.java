@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Manager;
+package com.bear.wanandroidbyjava.Controller;
 
 import com.bear.wanandroidbyjava.Data.NetBean.ArticleBean;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
@@ -12,7 +12,7 @@ import com.example.libokhttp.OkHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CollectManager {
+public class CollectController {
     private static final String TITLE = "title";
     private static final String AUTHOR = "author";
     private static final String LINK = "link";

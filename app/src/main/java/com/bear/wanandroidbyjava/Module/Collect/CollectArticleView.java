@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bear.wanandroidbyjava.EventKey;
-import com.bear.wanandroidbyjava.Manager.CollectManager;
+import com.bear.wanandroidbyjava.Controller.CollectController;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Storage.CollectInfoStorage;
 import com.example.libbase.Util.NetWorkUtil;
@@ -22,7 +22,7 @@ import com.example.libframework.Bus.Bus;
 import com.example.libframework.Bus.Event;
 
 public class CollectArticleView extends AppCompatImageView {
-    private final CollectManager collectManager = new CollectManager();
+    private final CollectController collectController = new CollectController();
     private CollectInfo collectInfo;
 
     public CollectArticleView(Context context) {
@@ -63,7 +63,7 @@ public class CollectArticleView extends AppCompatImageView {
         setCollect(true);
         final int articleId = collectInfo.getCollectId();
         final CollectInfo info = new CollectInfo(collectInfo);
-        collectManager.collectArticle(articleId, new CollectManager.CollectListener() {
+        collectController.collectArticle(articleId, new CollectController.CollectListener() {
             @Override
             public void onCollect(boolean success) {
                 if (articleId == collectInfo.getCollectId()) {
@@ -83,7 +83,7 @@ public class CollectArticleView extends AppCompatImageView {
         setCollect(false);
         final int articleId = collectInfo.getCollectId();
         final CollectInfo info = new CollectInfo(collectInfo);
-        collectManager.unCollectArticle(articleId, new CollectManager.UnCollectListener() {
+        collectController.unCollectArticle(articleId, new CollectController.UnCollectListener() {
             @Override
             public void onUnCollect(boolean success) {
                 if (articleId == collectInfo.getCollectId()) {
@@ -105,7 +105,7 @@ public class CollectArticleView extends AppCompatImageView {
         final String author = collectInfo.getAuthor();
         final String link = collectInfo.getLink();
         final CollectInfo info = new CollectInfo(collectInfo);
-        collectManager.collectOutArticle(title, author, link, new CollectManager.OutCollectListener() {
+        collectController.collectOutArticle(title, author, link, new CollectController.OutCollectListener() {
             @Override
             public void onOutCollect(boolean success, CollectInfo tempCollectInfo) {
                 if (StringUtil.equals(title, collectInfo.getTitle())
@@ -131,7 +131,7 @@ public class CollectArticleView extends AppCompatImageView {
         final int id = collectInfo.getDeleteId();
         final int originId = collectInfo.getOriginId();
         final CollectInfo info = new CollectInfo(collectInfo);
-        collectManager.unCollectOutArticleUrl(id, originId, new CollectManager.UnCollectListener() {
+        collectController.unCollectOutArticleUrl(id, originId, new CollectController.UnCollectListener() {
             @Override
             public void onUnCollect(boolean success) {
                 if (id == collectInfo.getDeleteId() && originId == collectInfo.getOriginId()) {

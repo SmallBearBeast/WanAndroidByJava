@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Manager;
+package com.bear.wanandroidbyjava.Controller;
 
 import com.bear.wanandroidbyjava.Data.Bean.Nav;
 import com.bear.wanandroidbyjava.Data.NetBean.NavBean;
@@ -18,7 +18,7 @@ import com.example.libokhttp.OkHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavManager {
+public class NavController {
     private static final String TAG = "NavManager";
     public void loadDataFromStorage(final NavDataListener listener) {
         BgThreadExecutor.execute(new Runnable() {

@@ -1,4 +1,4 @@
-package com.bear.wanandroidbyjava.Manager;
+package com.bear.wanandroidbyjava.Controller;
 
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.BannerSet;
@@ -25,7 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class HomeManager {
+public class HomeController {
     private static final String TAG = "HomeManager";
     private static final int REQUEST_COUNT = 3;
     private static final int FIRST_PAGE_INDEX = 1;

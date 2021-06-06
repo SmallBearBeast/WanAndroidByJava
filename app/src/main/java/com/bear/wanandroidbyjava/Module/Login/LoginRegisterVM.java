@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bear.wanandroidbyjava.Manager.LoginRegisterManager;
+import com.bear.wanandroidbyjava.Controller.LoginRegisterController;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.ResourceUtil;
@@ -12,7 +12,7 @@ import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 
 public class LoginRegisterVM extends ViewModel {
-    private final LoginRegisterManager loginRegisterManager = new LoginRegisterManager();
+    private final LoginRegisterController loginRegisterController = new LoginRegisterController();
     private final MutableLiveData<Boolean> loginSuccessLD = new MutableLiveData<>();
     private final MutableLiveData<Boolean> registerSuccessLD = new MutableLiveData<>();
 
@@ -21,7 +21,7 @@ public class LoginRegisterVM extends ViewModel {
             ToastUtil.showToast(R.string.str_net_error_to_try_again);
             return;
         }
-        loginRegisterManager.login(userName, password, new LoginRegisterManager.ILoginListener() {
+        loginRegisterController.login(userName, password, new LoginRegisterController.ILoginListener() {
             @Override
             public void onLoginSuccess() {
                 ToastUtil.showToast(ResourceUtil.getString(R.string.str_login_success));
@@ -43,7 +43,7 @@ public class LoginRegisterVM extends ViewModel {
             ToastUtil.showToast(R.string.str_net_error_to_try_again);
             return;
         }
-        loginRegisterManager.register(userName, password, rePassword, new LoginRegisterManager.IRegisterListener() {
+        loginRegisterController.register(userName, password, rePassword, new LoginRegisterController.IRegisterListener() {
             @Override
             public void onRegisterSuccess() {
                 ToastUtil.showToast(ResourceUtil.getString(R.string.str_register_success));
@@ -65,7 +65,7 @@ public class LoginRegisterVM extends ViewModel {
             ToastUtil.showToast(R.string.str_net_error_to_try_again);
             return;
         }
-        loginRegisterManager.logout(new LoginRegisterManager.ILogoutListener() {
+        loginRegisterController.logout(new LoginRegisterController.ILogoutListener() {
             @Override
             public void onLogoutSuccess() {
                 // Do nothing
