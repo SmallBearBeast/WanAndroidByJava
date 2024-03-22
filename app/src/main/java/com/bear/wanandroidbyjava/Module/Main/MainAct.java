@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
-import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.component.ComponentAct;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ScreenUtil;
 import com.example.liblog.SLog;
@@ -16,8 +16,8 @@ public class MainAct extends ComponentAct {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new MainContentCom());
-        regComponent(new MainBottomCom());
+        regActComponent(new MainContentCom());
+        regActComponent(new MainBottomCom());
         normalScreen();
     }
 

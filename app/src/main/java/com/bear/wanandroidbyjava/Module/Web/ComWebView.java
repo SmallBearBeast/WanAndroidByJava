@@ -200,8 +200,8 @@ public class ComWebView extends WebView {
         // Disable text zoom.
         webSettings.setTextZoom(100);
         // Allow cache and set cache location.
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setAppCachePath(getContext().getDir(APP_CACHE_PATH, 0).getPath());
+//        webSettings.setAppCacheEnabled(true);
+//        webSettings.setAppCachePath(getContext().getDir(APP_CACHE_PATH, 0).getPath());
         // Allow WebView to use File protocol.
         webSettings.setAllowFileAccess(true);
         // Set UA.

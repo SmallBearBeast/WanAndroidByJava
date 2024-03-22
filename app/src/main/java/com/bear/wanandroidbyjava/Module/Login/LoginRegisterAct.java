@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.component.ComponentAct;
 import com.bear.wanandroidbyjava.R;
 
 public class LoginRegisterAct extends ComponentAct {
@@ -15,7 +15,7 @@ public class LoginRegisterAct extends ComponentAct {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new LoginRegisterCom());
+        regActComponent(new LoginRegisterCom());
     }
 
     @Override

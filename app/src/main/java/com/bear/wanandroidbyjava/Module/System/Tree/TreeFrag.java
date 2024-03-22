@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.bear.libcomponent.ComponentFrag;
+import com.bear.libcomponent.component.ComponentFrag;
 import com.bear.wanandroidbyjava.R;
 
 public class TreeFrag extends ComponentFrag {
@@ -16,7 +16,7 @@ public class TreeFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new TreeCom());
+        regFragComponent(new TreeCom());
     }
 
     public static TreeFrag newInstance() {

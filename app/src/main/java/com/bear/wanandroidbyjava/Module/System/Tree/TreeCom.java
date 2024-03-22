@@ -7,9 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvDivider;
 import com.bear.librv.RvUtil;
@@ -19,6 +17,7 @@ import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libbase.Util.DensityUtil;
@@ -29,7 +28,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, View.OnClickListener {
+public class TreeCom extends FragmentComponent implements View.OnClickListener {
     private static final String TAG = "TreeCom";
     private RecyclerView recyclerView;
     private CaseView caseView;
@@ -64,10 +63,10 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, V
     protected void onCreateView() {
         caseView = findViewById(R.id.case_view);
         caseView.setOnClickListener(this);
-        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        vhAdapter = new VHAdapter(getFragment().getViewLifecycleOwner().getLifecycle());
         vhAdapter.register(new TreeVHBridge(), Tree.class);
         dataManager = vhAdapter.getDataManager();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getComActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = findViewById(R.id.rv_tree_container);
         recyclerView.addItemDecoration(new RvDivider(layoutManager, DensityUtil.dp2Px(20)));
         recyclerView.setLayoutManager(layoutManager);
@@ -82,14 +81,14 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, V
     }
 
     private void initData() {
-        treeVM = new ViewModelProvider(getDependence()).get(TreeVM.class);
-        treeVM.getTreeLD().observe(getDependence(), new Observer<List<Tree>>() {
+        treeVM = new ViewModelProvider(getFragment()).get(TreeVM.class);
+        treeVM.getTreeLD().observe(getFragment(), new Observer<List<Tree>>() {
             @Override
             public void onChanged(List<Tree> trees) {
                 dataManager.setData(trees);
             }
         });
-        treeVM.getLoadStateLD().observe(getDependence(), new Observer<Byte>() {
+        treeVM.getLoadStateLD().observe(getFragment(), new Observer<Byte>() {
             @Override
             public void onChanged(Byte loadState) {
                 Log.d(TAG, "onChanged: loadState = " + loadState);
@@ -123,14 +122,13 @@ public class TreeCom extends ViewComponent<ComponentFrag> implements ITreeCom, V
         treeVM.loadTreeData(true);
     }
 
-    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(recyclerView, true);
     }
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, caseView, vhAdapter, dataManager);
+        OtherUtil.clear(recyclerView, caseView, vhAdapter, dataManager);
     }
 
     @Override

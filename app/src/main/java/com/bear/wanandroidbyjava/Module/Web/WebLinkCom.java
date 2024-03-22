@@ -2,9 +2,8 @@ package com.bear.wanandroidbyjava.Module.Web;
 
 import android.view.View;
 
-import com.bear.libcomponent.ComponentAct;
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ActivityComponent;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Animator;
 import com.example.libbase.Manager.KeyBoardManager;
@@ -12,7 +11,7 @@ import com.example.libbase.Util.ClipboardUtil;
 import com.example.libbase.Util.DensityUtil;
 import com.example.libbase.Util.ToastUtil;
 
-public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkCom, View.OnClickListener {
+public class WebLinkCom extends ActivityComponent implements View.OnClickListener {
     private View maskView;
     private View topLinkView;
 
@@ -21,7 +20,7 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkC
         super.onCreate();
         maskView = findViewById(R.id.maskView);
         topLinkView = findViewById(R.id.topLinkView);
-        clickListener(this, R.id.copyLinkTv, R.id.openWithBrowserTv, R.id.maskView);
+        setOnClickListener(this, R.id.copyLinkTv, R.id.openWithBrowserTv, R.id.maskView);
 
         maskView.setFocusable(true);
         maskView.setFocusableInTouchMode(true);
@@ -31,8 +30,8 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.copyLinkTv:
-                String copyText = ComponentService.get().getComponent(IWebInputCom.class).getWebLink();
-                if (ClipboardUtil.copyToClipboard(copyText)) {
+                String copyText = ComponentService.get().getComponent(WebInputCom.class).getWebLink();
+                if (ClipboardUtil.copy(copyText)) {
                     ToastUtil.showToast(R.string.str_link_already_copy);
                 } else {
                     ToastUtil.showToast(R.string.str_link_copy_fail);
@@ -46,7 +45,6 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkC
         hideLinkView();
     }
 
-    @Override
     public void showLinkView() {
         maskView.setVisibility(View.VISIBLE);
         topLinkView.setVisibility(View.VISIBLE);
@@ -54,10 +52,9 @@ public class WebLinkCom extends ViewComponent<ComponentAct> implements IWebLinkC
         Animator.make(topLinkView, Animator.TRANSLATION_Y, -DensityUtil.dp2Px(40), 0f).start();
     }
 
-    @Override
     public void hideLinkView() {
         maskView.requestFocus();
-        KeyBoardManager.get().hideKeyBoard(getDependence(), topLinkView);
+        KeyBoardManager.get().hideKeyBoard(getContext(), topLinkView);
         Animator.make(maskView, Animator.ALPHA, 0.5f, 0f).statusAdapter(new Animator.StatusAdapter(){
             @Override
             public void onAnimationCancel(android.animation.Animator animation) {

@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.bear.libcomponent.ComponentAct;
-import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
+import com.bear.libcomponent.component.ComponentAct;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.Data.Bean.Article;
 import com.bear.wanandroidbyjava.Data.Bean.Banner;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
@@ -25,10 +25,10 @@ public class WebAct extends ComponentAct {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regComponent(new WebInputCom());
-        regComponent(new WebActionCom());
-        regComponent(new WebContentCom());
-        regComponent(new WebLinkCom());
+        regActComponent(new WebInputCom());
+        regActComponent(new WebActionCom());
+        regActComponent(new WebContentCom());
+        regActComponent(new WebLinkCom());
         normalScreen();
     }
 
@@ -64,7 +64,7 @@ public class WebAct extends ComponentAct {
 
     @Override
     public void onBackPressed() {
-        if (!ComponentService.get().getComponent(IWebContentCom.class).goBack()) {
+        if (!ComponentService.get().getComponent(WebContentCom.class).goBack()) {
             super.onBackPressed();
         }
     }

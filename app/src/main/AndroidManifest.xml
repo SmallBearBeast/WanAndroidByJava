@@ -12,10 +12,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/WanTheme">
+        android:theme="@style/WanTheme"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".Module.Welcome.WelcomeAct"
+            android:exported="true"
             android:theme="@style/WanTheme.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

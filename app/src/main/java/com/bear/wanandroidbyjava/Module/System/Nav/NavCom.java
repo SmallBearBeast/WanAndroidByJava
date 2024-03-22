@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvDivider;
 import com.bear.librv.RvUtil;
@@ -19,6 +18,7 @@ import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libbase.Util.DensityUtil;
@@ -29,7 +29,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, View.OnClickListener {
+public class NavCom extends FragmentComponent implements View.OnClickListener {
     private static final String TAG = "NavCom";
     private RecyclerView recyclerView;
     private CaseView caseView;
@@ -64,11 +64,11 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
     protected void onCreateView() {
         caseView = findViewById(R.id.case_view);
         caseView.setOnClickListener(this);
-        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        vhAdapter = new VHAdapter(getFragment().getViewLifecycleOwner().getLifecycle());
         vhAdapter.register(new NavVHBridge(), Nav.class);
         dataManager = vhAdapter.getDataManager();
         recyclerView = findViewById(R.id.rv_nav_container);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getComActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new RvDivider(layoutManager, DensityUtil.dp2Px(20)));
         recyclerView.setAdapter(vhAdapter);
@@ -82,14 +82,14 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
     }
 
     private void initData() {
-        navVM = new ViewModelProvider(getDependence()).get(NavVM.class);
-        navVM.getNavLD().observe(getDependence(), new Observer<List<Nav>>() {
+        navVM = new ViewModelProvider(getFragment()).get(NavVM.class);
+        navVM.getNavLD().observe(getFragment(), new Observer<List<Nav>>() {
             @Override
             public void onChanged(List<Nav> navList) {
                 dataManager.setData(navList);
             }
         });
-        navVM.getLoadStateLD().observe(getDependence(), new Observer<Byte>() {
+        navVM.getLoadStateLD().observe(getFragment(), new Observer<Byte>() {
             @Override
             public void onChanged(Byte loadState) {
                 Log.d(TAG, "onChanged: loadState = " + loadState);
@@ -125,14 +125,13 @@ public class NavCom extends ViewComponent<ComponentFrag> implements INavCom, Vie
         navVM.loadNavData(true);
     }
 
-    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(recyclerView, true);
     }
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, caseView, vhAdapter, dataManager);
+        OtherUtil.clear(recyclerView, caseView, vhAdapter, dataManager);
     }
 
     @Override

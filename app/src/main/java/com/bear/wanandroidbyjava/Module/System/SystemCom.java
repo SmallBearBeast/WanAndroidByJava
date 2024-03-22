@@ -7,19 +7,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Module.System.Nav.INavCom;
+import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.FragmentComponent;
+import com.bear.wanandroidbyjava.Module.System.Nav.NavCom;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavFrag;
-import com.bear.wanandroidbyjava.Module.System.Tree.ITreeCom;
+import com.bear.wanandroidbyjava.Module.System.Tree.TreeCom;
 import com.bear.wanandroidbyjava.Module.System.Tree.TreeFrag;
 import com.bear.wanandroidbyjava.R;
 
 import com.example.libbase.Util.ResourceUtil;
 import com.google.android.material.tabs.TabLayout;
 
-public class SystemCom extends ViewComponent<ComponentFrag> implements ISystemCom {
+public class SystemCom extends FragmentComponent {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -28,16 +27,15 @@ public class SystemCom extends ViewComponent<ComponentFrag> implements ISystemCo
         mTabLayout = findViewById(R.id.tl_title_layout);
         mViewPager = findViewById(R.id.vp_sys_container);
         mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setAdapter(new SystemFragAdapter(getDependence().getChildFragmentManager()));
+        mViewPager.setAdapter(new SystemFragAdapter(getFragment().getChildFragmentManager()));
     }
 
-    @Override
     public void scrollToTop() {
         int index = mViewPager.getCurrentItem();
         if (index == 0) {
-            ComponentService.get().getComponent(ITreeCom.class).scrollToTop();
+            ComponentService.get().getComponent(TreeCom.class).scrollToTop();
         } else if (index == 1) {
-            ComponentService.get().getComponent(INavCom.class).scrollToTop();
+            ComponentService.get().getComponent(NavCom.class).scrollToTop();
         }
     }
 

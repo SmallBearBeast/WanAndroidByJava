@@ -1,0 +1,209 @@
+ext {
+    buildToolsVersion = '30.0.3'
+    compileSdkVersion = 33
+    minSdkVersion = 21
+    targetSdkVersion = 33
+
+    recyclerview_version = '1.2.1'
+    kotlin_version = '1.7.10'
+    coroutines_version = '1.6.4'
+    lifecycle_version = '2.3.1'
+
+    smallbearbeast_version ='b48a0898c7'
+
+    pluginMap = [
+            'gradle'                   : 'com.android.tools.build:gradle:7.3.0',
+            'kotlin_gradle_plugin'     : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version",
+            'kotlin_android_extensions': "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version",
+//            'bintray_release'               : 'com.novoda:bintray-release:0.8.1',
+//            'protobuf_gradle_plugin'        : 'com.google.protobuf:protobuf-gradle-plugin:0.8.16',
+//            //使用沪江封装好的gradle插件，能自动倒入aspectj依赖，具有一定的编译检查错误能力，能处理好kt java混合开发情况。
+//            'gradle_android_plugin_aspectjx': 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10',
+//            // ARouter自动插入注册路由配置代码插件
+//            'arouter_register'              : "com.alibaba:arouter-register:1.0.2",
+//            'customtransformplugin'         : 'com.example:customtransformplugin:1.0.0',
+    ]
+
+    dependenciesMap = [
+            'junit'                     : 'junit:junit:4.12',
+
+            'androidx_junit'            : 'androidx.test.ext:junit:1.1.3',
+            'espresso_core'             : 'androidx.test.espresso:espresso-core:3.2.0',
+            'mockk_android'             : 'io.mockk:mockk-android:1.11.0',
+
+            'recyclerview'              : "androidx.recyclerview:recyclerview:$recyclerview_version",
+            // okhttp网络请求框架
+            'okhttp'                    : 'com.squareup.okhttp3:okhttp:3.14.9',
+            'mockwebserver'             : 'com.squareup.okhttp3:mockwebserver:3.14.9',
+            'gson'                      : 'com.google.code.gson:gson:2.8.6',
+            //fresco
+            'fresco'                    : 'com.facebook.fresco:fresco:1.13.0',
+            // For animated GIF support
+            'animated_gif'              : 'com.facebook.fresco:animated-gif:1.13.0',
+            // For WebP support, including animated WebP
+            'animated_webp'             : 'com.facebook.fresco:animated-webp:1.13.0',
+            'webpsupport'               : 'com.facebook.fresco:webpsupport:1.13.0',
+            'kotlin_stdlib_jdk7'        : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+            'kotlinx_coroutines_core'   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version",
+            'kotlinx_coroutines_android': "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version",
+            //    implementation 'org.aspectj:aspectjrt:1.9.5'
+            'room_runtime'              : 'androidx.room:room-runtime:2.3.0',
+            'lifecycle_viewmodel'       : "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version",
+            'lifecycle_livedata'        : "androidx.lifecycle:lifecycle-livedata:$lifecycle_version",
+            'lifecycle_common'          : "androidx.lifecycle:lifecycle-common:$lifecycle_version",
+            'lifecycle_service'         : "androidx.lifecycle:lifecycle-service:$lifecycle_version",
+            'fragment'                  : 'androidx.fragment:fragment:1.3.6',
+            'mmkv'                      : 'com.tencent:mmkv:1.0.24',
+            'datastore_preferences'     : "androidx.datastore:datastore-preferences:1.0.0-beta01",
+            'multidex'                  : 'androidx.multidex:multidex:2.0.1',
+
+            // 里面引入了cardview, constrainlayout, coordinatorlayout, recyclerview, viewpager2依赖
+            // 还引入了appcompat, core, fragment, lifecycle-runtime依赖
+            'material'                  : 'com.google.android.material:material:1.3.0',
+            // 里面也引入了core, drawerlayout, fragment
+            'appcompat'                 : 'androidx.appcompat:appcompat:1.2.0',
+            'protobuf_java'             : 'com.google.protobuf:protobuf-java:3.11.0',
+            'Anchors'                   : 'com.github.DSAppTeam:Anchors:v1.1.8',
+            // ARouter路由
+            'arouter_api'               : 'com.alibaba:arouter-api:1.5.2',
+            // Glide图片加载库
+            'glide'                     : 'com.github.bumptech.glide:glide:4.15.1',
+            // webrtc
+            'google_webrtc'             : 'org.webrtc:google-webrtc:1.0.23995',
+            // websocket
+            'Java_WebSocket'            : 'org.java-websocket:Java-WebSocket:1.5.4',
+            'permissionx'               : 'com.guolindev.permissionx:permissionx:1.7.1',
+            'refresh_layout_kernel'     : 'com.scwang.smart:refresh-layout-kernel:2.0.3',
+            'refresh_header_classics'   : 'com.scwang.smart:refresh-header-classics:2.0.3',
+
+            'leakcanary_android'        : 'com.squareup.leakcanary:leakcanary-android:2.10',
+
+            'arouter_compiler'          : 'com.alibaba:arouter-compiler:1.5.2',
+            'room_compiler'             : 'androidx.room:room-compiler:2.3.0',
+
+            'asm'                       : 'org.ow2.asm:asm:9.1',
+            'asm_util'                  : 'org.ow2.asm:asm-util:9.1',
+            'asm_common'                : 'org.ow2.asm:asm-commons:9.1',
+
+            'liblog'                    : "com.github.SmallBearBeast.AndroidTest:liblog:$smallbearbeast_version",
+            'libokhttp'                 : "com.github.SmallBearBeast.AndroidTest:libokhttp:$smallbearbeast_version",
+            'libkv'                     : "com.github.SmallBearBeast.AndroidTest:libkv:$smallbearbeast_version",
+            'libbase'                   : "com.github.SmallBearBeast.AndroidTest:libbase:$smallbearbeast_version",
+            'libframework'              : "com.github.SmallBearBeast.AndroidTest:libframework:$smallbearbeast_version",
+            'librv'                     : "com.github.SmallBearBeast.AndroidTest:librv:$smallbearbeast_version",
+            'libcomponent'              : "com.github.SmallBearBeast.AndroidTest:libcomponent:$smallbearbeast_version",
+            'libstorage'              : "com.github.SmallBearBeast.AndroidTest:libstorage:$smallbearbeast_version",
+    ]
+
+    appDependenciesMap = [
+            "testImplementation"       : [
+                    "${dependenciesMap.junit}",
+            ],
+            "androidTestImplementation": [
+                    "${dependenciesMap.androidx_junit}",
+                    "${dependenciesMap.espresso_core}",
+            ],
+            "implementation"           : [
+                    "${dependenciesMap.recyclerview}",
+                    "${dependenciesMap.okhttp}",
+                    "${dependenciesMap.gson}",
+                    "${dependenciesMap.kotlin_stdlib_jdk7}",
+                    "${dependenciesMap.kotlinx_coroutines_core}",
+                    "${dependenciesMap.kotlinx_coroutines_android}",
+                    "${dependenciesMap.room_runtime}",
+                    "${dependenciesMap.lifecycle_viewmodel}",
+                    "${dependenciesMap.lifecycle_livedata}",
+                    "${dependenciesMap.lifecycle_common}",
+                    "${dependenciesMap.lifecycle_service}",
+                    "${dependenciesMap.fragment}",
+                    "${dependenciesMap.material}",
+                    "${dependenciesMap.appcompat}",
+                    "${dependenciesMap.glide}",
+                    "${dependenciesMap.permissionx}",
+                    "${dependenciesMap.refresh_layout_kernel}",
+                    "${dependenciesMap.refresh_header_classics}",
+                    "${dependenciesMap.liblog}",
+                    "${dependenciesMap.libokhttp}",
+                    "${dependenciesMap.libkv}",
+                    "${dependenciesMap.libbase}",
+                    "${dependenciesMap.libframework}",
+                    "${dependenciesMap.librv}",
+                    "${dependenciesMap.libcomponent}",
+                    "${dependenciesMap.libstorage}",
+            ],
+            "debugImplementation"      : [
+                    "${dependenciesMap.leakcanary_android}",
+            ],
+            "annotationProcessor"      : [
+                    "${dependenciesMap.room_compiler}",
+            ]
+    ]
+
+    importDependencies = { project, dependenciesMap ->
+        // compileOnly 依赖
+        def dependencies = dependenciesMap["compileOnly"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    compileOnly(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: compileOnly dependencies = $dependencies")
+
+        // testImplementation 依赖
+        dependencies = dependenciesMap["testImplementation"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    testImplementation(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: testImplementation dependencies = $dependencies")
+
+        // androidTestImplementation 依赖
+        dependencies = dependenciesMap["androidTestImplementation"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    androidTestImplementation(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: androidTestImplementation dependencies = $dependencies")
+
+        // implementation 依赖
+        dependencies = dependenciesMap["implementation"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    implementation(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: implementation dependencies = $dependencies")
+
+        // debugImplementation依赖
+        dependencies = dependenciesMap["debugImplementation"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    debugImplementation(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: debugImplementation dependencies = $dependencies")
+
+        // annotationProcessor依赖
+        dependencies = dependenciesMap["annotationProcessor"]
+        if (dependencies) {
+            project.dependencies {
+                dependencies.each { dependency ->
+                    annotationProcessor(dependency)
+                }
+            }
+        }
+        println("ext_dependencies: annotationProcessor dependencies = $dependencies")
+    }
+}

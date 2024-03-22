@@ -4,7 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.R;
@@ -25,6 +25,6 @@ public class LoadFailVHBridge extends VHBridge implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        ComponentService.get().getComponent(IHomeListCom.class).loadMore();
+        ComponentService.get().getComponent(HomeListCom.class).loadMore();
     }
 }

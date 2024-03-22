@@ -3,7 +3,7 @@ package com.bear.wanandroidbyjava.Module.Web;
 import android.app.Activity;
 import android.view.View;
 
-import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.BottomView;
 
@@ -36,14 +36,14 @@ public class ActionBottomView extends BottomView implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.homeWebItemView:
-                ComponentService.get().getComponent(IWebContentCom.class).goBackHome();
+                ComponentService.get().getComponent(WebContentCom.class).goBackHome();
                 break;
             case R.id.collectItemView:
                 break;
             case R.id.bookmarkItemView:
                 break;
             case R.id.refreshItemView:
-                ComponentService.get().getComponent(IWebContentCom.class).reload();
+                ComponentService.get().getComponent(WebContentCom.class).reload();
                 break;
             case R.id.shareItemView:
                 break;

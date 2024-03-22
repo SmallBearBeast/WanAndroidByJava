@@ -2,11 +2,10 @@ package com.bear.wanandroidbyjava.Module.Main;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.bear.libcomponent.ComponentAct;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ActivityComponent;
 import com.bear.wanandroidbyjava.R;
 
-public class MainContentCom extends ViewComponent<ComponentAct> implements IMainContentCom {
+public class MainContentCom extends ActivityComponent {
     public static final int TAB_HOME = 0;
     public static final int TAB_SYSTEM = TAB_HOME + 1;
     public static final int TAB_PUBLIC = TAB_SYSTEM + 1;
@@ -18,10 +17,9 @@ public class MainContentCom extends ViewComponent<ComponentAct> implements IMain
     protected void onCreate() {
         super.onCreate();
         mViewPager = findViewById(R.id.mainViewPager);
-        mViewPager.setAdapter(new MainAdapter(getDependence().getSupportFragmentManager()));
+        mViewPager.setAdapter(new MainAdapter(getActivity().getSupportFragmentManager()));
     }
 
-    @Override
     public void switchTab(@Tab int tabIndex) {
         mViewPager.setCurrentItem(tabIndex, false);
     }

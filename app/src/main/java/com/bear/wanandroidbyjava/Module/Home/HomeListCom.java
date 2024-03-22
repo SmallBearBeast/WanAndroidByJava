@@ -8,9 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.CustomData;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvUtil;
@@ -22,6 +20,7 @@ import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Case.CaseHelper;
 import com.bear.wanandroidbyjava.Tool.Case.CaseView;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libframework.Bus.Bus;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings({"rawtypes"})
-public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeListCom, View.OnClickListener {
+public class HomeListCom extends FragmentComponent implements View.OnClickListener {
     private static final String TAG = "HomeListCom";
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
@@ -87,8 +86,8 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
     }
 
     private void initViewModel() {
-        homeListVM = new ViewModelProvider(getDependence()).get(HomeListVM.class);
-        homeListVM.getRefreshDataListLD().observe(getDependence(), new Observer<List>() {
+        homeListVM = new ViewModelProvider(getFragment()).get(HomeListVM.class);
+        homeListVM.getRefreshDataListLD().observe(getFragment(), new Observer<List>() {
             @Override
             public void onChanged(List list) {
                 if (!CollectionUtil.isEmpty(list)) {
@@ -96,7 +95,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                 }
             }
         });
-        homeListVM.getLoadMoreDataListLD().observe(getDependence(), new Observer<List<Article>>() {
+        homeListVM.getLoadMoreDataListLD().observe(getFragment(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (!CollectionUtil.isEmpty(articles)) {
@@ -104,7 +103,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                 }
             }
         });
-        homeListVM.getRefreshStateLD().observe(getDependence(), new Observer<Byte>() {
+        homeListVM.getRefreshStateLD().observe(getFragment(), new Observer<Byte>() {
             @Override
             public void onChanged(Byte refreshState) {
                 Log.d(TAG, "onChanged: refreshState = " + refreshState);
@@ -138,7 +137,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                 }
             }
         });
-        homeListVM.getLoadMoreStateLD().observe(getDependence(), new Observer<Byte>() {
+        homeListVM.getLoadMoreStateLD().observe(getFragment(), new Observer<Byte>() {
             @Override
             public void onChanged(Byte loadMoreState) {
                 Log.d(TAG, "onChanged: loadMoreState = " + loadMoreState);
@@ -158,7 +157,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
                 }
             }
         });
-        homeListVM.getUpdateDataLD().observe(getDependence(), new Observer<Integer>() {
+        homeListVM.getUpdateDataLD().observe(getFragment(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer index) {
                 if (index != null) {
@@ -204,8 +203,8 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
 
     private void initRecyclerView() {
         recyclerView = findViewById(R.id.rv_home_container);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        vhAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        vhAdapter = new VHAdapter(getFragment().getViewLifecycleOwner().getLifecycle());
         dataManager = vhAdapter.getDataManager();
         vhAdapter.register(new BannerVHBridge(), BannerSet.class);
         vhAdapter.register(new HomeListVHBridge(), Article.class);
@@ -227,7 +226,6 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
         });
     }
 
-    @Override
     public void scrollToTop() {
         if (RvUtil.isTop(recyclerView)) {
             refreshLayout.autoRefresh(0, 300, 1.2f, false);
@@ -243,7 +241,7 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
 
     @Override
     protected void onDestroyView() {
-        clear(recyclerView, caseView, vhAdapter, dataManager, refreshLayout);
+        OtherUtil.clear(recyclerView, caseView, vhAdapter, dataManager, refreshLayout);
     }
 
     @Override
@@ -252,7 +250,6 @@ public class HomeListCom extends ViewComponent<ComponentFrag> implements IHomeLi
         Bus.get().unRegister(eventCallback);
     }
 
-    @Override
     public void loadMore() {
         homeListVM.loadMore();
     }

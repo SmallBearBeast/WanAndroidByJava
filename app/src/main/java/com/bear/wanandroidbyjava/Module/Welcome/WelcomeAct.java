@@ -3,7 +3,8 @@ package com.bear.wanandroidbyjava.Module.Welcome;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.bear.libcomponent.ComponentAct;
+
+import com.bear.libcomponent.component.ComponentAct;
 import com.bear.wanandroidbyjava.Module.Main.MainAct;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Animator;

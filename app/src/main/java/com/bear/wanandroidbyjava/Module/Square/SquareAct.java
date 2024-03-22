@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import androidx.core.content.ContextCompat;
 
-import com.bear.libcomponent.ComponentAct;
+import com.bear.libcomponent.component.ComponentAct;
 
 public class SquareAct extends ComponentAct {
     @Override

@@ -10,8 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.CustomData;
 import com.bear.librv.DataManager;
 import com.bear.librv.RvUtil;
@@ -22,6 +21,7 @@ import com.bear.wanandroidbyjava.Module.Home.HomeListVHBridge;
 import com.bear.wanandroidbyjava.Module.Home.LoadMoreVHBridge;
 import com.bear.wanandroidbyjava.Module.Home.NoMoreDataVHBridge;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libframework.Bus.Bus;
@@ -31,7 +31,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class PublicListCom extends ViewComponent<ComponentFrag> implements IPublicListCom {
+public class PublicListCom extends FragmentComponent {
     private static final int LOAD_MORE_OFFSET = 3;
     private static final int BRIDGE_LOAD_MORE = 1;
     private static final int BRIDGE_NO_MORE_DATA = 2;
@@ -80,8 +80,8 @@ public class PublicListCom extends ViewComponent<ComponentFrag> implements IPubl
     protected void onCreateView() {
         mPbPublicListLoading = findViewById(R.id.pb_public_list_loading);
         mRecyclerView = findViewById(R.id.rv_public_list_container);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        mVHAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mVHAdapter = new VHAdapter(getFragment().getViewLifecycleOwner().getLifecycle());
         mDataManager = mVHAdapter.getDataManager();
         mVHAdapter.register(new HomeListVHBridge(), Article.class);
         mVHAdapter.register(new LoadMoreVHBridge(), CustomData.of(BRIDGE_LOAD_MORE));
@@ -104,8 +104,8 @@ public class PublicListCom extends ViewComponent<ComponentFrag> implements IPubl
     }
 
     private void initData() {
-        mPublicListVM = new ViewModelProvider(getDependence()).get(PublicListVM.class);
-        mPublicListVM.getRefreshArticlePairLD().observe(getDependence(), new Observer<Pair<Boolean, List<Article>>>() {
+        mPublicListVM = new ViewModelProvider(getFragment()).get(PublicListVM.class);
+        mPublicListVM.getRefreshArticlePairLD().observe(getFragment(), new Observer<Pair<Boolean, List<Article>>>() {
             @Override
             public void onChanged(Pair<Boolean, List<Article>> pair) {
                 if (!CollectionUtil.isEmpty(pair.second)) {
@@ -116,7 +116,7 @@ public class PublicListCom extends ViewComponent<ComponentFrag> implements IPubl
                 }
             }
         });
-        mPublicListVM.getLoadMoreArticleLD().observe(getDependence(), new Observer<List<Article>>() {
+        mPublicListVM.getLoadMoreArticleLD().observe(getFragment(), new Observer<List<Article>>() {
             @Override
             public void onChanged(List<Article> articles) {
                 if (CollectionUtil.isEmpty(articles)) {
@@ -129,7 +129,7 @@ public class PublicListCom extends ViewComponent<ComponentFrag> implements IPubl
                 }
             }
         });
-        mPublicListVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        mPublicListVM.getShowProgressLD().observe(getFragment(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -152,13 +152,12 @@ public class PublicListCom extends ViewComponent<ComponentFrag> implements IPubl
         mPublicListVM.refresh(mTabId);
     }
 
-    @Override
     public void scrollToTop() {
         RvUtil.scrollToTop(mRecyclerView, 3, 0);
     }
 
     @Override
     protected void onDestroyView() {
-        clear(mRecyclerView, mPbPublicListLoading, mVHAdapter, mDataManager);
+        OtherUtil.clear(mRecyclerView, mPbPublicListLoading, mVHAdapter, mDataManager);
     }
 }

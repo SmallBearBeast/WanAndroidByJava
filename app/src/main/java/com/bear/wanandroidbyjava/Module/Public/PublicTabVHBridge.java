@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.bear.libcomponent.ComponentAct;
-import com.bear.libcomponent.ComponentService;
+import com.bear.libcomponent.component.ComponentAct;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
@@ -47,7 +47,7 @@ public class PublicTabVHBridge extends VHBridge<PublicTabVHBridge.TabVHolder> {
         @Override
         public void onClick(View v) {
             if (getContext() instanceof ComponentAct && mSelectTabPos != getPos()) {
-                ComponentService.get().getComponent(IPublicCom.class).switchTabArticle(getData().publicTabId);
+                ComponentService.get().getComponent(PublicCom.class).switchTabArticle(getData().publicTabId);
                 getDataManager().update(mSelectTabPos);
                 getDataManager().update(getPos());
                 mSelectTabPos = getPos();

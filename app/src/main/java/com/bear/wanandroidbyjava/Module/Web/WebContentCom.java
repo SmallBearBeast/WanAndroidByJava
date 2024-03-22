@@ -10,26 +10,24 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
-import com.bear.libcomponent.ComponentAct;
-import com.bear.libcomponent.ComponentService;
 import com.bear.libcomponent.ShareVM;
-import com.bear.libcomponent.ViewComponent;
-import com.bear.wanandroidbyjava.Data.Bean.Article;
+import com.bear.libcomponent.component.ActivityComponent;
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.R;
 
-public class WebContentCom extends ViewComponent<ComponentAct> implements IWebContentCom {
+public class WebContentCom extends ActivityComponent {
     private static final String TAG = WebAct.TAG + "-WebContentCom";
     private ComWebView mWvContent;
 
     @Override
     protected void onCreate() {
         FrameLayout flWebContainer = findViewById(R.id.fl_web_container);
-        mWvContent = new ComWebView(getDependence().getApplicationContext());
+        mWvContent = new ComWebView(getActivity().getApplicationContext());
         mWvContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
         flWebContainer.addView(mWvContent, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         initWebCallback();
-        CollectInfo collectInfo = ShareVM.get(getDependence(), WebAct.KEY_WEB_COLLECT_INFO);
+        CollectInfo collectInfo = ShareVM.get(getActivity(), WebAct.KEY_WEB_COLLECT_INFO);
         mWvContent.loadUrl(collectInfo.getLink());
     }
 
@@ -57,7 +55,7 @@ public class WebContentCom extends ViewComponent<ComponentAct> implements IWebCo
                     }
                     if (intent != null) {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getDependence().startActivity(intent);
+                        getActivity().startActivity(intent);
                         return true;
                     }
                 } catch (Exception e) {
@@ -68,13 +66,13 @@ public class WebContentCom extends ViewComponent<ComponentAct> implements IWebCo
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                ComponentService.get().getComponent(IWebInputCom.class).onPageStarted(url);
+                ComponentService.get().getComponent(WebInputCom.class).onPageStarted(url);
                 updateBackAndForwardAction();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                ComponentService.get().getComponent(IWebInputCom.class).onPageFinished();
+                ComponentService.get().getComponent(WebInputCom.class).onPageFinished();
             }
 
             @Override
@@ -84,45 +82,41 @@ public class WebContentCom extends ViewComponent<ComponentAct> implements IWebCo
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                ComponentService.get().getComponent(IWebInputCom.class).setWebProgress(newProgress);
+                ComponentService.get().getComponent(WebInputCom.class).setWebProgress(newProgress);
             }
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                ComponentService.get().getComponent(IWebInputCom.class).setWebIcon(icon);
+                ComponentService.get().getComponent(WebInputCom.class).setWebIcon(icon);
             }
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                ComponentService.get().getComponent(IWebInputCom.class).setWebTitle(title);
+                ComponentService.get().getComponent(WebInputCom.class).setWebTitle(title);
             }
         });
         mWvContent.addWebCallback(new WebTimeCallback());
     }
 
-    @Override
     public void goForward() {
         mWvContent.forward();
     }
 
-    @Override
     public boolean goBack() {
         return mWvContent.back();
     }
 
     private void updateBackAndForwardAction() {
         boolean canGoForward = mWvContent.canGoForward();
-        ComponentService.get().getComponent(IWebActionCom.class).setForwardEnable(canGoForward);
+        ComponentService.get().getComponent(WebActionCom.class).setForwardEnable(canGoForward);
         boolean canGoBack = mWvContent.canGoBack();
-        ComponentService.get().getComponent(IWebActionCom.class).setBackEnable(canGoBack);
+        ComponentService.get().getComponent(WebActionCom.class).setBackEnable(canGoBack);
     }
 
-    @Override
     public void loadUrl(String url) {
         mWvContent.loadUrl(url);
     }
 
-    @Override
     public void goBackHome() {
         int steps = -1;
         while (mWvContent.canGoBackOrForward(steps)) {
@@ -131,7 +125,6 @@ public class WebContentCom extends ViewComponent<ComponentAct> implements IWebCo
         mWvContent.goBackOrForward(steps + 1);
     }
 
-    @Override
     public void reload() {
         mWvContent.reload();
     }

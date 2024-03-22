@@ -8,14 +8,15 @@ import android.widget.TextView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.bear.wanandroidbyjava.Widget.InputView;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 
-public class RegisterCom extends ViewComponent<RegisterFrag> implements View.OnClickListener {
+public class RegisterCom extends FragmentComponent implements View.OnClickListener {
     private InputView userInputView;
     private InputView passwordInputView;
     private InputView rePasswordInputView;
@@ -24,12 +25,12 @@ public class RegisterCom extends ViewComponent<RegisterFrag> implements View.OnC
 
     @Override
     protected void onCreate() {
-        loginRegisterVM = new ViewModelProvider(getDependence()).get(LoginRegisterVM.class);
-        loginRegisterVM.getRegisterSuccessLD().observe(getDependence(), new Observer<Boolean>() {
+        loginRegisterVM = new ViewModelProvider(getFragment()).get(LoginRegisterVM.class);
+        loginRegisterVM.getRegisterSuccessLD().observe(getFragment(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean success) {
                 if (success != null && success) {
-                    getComActivity().finish();
+                    getActivity().finish();
                 }
             }
         });
@@ -37,7 +38,7 @@ public class RegisterCom extends ViewComponent<RegisterFrag> implements View.OnC
 
     @Override
     protected void onCreateView() {
-        clickListener(this, R.id.registerBt, R.id.goToLoginView);
+        setOnClickListener(this, R.id.registerBt, R.id.goToLoginView);
         userInputView = findViewById(R.id.userInputView);
         passwordInputView = findViewById(R.id.passwordInputView);
         rePasswordInputView = findViewById(R.id.rePasswordInputView);
@@ -59,7 +60,7 @@ public class RegisterCom extends ViewComponent<RegisterFrag> implements View.OnC
         if (viewId == R.id.registerBt) {
             register();
         } else if (viewId == R.id.goToLoginView) {
-            ComponentService.get().getComponent(ILoginRegisterCom.class).goToLoginPage();
+            ComponentService.get().getComponent(LoginRegisterCom.class).goToLoginPage();
         }
     }
 
@@ -94,6 +95,6 @@ public class RegisterCom extends ViewComponent<RegisterFrag> implements View.OnC
 
     @Override
     protected void onDestroyView() {
-        clear(userInputView, passwordInputView, rePasswordInputView);
+        OtherUtil.clear(userInputView, passwordInputView, rePasswordInputView);
     }
 }

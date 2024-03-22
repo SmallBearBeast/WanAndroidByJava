@@ -8,14 +8,15 @@ import android.widget.TextView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.bear.wanandroidbyjava.Widget.InputView;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 
-public class LoginCom extends ViewComponent<LoginFrag> implements View.OnClickListener {
+public class LoginCom extends FragmentComponent implements View.OnClickListener {
     private InputView userInputView;
     private InputView passwordInputView;
 
@@ -23,12 +24,12 @@ public class LoginCom extends ViewComponent<LoginFrag> implements View.OnClickLi
 
     @Override
     protected void onCreate() {
-        loginRegisterVM = new ViewModelProvider(getDependence()).get(LoginRegisterVM.class);
-        loginRegisterVM.getLoginSuccessLD().observe(getDependence(), new Observer<Boolean>() {
+        loginRegisterVM = new ViewModelProvider(getFragment()).get(LoginRegisterVM.class);
+        loginRegisterVM.getLoginSuccessLD().observe(getFragment(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean success) {
                 if (success != null && success) {
-                    getComActivity().finish();
+                    getActivity().finish();
                 }
             }
         });
@@ -36,7 +37,7 @@ public class LoginCom extends ViewComponent<LoginFrag> implements View.OnClickLi
 
     @Override
     protected void onCreateView() {
-        clickListener(this, R.id.loginBt, R.id.goToRegisterView);
+        setOnClickListener(this, R.id.loginBt, R.id.goToRegisterView);
         userInputView = findViewById(R.id.userInputView);
         passwordInputView = findViewById(R.id.passwordInputView);
         passwordInputView.getInputEt().setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -57,7 +58,7 @@ public class LoginCom extends ViewComponent<LoginFrag> implements View.OnClickLi
         if (viewId == R.id.loginBt) {
             login();
         } else if (viewId == R.id.goToRegisterView) {
-            ComponentService.get().getComponent(ILoginRegisterCom.class).goToRegisterPage();
+            ComponentService.get().getComponent(LoginRegisterCom.class).goToRegisterPage();
         }
     }
 
@@ -83,6 +84,6 @@ public class LoginCom extends ViewComponent<LoginFrag> implements View.OnClickLi
 
     @Override
     protected void onDestroyView() {
-        clear(userInputView, passwordInputView);
+        OtherUtil.clear(userInputView, passwordInputView);
     }
 }

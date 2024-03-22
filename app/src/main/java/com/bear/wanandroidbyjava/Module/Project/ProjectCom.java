@@ -8,12 +8,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.Data.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.example.libbase.Util.CollectionUtil;
 
 import com.example.libframework.Bus.Bus;
@@ -24,7 +24,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 import java.util.Set;
 
-public class ProjectCom extends ViewComponent<ComponentFrag> implements IProjectCom {
+public class ProjectCom extends FragmentComponent {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private ProgressBar mPbProjectLoading;
@@ -61,7 +61,7 @@ public class ProjectCom extends ViewComponent<ComponentFrag> implements IProject
         mViewPager = findViewById(R.id.vp_project_container);
         mTabLayout = findViewById(R.id.tl_project_layout);
         mTabLayout.setupWithViewPager(mViewPager);
-        mProjectListFragAdapter = new ProjectListFragAdapter(getDependence().getChildFragmentManager());
+        mProjectListFragAdapter = new ProjectListFragAdapter(getFragment().getChildFragmentManager());
         mViewPager.setAdapter(mProjectListFragAdapter);
         mProjectListFragAdapter.setProjectTabList(mProjectVM.getProjectTabList());
     }
@@ -72,17 +72,16 @@ public class ProjectCom extends ViewComponent<ComponentFrag> implements IProject
         Bus.get().unRegister(mEventCallback);
     }
 
-    @Override
     public void scrollToTop() {
         int curIndex = mViewPager.getCurrentItem();
         List<ProjectTab> projectTabList = mProjectVM.getProjectTabList();
         int cid = projectTabList.get(curIndex).projectTabId;
-        ComponentService.get().getComponent(IProjectListCom.class, cid).scrollToTop();
+        ComponentService.get().getComponent(ProjectListCom.class, cid).scrollToTop();
     }
 
     private void initData() {
-        mProjectVM = new ViewModelProvider(getDependence()).get(ProjectVM.class);
-        mProjectVM.getProjectTabPairLD().observe(getDependence(), new Observer<Pair<Boolean, List<ProjectTab>>>() {
+        mProjectVM = new ViewModelProvider(getFragment()).get(ProjectVM.class);
+        mProjectVM.getProjectTabPairLD().observe(getFragment(), new Observer<Pair<Boolean, List<ProjectTab>>>() {
             @Override
             public void onChanged(Pair<Boolean, List<ProjectTab>> pair) {
                 if (!CollectionUtil.isEmpty(pair.second)) {
@@ -93,7 +92,7 @@ public class ProjectCom extends ViewComponent<ComponentFrag> implements IProject
                 }
             }
         });
-        mProjectVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        mProjectVM.getShowProgressLD().observe(getFragment(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -114,6 +113,6 @@ public class ProjectCom extends ViewComponent<ComponentFrag> implements IProject
 
     @Override
     protected void onDestroyView() {
-        clear(mPbProjectLoading, mViewPager, mTabLayout, mProjectListFragAdapter);
+        OtherUtil.clear(mPbProjectLoading, mViewPager, mTabLayout, mProjectListFragAdapter);
     }
 }

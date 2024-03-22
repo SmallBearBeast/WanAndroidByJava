@@ -3,6 +3,7 @@ package com.bear.wanandroidbyjava;
 import android.app.Application;
 import android.content.Context;
 
+import com.bear.libcomponent.component.ComponentService;
 import com.bear.libkv.SpVal.SpHelper;
 import com.bear.wanandroidbyjava.Net.WanCookieJar;
 import com.bear.wanandroidbyjava.Storage.CollectInfoStorage;
@@ -26,8 +27,9 @@ public class WanApp extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        OkHelper.init(this, new OkHttpClient.Builder().cookieJar(new WanCookieJar()));
         AppInitUtil.init(this);
+        OkHelper.init(this, new OkHttpClient.Builder().cookieJar(new WanCookieJar()));
+        ComponentService.get().init(this);
         NetReceiver.init(this, new NetReceiver.NetChangeListener() {
             @Override
             public void onConnected(boolean connect) {

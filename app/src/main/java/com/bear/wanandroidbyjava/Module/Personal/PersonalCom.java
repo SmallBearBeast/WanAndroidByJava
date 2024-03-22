@@ -4,12 +4,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.R;
 
 
-public class PersonalCom extends ViewComponent<ComponentFrag> implements View.OnClickListener {
+public class PersonalCom extends FragmentComponent implements View.OnClickListener {
     private ImageView mIvUserBackground;
     private ImageView mIvUserIcon;
     private TextView mTvUserName;
@@ -25,7 +24,7 @@ public class PersonalCom extends ViewComponent<ComponentFrag> implements View.On
         mTvUserId = findViewById(R.id.tv_user_id);
         mTvUserRank = findViewById(R.id.tv_user_rank);
         mTvUserGrade = findViewById(R.id.tv_user_grade);
-        clickListener(this, R.id.ll_my_integral, R.id.ll_my_share, R.id.ll_my_collect, R.id.ll_my_todo, R.id.ll_about_developer, R.id.ll_my_setting);
+        setOnClickListener(this, R.id.ll_my_integral, R.id.ll_my_share, R.id.ll_my_collect, R.id.ll_my_todo, R.id.ll_about_developer, R.id.ll_my_setting);
     }
 
     @Override

@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bear.libcomponent.ComponentFrag;
-import com.bear.libcomponent.ComponentService;
-import com.bear.libcomponent.ViewComponent;
+import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
 import com.bear.wanandroidbyjava.EventKey;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.bear.wanandroidbyjava.Widget.NoSwitchViewPager;
 import com.example.libbase.Util.CollectionUtil;
 import com.example.libframework.Bus.Bus;
@@ -25,7 +25,7 @@ import com.example.libframework.Bus.EventCallback;
 import java.util.List;
 import java.util.Set;
 
-public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCom{
+public class PublicCom extends FragmentComponent {
     private RecyclerView mRvTabContainer;
     private ProgressBar mPbPublicTabLoading;
     private VHAdapter mTabListAdapter;
@@ -61,13 +61,13 @@ public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCo
     protected void onCreateView() {
         mPbPublicTabLoading = findViewById(R.id.pb_public_tab_loading);
         mNoSwitchViewPager = findViewById(R.id.vp_article_container);
-        mPublicListFragAdapter = new PublicListFragAdapter(getDependence().getChildFragmentManager());
+        mPublicListFragAdapter = new PublicListFragAdapter(getFragment().getChildFragmentManager());
         mNoSwitchViewPager.setAdapter(mPublicListFragAdapter);
         mPublicListFragAdapter.setPublicTabList(mPublicTabVM.getPublicTabList());
 
         mRvTabContainer = findViewById(R.id.rv_tab_container);
-        mRvTabContainer.setLayoutManager(new LinearLayoutManager(getComActivity()));
-        mTabListAdapter = new VHAdapter(getDependence().getViewLifecycleOwner().getLifecycle());
+        mRvTabContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTabListAdapter = new VHAdapter(getFragment().getViewLifecycleOwner().getLifecycle());
         mTabListAdapter.register(new PublicTabVHBridge(), PublicTab.class);
         mRvTabContainer.setAdapter(mTabListAdapter);
         mTabListAdapter.getDataManager().setData(mPublicTabVM.getPublicTabList());
@@ -80,8 +80,8 @@ public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCo
     }
 
     private void initData() {
-        mPublicTabVM = new ViewModelProvider(getDependence()).get(PublicTabVM.class);
-        mPublicTabVM.getPublicTabLD().observe(getDependence(), new Observer<Pair<Boolean, List<PublicTab>>>() {
+        mPublicTabVM = new ViewModelProvider(getFragment()).get(PublicTabVM.class);
+        mPublicTabVM.getPublicTabLD().observe(getFragment(), new Observer<Pair<Boolean, List<PublicTab>>>() {
             @Override
             public void onChanged(Pair<Boolean, List<PublicTab>> pair) {
                 if (!CollectionUtil.isEmpty(pair.second)) {
@@ -93,7 +93,7 @@ public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCo
                 }
             }
         });
-        mPublicTabVM.getShowProgressLD().observe(getDependence(), new Observer<Boolean>() {
+        mPublicTabVM.getShowProgressLD().observe(getFragment(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean show) {
                 if (show != null) {
@@ -112,7 +112,6 @@ public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCo
         mPublicTabVM.fetchTab();
     }
 
-    @Override
     public void switchTabArticle(int tabId) {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int index = 0;
@@ -125,16 +124,15 @@ public class PublicCom extends ViewComponent<ComponentFrag> implements IPublicCo
         mNoSwitchViewPager.setCurrentItem(index, false);
     }
 
-    @Override
     public void scrollToTop() {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
-        ComponentService.get().getComponent(IPublicListCom.class, curPublicTab.publicTabId).scrollToTop();
+        ComponentService.get().getComponent(PublicListCom.class, curPublicTab.publicTabId).scrollToTop();
     }
 
     @Override
     protected void onDestroyView() {
-        clear(mRvTabContainer, mPbPublicTabLoading, mTabListAdapter, mNoSwitchViewPager, mPublicListFragAdapter);
+        OtherUtil.clear(mRvTabContainer, mPbPublicTabLoading, mTabListAdapter, mNoSwitchViewPager, mPublicListFragAdapter);
     }
 }
