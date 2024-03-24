@@ -9,6 +9,8 @@ public class WanUrl {
     public static final int SUCCESS_ERROR_CODE = 0;
     public static final int FAIL_ERROR_CODE = -1;
 
+    public static final int NEED_TO_LOGIN_CODE = -1001;
+
     private static final String HTTPS = "https://";
     private static final String HOST = "www.wanandroid.com";
 
@@ -170,4 +172,13 @@ public class WanUrl {
      * id
      */
     public static final String DELETE_COLLECT_LINK_URL = HTTPS + HOST + "/lg/collect/deletetool/json";
+
+
+    /**
+     * https://wanandroid.com//user/lg/userinfo/json
+     * 个人信息接口
+     * 方法：GET
+     * 需要登录
+     */
+    public static final String GET_USERINFO_URL = HTTPS + HOST + "/user/lg/userinfo/json";
 }

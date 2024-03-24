@@ -59,7 +59,7 @@ public class CookieStorage {
                     if (!hasLoadFromStorage) {
                         cookieListMap = FileStorage.readObjFromJson(COOKIE_STORAGE_PATH,
                                 new TypeToken<Map<String, List<Cookie>>>() {});
-                        cookieListMap = cookieListMap != null ? cookieListMap : new HashMap<String, List<Cookie>>();
+                        cookieListMap = cookieListMap != null ? cookieListMap : new HashMap<>();
                         hasLoadFromStorage = true;
                     }
                 }

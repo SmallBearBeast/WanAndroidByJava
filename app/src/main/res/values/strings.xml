@@ -64,4 +64,8 @@
     <string name="str_re_password_not_empty">确认密码不能为空</string>
     <string name="str_net_error_to_try_again">网络异常，请检查重试</string>
     <string name="str_password_not_same_to_try_again">密码输入不一致，请重新输入</string>
+    <string name="str_operation_failed_and_retry_again">操作失败，请重试</string>
+    <string name="str_personal_id">ID: %d</string>
+    <string name="str_personal_grade">等级: %d</string>
+    <string name="str_personal_rank">排名: %s</string>
 </resources>

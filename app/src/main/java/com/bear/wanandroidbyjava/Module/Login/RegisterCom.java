@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bear.libcomponent.component.ComponentService;
@@ -13,6 +12,7 @@ import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.bear.wanandroidbyjava.Widget.InputView;
+import com.example.libbase.Util.NetWorkUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 
@@ -26,12 +26,10 @@ public class RegisterCom extends FragmentComponent implements View.OnClickListen
     @Override
     protected void onCreate() {
         loginRegisterVM = new ViewModelProvider(getFragment()).get(LoginRegisterVM.class);
-        loginRegisterVM.getRegisterSuccessLD().observe(getFragment(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean success) {
-                if (success != null && success) {
-                    getActivity().finish();
-                }
+        loginRegisterVM.getRegisterSuccessLD().observe(getFragment(), pair -> {
+            Boolean success = pair.first;
+            if (success != null && success) {
+                getActivity().finish();
             }
         });
     }
@@ -68,6 +66,10 @@ public class RegisterCom extends FragmentComponent implements View.OnClickListen
         String userName = userInputView.getInputText().trim();
         String password = passwordInputView.getInputText().trim();
         String rePassword = rePasswordInputView.getInputText().trim();
+        if (!NetWorkUtil.isConnected()) {
+            ToastUtil.showToast(R.string.str_net_error_to_try_again);
+            return;
+        }
         if (checkInput(userName, password, rePassword)) {
             loginRegisterVM.register(userName, password, rePassword);
         }

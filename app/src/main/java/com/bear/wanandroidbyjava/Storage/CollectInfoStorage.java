@@ -61,7 +61,7 @@ public class CollectInfoStorage extends FileStorage {
                         collectInfoMap = FileStorage.readObjFromJson(COLLECT_STORAGE_PATH,
                                 new TypeToken<Map<Integer, CollectInfo>>() {
                                 });
-                        collectInfoMap = collectInfoMap != null ? collectInfoMap : new HashMap<Integer, CollectInfo>();
+                        collectInfoMap = collectInfoMap != null ? collectInfoMap : new HashMap<>();
                         hasLoadFromStorage = true;
                     }
                 }

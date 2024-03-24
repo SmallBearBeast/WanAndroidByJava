@@ -1,7 +1,6 @@
 package com.bear.wanandroidbyjava.Module.Personal;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 
 import com.bear.libcomponent.component.ComponentFrag;
@@ -12,7 +11,8 @@ public class PersonalFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new PersonalCom());
+        regFragComponent(new PersonalInfoCom());
+        regFragComponent(new PersonalItemCom());
     }
 
     @Override

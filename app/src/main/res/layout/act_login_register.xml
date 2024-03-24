@@ -12,9 +12,9 @@
         android:layout_height="@dimen/dp_40"
         android:padding="@dimen/dp_10"
         android:src="@drawable/ic_cancel"
-        android:tint="@color/color_5C5C5C"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/color_5C5C5C" />
 
     <LinearLayout
         android:id="@+id/titleIconView"
@@ -41,7 +41,7 @@
             android:layout_height="@dimen/dp_50"
             android:layout_marginStart="@dimen/dp_10"
             android:src="@drawable/ic_logo"
-            android:tint="@color/color_5C5C5C" />
+            app:tint="@color/color_5C5C5C" />
     </LinearLayout>
 
     <TextView

@@ -1,22 +1,28 @@
 package com.bear.wanandroidbyjava.Module.Login;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
+import com.bear.wanandroidbyjava.Data.Bean.UserInfoBean;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
+import com.bear.wanandroidbyjava.WanConstant;
 import com.bear.wanandroidbyjava.Widget.InputView;
+import com.example.libbase.Util.NetWorkUtil;
+import com.example.libbase.Util.ResourceUtil;
 import com.example.libbase.Util.StringUtil;
 import com.example.libbase.Util.ToastUtil;
 
 public class LoginCom extends FragmentComponent implements View.OnClickListener {
+
     private InputView userInputView;
     private InputView passwordInputView;
 
@@ -25,13 +31,21 @@ public class LoginCom extends FragmentComponent implements View.OnClickListener 
     @Override
     protected void onCreate() {
         loginRegisterVM = new ViewModelProvider(getFragment()).get(LoginRegisterVM.class);
-        loginRegisterVM.getLoginSuccessLD().observe(getFragment(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean success) {
-                if (success != null && success) {
-                    getActivity().finish();
-                }
+        loginRegisterVM.getLoginStateLD().observe(getFragment(), pair -> {
+            Boolean success = pair.first;
+            UserInfoBean userInfoBean = pair.second;
+            if (success != null && success) {
+                ToastUtil.showToast(ResourceUtil.getString(R.string.str_login_success));
+                loginRegisterVM.fetchUserData();
+            } else {
+                ToastUtil.showToast(R.string.str_login_fail);
             }
+        });
+        loginRegisterVM.getFetchUserDataResultLD().observe(getFragment(), userDataBean -> {
+            Intent intent = new Intent();
+            intent.putExtra(WanConstant.BUNDLE_KEY_USER_DATA, userDataBean);
+            getActivity().setResult(Activity.RESULT_OK, intent);
+            getActivity().finish();
         });
     }
 
@@ -65,6 +79,10 @@ public class LoginCom extends FragmentComponent implements View.OnClickListener 
     private void login() {
         String userName = userInputView.getInputText().trim();
         String password = passwordInputView.getInputText().trim();
+        if (!NetWorkUtil.isConnected()) {
+            ToastUtil.showToast(R.string.str_net_error_to_try_again);
+            return;
+        }
         if (checkInput(userName, password)) {
             loginRegisterVM.login(userName, password);
         }

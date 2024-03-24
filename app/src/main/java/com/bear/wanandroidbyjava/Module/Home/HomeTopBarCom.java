@@ -20,7 +20,6 @@ public class HomeTopBarCom extends FragmentComponent {
                 switch (view.getId()) {
                     case R.id.iv_square:
                         ToastUtil.showToast(R.string.str_feature_not_open);
-                        LoginRegisterAct.go(getActivity());
 //                        SquareAct.go(getComActivity());
                         break;
 
