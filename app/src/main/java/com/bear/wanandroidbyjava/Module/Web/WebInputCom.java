@@ -11,10 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
 
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.component.ActivityComponent;
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.Module.Collect.CollectArticleView;
 import com.bear.wanandroidbyjava.R;
@@ -38,6 +38,10 @@ public class WebInputCom extends ActivityComponent implements View.OnClickListen
     private ProgressBar webLoadingPb;
     private String webLink;
     private String webTitle;
+
+    public WebInputCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -72,12 +76,12 @@ public class WebInputCom extends ActivityComponent implements View.OnClickListen
                     clearInputIv.setVisibility(View.VISIBLE);
                     webIconIv.setVisibility(View.INVISIBLE);
                     searchInputEt.setText(webLink);
-                    ComponentService.get().getComponent(WebLinkCom.class).showLinkView();
+                    getComponent(WebLinkCom.class).showLinkView();
                 } else {
                     clearInputIv.setVisibility(View.INVISIBLE);
                     webIconIv.setVisibility(View.VISIBLE);
                     searchInputEt.setText(webTitle);
-                    ComponentService.get().getComponent(WebLinkCom.class).hideLinkView();
+                    getComponent(WebLinkCom.class).hideLinkView();
                 }
             }
         });
@@ -154,7 +158,7 @@ public class WebInputCom extends ActivityComponent implements View.OnClickListen
             KeyBoardManager.get().hideKeyBoard(getContext(), searchInputEt);
             setEditTextEnable(false);
             searchInputEt.setText(inputUrl);
-            ComponentService.get().getComponent(WebContentCom.class).loadUrl(inputUrl);
+            getComponent(WebContentCom.class).loadUrl(inputUrl);
         }
     }
 

@@ -10,15 +10,20 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
+import androidx.lifecycle.Lifecycle;
+
 import com.bear.libcomponent.ShareVM;
 import com.bear.libcomponent.component.ActivityComponent;
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.Module.Collect.CollectInfo;
 import com.bear.wanandroidbyjava.R;
 
 public class WebContentCom extends ActivityComponent {
     private static final String TAG = WebAct.TAG + "-WebContentCom";
     private ComWebView mWvContent;
+
+    public WebContentCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -66,13 +71,13 @@ public class WebContentCom extends ActivityComponent {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                ComponentService.get().getComponent(WebInputCom.class).onPageStarted(url);
+                getComponent(WebInputCom.class).onPageStarted(url);
                 updateBackAndForwardAction();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                ComponentService.get().getComponent(WebInputCom.class).onPageFinished();
+                getComponent(WebInputCom.class).onPageFinished();
             }
 
             @Override
@@ -82,17 +87,17 @@ public class WebContentCom extends ActivityComponent {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebProgress(newProgress);
+                getComponent(WebInputCom.class).setWebProgress(newProgress);
             }
 
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebIcon(icon);
+                getComponent(WebInputCom.class).setWebIcon(icon);
             }
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                ComponentService.get().getComponent(WebInputCom.class).setWebTitle(title);
+                getComponent(WebInputCom.class).setWebTitle(title);
             }
         });
         mWvContent.addWebCallback(new WebTimeCallback());
@@ -108,9 +113,9 @@ public class WebContentCom extends ActivityComponent {
 
     private void updateBackAndForwardAction() {
         boolean canGoForward = mWvContent.canGoForward();
-        ComponentService.get().getComponent(WebActionCom.class).setForwardEnable(canGoForward);
+        getComponent(WebActionCom.class).setForwardEnable(canGoForward);
         boolean canGoBack = mWvContent.canGoBack();
-        ComponentService.get().getComponent(WebActionCom.class).setBackEnable(canGoBack);
+        getComponent(WebActionCom.class).setBackEnable(canGoBack);
     }
 
     public void loadUrl(String url) {

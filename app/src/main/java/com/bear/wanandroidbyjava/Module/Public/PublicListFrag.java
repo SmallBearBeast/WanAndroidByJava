@@ -15,7 +15,7 @@ public class PublicListFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new PublicListCom(mTabId), mTabId);
+        regFragComponent(new PublicListCom(getLifecycle(), mTabId), mTabId);
     }
 
     @Override

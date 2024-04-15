@@ -2,8 +2,9 @@ package com.bear.wanandroidbyjava.Module.Web;
 
 import android.view.View;
 
+import androidx.lifecycle.Lifecycle;
+
 import com.bear.libcomponent.component.ActivityComponent;
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Animator;
 import com.example.libbase.Manager.KeyBoardManager;
@@ -14,6 +15,10 @@ import com.example.libbase.Util.ToastUtil;
 public class WebLinkCom extends ActivityComponent implements View.OnClickListener {
     private View maskView;
     private View topLinkView;
+
+    public WebLinkCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -30,7 +35,7 @@ public class WebLinkCom extends ActivityComponent implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.copyLinkTv:
-                String copyText = ComponentService.get().getComponent(WebInputCom.class).getWebLink();
+                String copyText = getComponent(WebInputCom.class).getWebLink();
                 if (ClipboardUtil.copy(copyText)) {
                     ToastUtil.showToast(R.string.str_link_already_copy);
                 } else {

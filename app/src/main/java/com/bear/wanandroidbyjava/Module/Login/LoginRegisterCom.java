@@ -3,6 +3,7 @@ package com.bear.wanandroidbyjava.Module.Login;
 import android.view.View;
 
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bear.libcomponent.component.ActivityComponent;
@@ -10,6 +11,11 @@ import com.bear.wanandroidbyjava.R;
 
 public class LoginRegisterCom extends ActivityComponent implements View.OnClickListener {
     private ViewPager loginRegisterViewPager;
+
+    public LoginRegisterCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
+
     @Override
     protected void onCreate() {
         setOnClickListener(this, R.id.closeIv);

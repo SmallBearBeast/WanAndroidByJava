@@ -12,7 +12,7 @@ public class LoginFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new LoginCom());
+        regFragComponent(new LoginCom(getLifecycle()));
     }
 
     @Override

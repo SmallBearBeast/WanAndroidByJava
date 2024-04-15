@@ -12,7 +12,7 @@ public class ProjectFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new ProjectCom());
+        regFragComponent(new ProjectCom(getLifecycle()));
     }
 
     @Override

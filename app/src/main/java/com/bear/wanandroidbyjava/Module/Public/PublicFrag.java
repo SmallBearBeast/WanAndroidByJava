@@ -12,7 +12,7 @@ public class PublicFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new PublicCom());
+        regFragComponent(new PublicCom(getLifecycle()));
     }
 
     @Override

@@ -19,7 +19,7 @@ public class LoginRegisterAct extends ComponentAct {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regActComponent(new LoginRegisterCom());
+        regActComponent(new LoginRegisterCom(getLifecycle()));
         ((WanApp)WanApp.getAppContext()).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {

@@ -4,8 +4,9 @@ import android.content.res.ColorStateList;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.lifecycle.Lifecycle;
+
 import com.bear.libcomponent.component.ActivityComponent;
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.wanandroidbyjava.R;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libbase.Util.ViewUtil;
@@ -16,6 +17,10 @@ public class WebActionCom extends ActivityComponent implements View.OnClickListe
     private ImageView forWardIv;
     private ImageView backIv;
     private ImageView cancelIv;
+
+    public WebActionCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -39,11 +44,11 @@ public class WebActionCom extends ActivityComponent implements View.OnClickListe
                 break;
 
             case R.id.iv_forward:
-                ComponentService.get().getComponent(WebContentCom.class).goForward();
+                getComponent(WebContentCom.class).goForward();
                 break;
 
             case R.id.back_iv:
-                ComponentService.get().getComponent(WebContentCom.class).goBack();
+                getComponent(WebContentCom.class).goBack();
                 break;
         }
     }

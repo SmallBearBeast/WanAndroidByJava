@@ -5,9 +5,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
@@ -22,6 +22,10 @@ public class RegisterCom extends FragmentComponent implements View.OnClickListen
     private InputView rePasswordInputView;
 
     private LoginRegisterVM loginRegisterVM;
+
+    public RegisterCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -58,7 +62,7 @@ public class RegisterCom extends FragmentComponent implements View.OnClickListen
         if (viewId == R.id.registerBt) {
             register();
         } else if (viewId == R.id.goToLoginView) {
-            ComponentService.get().getComponent(LoginRegisterCom.class).goToLoginPage();
+            getComponent(LoginRegisterCom.class).goToLoginPage();
         }
     }
 

@@ -3,6 +3,7 @@ package com.bear.wanandroidbyjava.Module.System.Nav;
 import android.util.Log;
 import android.view.View;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,6 +53,10 @@ public class NavCom extends FragmentComponent implements View.OnClickListener {
             return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
         }
     };
+
+    public NavCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {

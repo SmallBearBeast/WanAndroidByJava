@@ -4,12 +4,12 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.librv.VHAdapter;
 import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
@@ -50,6 +50,10 @@ public class PublicCom extends FragmentComponent {
             return CollectionUtil.asSet(EventKey.KEY_NET_CHANGE);
         }
     };
+
+    public PublicCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreate() {
@@ -128,7 +132,7 @@ public class PublicCom extends FragmentComponent {
         List<PublicTab> publicTabList = mPublicTabVM.getPublicTabList();
         int curIndex = mNoSwitchViewPager.getCurrentItem();
         PublicTab curPublicTab = publicTabList.get(curIndex);
-        ComponentService.get().getComponent(PublicListCom.class, curPublicTab.publicTabId).scrollToTop();
+        getComponent(PublicListCom.class, curPublicTab.publicTabId).scrollToTop();
     }
 
     @Override

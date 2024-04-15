@@ -2,6 +2,8 @@ package com.bear.wanandroidbyjava.Module.Home;
 
 import android.view.View;
 
+import androidx.lifecycle.Lifecycle;
+
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.Module.Login.LoginRegisterAct;
 import com.bear.wanandroidbyjava.R;
@@ -11,6 +13,10 @@ import com.example.libbase.OnProtectClickListener;
 import com.example.libbase.Util.ToastUtil;
 
 public class HomeTopBarCom extends FragmentComponent {
+
+    public HomeTopBarCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreateView() {

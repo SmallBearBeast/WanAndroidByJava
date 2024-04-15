@@ -16,7 +16,7 @@ public class SystemFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new SystemCom());
+        regFragComponent(new SystemCom(getLifecycle()));
     }
 
     public static SystemFrag newInstance() {

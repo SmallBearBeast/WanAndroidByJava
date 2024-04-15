@@ -9,7 +9,7 @@ ext {
     coroutines_version = '1.6.4'
     lifecycle_version = '2.3.1'
 
-    smallbearbeast_version ='b48a0898c7'
+    smallbearbeast_version ='10776f37f3'
 
     pluginMap = [
             'gradle'                   : 'com.android.tools.build:gradle:7.3.0',

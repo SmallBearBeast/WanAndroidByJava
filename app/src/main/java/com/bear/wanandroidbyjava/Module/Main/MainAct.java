@@ -16,8 +16,8 @@ public class MainAct extends ComponentAct {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regActComponent(new MainContentCom());
-        regActComponent(new MainBottomCom());
+        regActComponent(new MainContentCom(getLifecycle()));
+        regActComponent(new MainBottomCom(getLifecycle()));
         normalScreen();
     }
 

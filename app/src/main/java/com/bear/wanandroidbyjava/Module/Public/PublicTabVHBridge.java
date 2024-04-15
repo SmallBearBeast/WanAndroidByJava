@@ -7,14 +7,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bear.libcomponent.component.ComponentAct;
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.Data.Bean.PublicTab;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.base.ComponentVHBridge;
 import com.example.libbase.Util.ResourceUtil;
 
-public class PublicTabVHBridge extends VHBridge<PublicTabVHBridge.TabVHolder> {
+public class PublicTabVHBridge extends ComponentVHBridge<PublicTabVHBridge.TabVHolder> {
     private int mSelectTabPos = 0;
 
     @NonNull
@@ -47,7 +47,10 @@ public class PublicTabVHBridge extends VHBridge<PublicTabVHBridge.TabVHolder> {
         @Override
         public void onClick(View v) {
             if (getContext() instanceof ComponentAct && mSelectTabPos != getPos()) {
-                ComponentService.get().getComponent(PublicCom.class).switchTabArticle(getData().publicTabId);
+                PublicCom publicCom = getComponent(PublicCom.class);
+                if (publicCom != null) {
+                    publicCom.switchTabArticle(getData().publicTabId);
+                }
                 getDataManager().update(mSelectTabPos);
                 getDataManager().update(getPos());
                 mSelectTabPos = getPos();

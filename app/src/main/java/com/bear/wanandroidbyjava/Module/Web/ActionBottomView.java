@@ -3,7 +3,8 @@ package com.bear.wanandroidbyjava.Module.Web;
 import android.app.Activity;
 import android.view.View;
 
-import com.bear.libcomponent.component.ComponentService;
+import com.bear.libcomponent.component.ComponentAct;
+import com.bear.libcomponent.component.GroupComponent;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Widget.BottomView;
 
@@ -34,16 +35,23 @@ public class ActionBottomView extends BottomView implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        WebContentCom webContentCom;
+                switch (view.getId()) {
             case R.id.homeWebItemView:
-                ComponentService.get().getComponent(WebContentCom.class).goBackHome();
+                webContentCom = getComponent(WebContentCom.class);
+                if (webContentCom != null) {
+                    webContentCom.goBackHome();
+                }
                 break;
             case R.id.collectItemView:
                 break;
             case R.id.bookmarkItemView:
                 break;
             case R.id.refreshItemView:
-                ComponentService.get().getComponent(WebContentCom.class).reload();
+                webContentCom = getComponent(WebContentCom.class);
+                if (webContentCom != null) {
+                    getComponent(WebContentCom.class).reload();
+                }
                 break;
             case R.id.shareItemView:
                 break;
@@ -52,5 +60,12 @@ public class ActionBottomView extends BottomView implements View.OnClickListener
                 break;
         }
         hide();
+    }
+
+    private <C extends GroupComponent> C getComponent(Class<C> clz) {
+        if (getActivity() instanceof ComponentAct) {
+            ((ComponentAct)getActivity()).getComponentManager().getComponent(clz);
+        }
+        return null;
     }
 }

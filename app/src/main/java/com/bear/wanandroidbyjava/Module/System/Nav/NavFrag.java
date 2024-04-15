@@ -16,7 +16,7 @@ public class NavFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new NavCom());
+        regFragComponent(new NavCom(getLifecycle()));
     }
 
     public static NavFrag newInstance() {

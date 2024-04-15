@@ -3,6 +3,7 @@ package com.bear.wanandroidbyjava.Module.Personal;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bear.libcomponent.component.FragmentComponent;
@@ -17,6 +18,10 @@ public class PersonalItemCom extends FragmentComponent implements View.OnClickLi
     private TextView integralCountTv;
 
     private TextView collectCountTv;
+
+    public PersonalItemCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
 
     @Override
     protected void onCreateView() {

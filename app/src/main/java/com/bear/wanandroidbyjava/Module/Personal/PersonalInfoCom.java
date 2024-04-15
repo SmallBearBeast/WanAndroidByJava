@@ -6,18 +6,18 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.Data.Bean.UserDataBean;
 import com.bear.wanandroidbyjava.Module.Login.LoginRegisterAct;
 import com.bear.wanandroidbyjava.R;
 import com.bear.wanandroidbyjava.Tool.Util.OtherUtil;
 import com.bear.wanandroidbyjava.WanConstant;
-import com.example.libbase.Util.MainHandlerUtil;
 import com.example.libbase.Util.ResourceUtil;
 import com.example.libbase.Util.ViewUtil;
 
@@ -35,6 +35,10 @@ public class PersonalInfoCom extends FragmentComponent implements View.OnClickLi
 
     private ActivityResultLauncher<Intent> launcher;
 
+    public PersonalInfoCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
+
     @Override
     protected void onCreate() {
         super.onCreate();
@@ -43,14 +47,8 @@ public class PersonalInfoCom extends FragmentComponent implements View.OnClickLi
                 UserDataBean userDataBean = (UserDataBean) result.getData().getSerializableExtra(WanConstant.BUNDLE_KEY_USER_DATA);
                 updateInfoByLoginState(true);
                 updateInfoByUserData(userDataBean);
-                // TODO: 2024/3/24 onActivityResult回调太早，导致上一个page的component还没来得及销毁。
-                MainHandlerUtil.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ComponentService.get().getComponent(PersonalItemCom.class).updateItemByLoginStateExt(true);
-                        ComponentService.get().getComponent(PersonalItemCom.class).updateItemByUserDataExt(userDataBean);
-                    }
-                }, 1000);
+                getComponent(PersonalItemCom.class).updateItemByLoginStateExt(true);
+                getComponent(PersonalItemCom.class).updateItemByUserDataExt(userDataBean);
             }
         });
     }

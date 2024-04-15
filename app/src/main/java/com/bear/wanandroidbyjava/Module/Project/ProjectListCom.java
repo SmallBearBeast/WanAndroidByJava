@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -60,7 +61,8 @@ public class ProjectListCom extends FragmentComponent {
         }
     };
 
-    public ProjectListCom(int tabId) {
+    public ProjectListCom(Lifecycle lifecycle, int tabId) {
+        super(lifecycle);
         mTabId = tabId;
     }
 

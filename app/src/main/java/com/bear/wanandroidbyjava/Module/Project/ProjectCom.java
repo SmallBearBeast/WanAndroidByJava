@@ -4,11 +4,11 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.Data.Bean.ProjectTab;
 import com.bear.wanandroidbyjava.EventKey;
@@ -49,6 +49,10 @@ public class ProjectCom extends FragmentComponent {
         }
     };
 
+    public ProjectCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
+
     @Override
     protected void onCreate() {
         initData();
@@ -76,7 +80,7 @@ public class ProjectCom extends FragmentComponent {
         int curIndex = mViewPager.getCurrentItem();
         List<ProjectTab> projectTabList = mProjectVM.getProjectTabList();
         int cid = projectTabList.get(curIndex).projectTabId;
-        ComponentService.get().getComponent(ProjectListCom.class, cid).scrollToTop();
+        getComponent(ProjectListCom.class, cid).scrollToTop();
     }
 
     private void initData() {

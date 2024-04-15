@@ -5,9 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bear.libcomponent.component.ComponentService;
 import com.bear.libcomponent.component.FragmentComponent;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavCom;
 import com.bear.wanandroidbyjava.Module.System.Nav.NavFrag;
@@ -22,6 +22,10 @@ public class SystemCom extends FragmentComponent {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
+    public SystemCom(Lifecycle lifecycle) {
+        super(lifecycle);
+    }
+
     @Override
     protected void onCreateView() {
         mTabLayout = findViewById(R.id.tl_title_layout);
@@ -33,9 +37,9 @@ public class SystemCom extends FragmentComponent {
     public void scrollToTop() {
         int index = mViewPager.getCurrentItem();
         if (index == 0) {
-            ComponentService.get().getComponent(TreeCom.class).scrollToTop();
+            getComponent(TreeCom.class).scrollToTop();
         } else if (index == 1) {
-            ComponentService.get().getComponent(NavCom.class).scrollToTop();
+            getComponent(NavCom.class).scrollToTop();
         }
     }
 

@@ -16,7 +16,7 @@ public class TreeFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new TreeCom());
+        regFragComponent(new TreeCom(getLifecycle()));
     }
 
     public static TreeFrag newInstance() {

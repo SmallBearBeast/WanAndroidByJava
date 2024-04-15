@@ -12,8 +12,8 @@ public class HomeFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new HomeTopBarCom());
-        regFragComponent(new HomeListCom());
+        regFragComponent(new HomeTopBarCom(getLifecycle()));
+        regFragComponent(new HomeListCom(getLifecycle()));
     }
 
     @Override

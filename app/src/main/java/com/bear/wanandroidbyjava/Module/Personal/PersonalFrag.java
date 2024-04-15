@@ -11,8 +11,8 @@ public class PersonalFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new PersonalInfoCom());
-        regFragComponent(new PersonalItemCom());
+        regFragComponent(new PersonalInfoCom(getLifecycle()));
+        regFragComponent(new PersonalItemCom(getLifecycle()));
     }
 
     @Override

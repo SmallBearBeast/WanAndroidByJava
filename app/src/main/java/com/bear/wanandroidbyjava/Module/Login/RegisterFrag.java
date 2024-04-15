@@ -11,7 +11,7 @@ public class RegisterFrag extends ComponentFrag {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        regFragComponent(new RegisterCom());
+        regFragComponent(new RegisterCom(getLifecycle()));
     }
 
     @Override

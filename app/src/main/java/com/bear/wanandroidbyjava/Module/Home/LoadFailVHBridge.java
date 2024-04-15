@@ -4,13 +4,12 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.bear.libcomponent.component.ComponentService;
-import com.bear.librv.VHBridge;
 import com.bear.librv.VHolder;
 import com.bear.wanandroidbyjava.R;
+import com.bear.wanandroidbyjava.base.ComponentVHBridge;
 
 @SuppressWarnings({"rawtypes"})
-public class LoadFailVHBridge extends VHBridge implements View.OnClickListener{
+public class LoadFailVHBridge extends ComponentVHBridge<VHolder> implements View.OnClickListener {
     @NonNull
     @Override
     protected VHolder onCreateViewHolder(@NonNull View view) {
@@ -25,6 +24,9 @@ public class LoadFailVHBridge extends VHBridge implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        ComponentService.get().getComponent(HomeListCom.class).loadMore();
+        HomeListCom homeListCom = getComponent(HomeListCom.class);
+        if (homeListCom != null) {
+            homeListCom.loadMore();
+        }
     }
 }
